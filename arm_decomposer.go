@@ -16,7 +16,6 @@ type ArmInstruction struct {
 	CC          ArmCC
 	UpdateFlags bool
 	Writeback   bool
-	OpCount     uint8
 	Operands    []ArmOperand
 }
 
@@ -46,7 +45,7 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Address = uint(raw.address)
 	insn.Size = uint(raw.size)
 	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
-	insn.OpStr = C.GoString(&raw.operands[0])
+	insn.OpStr = C.GoString(&raw.op_str[0])
 	for i := 0; raw.regs_read[i] != 0; i++ {
 		insn.RegistersRead = append(insn.RegistersRead, Register(raw.regs_read[i]))
 	}
@@ -65,35 +64,34 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	arm.CC = ArmCC(cs_arm.cc)
 	arm.UpdateFlags = bool(cs_arm.update_flags)
 	arm.Writeback = bool(cs_arm.writeback)
-	arm.OpCount = uint8(cs_arm.op_count)
 
 	// Cast the op_info to a []C.cs_arm_op
 	var ops []C.cs_arm_op
 	h := (*reflect.SliceHeader)(unsafe.Pointer(&ops))
-	h.Data = uintptr(unsafe.Pointer(&cs_arm.op_info[0]))
+	h.Data = uintptr(unsafe.Pointer(&cs_arm.operands[0]))
 	h.Len = int(cs_arm.op_count)
 	h.Cap = int(cs_arm.op_count)
 
 	// Create the Go object for each operand
-	for _, op := range ops {
-		if op._type == ARM_OP_INVALID {
+	for _, cop := range ops {
+		if cop._type == ARM_OP_INVALID {
 			break
 		}
 		gop := new(ArmOperand)
-		gop.Shift.Type = ArmShiftType(op.shift._type)
-		gop.Shift.Value = uint(op.shift.value)
-		gop.Type = ArmOpType(op._type)
-		switch op._type {
+		gop.Shift.Type = ArmShiftType(cop.shift._type)
+		gop.Shift.Value = uint(cop.shift.value)
+		gop.Type = ArmOpType(cop._type)
+		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case ARM_OP_IMM:
-			gop.Imm = int64(*(*C.int64_t)(unsafe.Pointer(&op.anon0[0])))
+			gop.Imm = int64(*(*C.int64_t)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM_OP_FP:
-			gop.FP = float64(*(*C.double)(unsafe.Pointer(&op.anon0[0])))
+			gop.FP = float64(*(*C.double)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM_OP_REG:
-			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&op.anon0[0])))
+			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM_OP_MEM:
 			gmop := new(ArmMemoryOperand)
-			cmop := (*C.arm_op_mem)(unsafe.Pointer(&op.anon0[0]))
+			cmop := (*C.arm_op_mem)(unsafe.Pointer(&cop.anon0[0]))
 			gmop.Base = uint(cmop.base)
 			gmop.Index = uint(cmop.index)
 			gmop.Scale = int(cmop.scale)

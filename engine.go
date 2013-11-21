@@ -41,6 +41,10 @@ func (e Engine) Close() (bool, error) {
 	return bool(res), err
 }
 
+func (e Engine) RegName(reg uint) string {
+	return C.GoString(C.cs_reg_name(e.Handle, C.uint(reg)))
+}
+
 func (e Engine) Disasm(input string, offset, count uint64) ([]Instruction, error) {
 
 	code := C.CString(input)
