@@ -45,7 +45,7 @@ Disasm:
 		operands[1].type: IMM = 0x0
 
 0x1018:	strb	r3, [r1, r2]
-	op_count: 3
+	op_count: 2
 		operands[0].type: REG = r3
 		operands[1].type: MEM
 			operands[1].mem.base: REG = r1

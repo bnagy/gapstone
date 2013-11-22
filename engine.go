@@ -33,7 +33,8 @@ type InstructionHeader struct {
 
 type Instruction struct {
 	InstructionHeader
-	Arm ArmInstruction
+	Arm   ArmInstruction
+	Arm64 Arm64Instruction
 }
 
 func (e Engine) Close() (bool, error) {
@@ -41,20 +42,24 @@ func (e Engine) Close() (bool, error) {
 	return bool(res), err
 }
 
+func (e Engine) Version() (int, int) {
+	var maj, min int
+	C.cs_version((*C.int)(unsafe.Pointer(&maj)), (*C.int)(unsafe.Pointer(&min)))
+	return maj, min
+}
+
 func (e Engine) RegName(reg uint) string {
 	return C.GoString(C.cs_reg_name(e.Handle, C.uint(reg)))
 }
 
-func (e Engine) Disasm(input string, offset, count uint64) ([]Instruction, error) {
-
-	code := C.CString(input)
-	defer C.free(unsafe.Pointer(code))
+func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
 
+	bptr := (*C.char)(unsafe.Pointer(&input[0]))
 	disassembled := C.cs_disasm_dyn(
 		e.Handle,
-		code,
+		bptr,
 		C.uint64_t(len(input)),
 		C.uint64_t(offset),
 		C.uint64_t(count),
