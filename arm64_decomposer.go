@@ -8,6 +8,8 @@ import "C"
 import "unsafe"
 import "reflect"
 
+//import "fmt"
+
 type Arm64OpType uint
 type Arm64ShiftType uint
 type Arm64CC uint
@@ -38,50 +40,37 @@ type Arm64Operand struct {
 type Arm64MemoryOperand struct {
 	Base  uint
 	Index uint
-	Disp  uint64
+	Disp  int64
 }
-
-// func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
-// 	insn.Id = uint(raw.id)
-// 	insn.Address = uint(raw.address)
-// 	insn.Size = uint(raw.size)
-// 	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
-// 	insn.OpStr = C.GoString(&raw.op_str[0])
-// 	for i := 0; raw.regs_read[i] != 0; i++ {
-// 		insn.RegistersRead = append(insn.RegistersRead, Register(raw.regs_read[i]))
-// 	}
-// 	for i := 0; raw.regs_write[i] != 0; i++ {
-// 		insn.RegistersWritten = append(insn.RegistersWritten, Register(raw.regs_write[i]))
-// 	}
-// 	for i := 0; raw.groups[i] != 0; i++ {
-// 		insn.Groups = append(insn.Groups, Group(raw.groups[i]))
-// 	}
-// }
 
 func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 	arm := new(Arm64Instruction)
-	// Parse the cs_arm union header
-	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.anon0[0]))
-	arm.CC = Arm64CC(cs_arm.cc)
-	arm.UpdateFlags = bool(cs_arm.update_flags)
-	arm.Writeback = bool(cs_arm.writeback)
+	// Parse the cs_arm64 union header
+	cs_arm64 := (*C.cs_arm64)(unsafe.Pointer(&raw.anon0[0]))
+	arm.CC = Arm64CC(cs_arm64.cc)
+	arm.UpdateFlags = bool(cs_arm64.update_flags)
+	arm.Writeback = bool(cs_arm64.writeback)
 
-	// Cast the op_info to a []C.cs_arm_op
-	var ops []C.cs_arm_op
+	// Cast the op_info to a []C.cs_arm6464_op
+	var ops []C.cs_arm64_op
 	h := (*reflect.SliceHeader)(unsafe.Pointer(&ops))
-	h.Data = uintptr(unsafe.Pointer(&cs_arm.operands[0]))
-	h.Len = int(cs_arm.op_count)
-	h.Cap = int(cs_arm.op_count)
+	h.Data = uintptr(unsafe.Pointer(&cs_arm64.operands[0]))
+	h.Len = int(cs_arm64.op_count)
+	h.Cap = int(cs_arm64.op_count)
 
 	// Create the Go object for each operand
 	for _, cop := range ops {
+
 		if cop._type == ARM64_OP_INVALID {
 			break
 		}
+
 		gop := new(Arm64Operand)
 		gop.Shift.Type = Arm64ShiftType(cop.shift._type)
 		gop.Shift.Value = uint(cop.shift.value)
 		gop.Type = Arm64OpType(cop._type)
+		gop.Ext = Arm64Extender(cop.ext)
+
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case ARM64_OP_IMM:
@@ -92,13 +81,15 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM64_OP_MEM:
 			gmop := new(Arm64MemoryOperand)
-			cmop := (*C.arm_op_mem)(unsafe.Pointer(&cop.anon0[0]))
+			cmop := (*C.arm64_op_mem)(unsafe.Pointer(&cop.anon0[0]))
 			gmop.Base = uint(cmop.base)
 			gmop.Index = uint(cmop.index)
-			gmop.Disp = uint64(cmop.disp)
+			gmop.Disp = int64(cmop.disp)
 			gop.Mem = *gmop
 		}
+
 		arm.Operands = append(arm.Operands, *gop)
+
 	}
 	insn.Arm64 = *arm
 }

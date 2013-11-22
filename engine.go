@@ -78,6 +78,8 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		switch e.Arch {
 		case CS_ARCH_ARM:
 			return DecomposeArm(insns), nil
+		case CS_ARCH_ARM64:
+			return DecomposeArm64(insns), nil
 		}
 	}
 	return nil, fmt.Errorf("Disassembly failed.")

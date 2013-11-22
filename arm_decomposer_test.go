@@ -5,7 +5,7 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func insnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Arm.Operands))
 	//fmt.Printf("\n\n%#v\n\n", insn.Arm.Operands)
 
@@ -87,7 +87,7 @@ func TestArm(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				insnDetail(insn, &engine, final)
+				armInsnDetail(insn, &engine, final)
 			}
 			fmt.Fprintf(final, "0x%x:\n\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 		}
