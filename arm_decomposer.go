@@ -40,23 +40,6 @@ type ArmMemoryOperand struct {
 	Disp  int64
 }
 
-func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
-	insn.Id = uint(raw.id)
-	insn.Address = uint(raw.address)
-	insn.Size = uint(raw.size)
-	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
-	insn.OpStr = C.GoString(&raw.op_str[0])
-	for i := 0; raw.regs_read[i] != 0; i++ {
-		insn.RegistersRead = append(insn.RegistersRead, uint(raw.regs_read[i]))
-	}
-	for i := 0; raw.regs_write[i] != 0; i++ {
-		insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.regs_write[i]))
-	}
-	for i := 0; raw.groups[i] != 0; i++ {
-		insn.Groups = append(insn.Groups, uint(raw.groups[i]))
-	}
-}
-
 func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	arm := new(ArmInstruction)
 	// Parse the cs_arm union header

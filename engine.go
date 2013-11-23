@@ -33,7 +33,25 @@ type Instruction struct {
 	InstructionHeader
 	Arm   ArmInstruction
 	Arm64 Arm64Instruction
+	Mips  MipsInstruction
 	X86   X86Instruction
+}
+
+func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
+	insn.Id = uint(raw.id)
+	insn.Address = uint(raw.address)
+	insn.Size = uint(raw.size)
+	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
+	insn.OpStr = C.GoString(&raw.op_str[0])
+	for i := 0; raw.regs_read[i] != 0; i++ {
+		insn.RegistersRead = append(insn.RegistersRead, uint(raw.regs_read[i]))
+	}
+	for i := 0; raw.regs_write[i] != 0; i++ {
+		insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.regs_write[i]))
+	}
+	for i := 0; raw.groups[i] != 0; i++ {
+		insn.Groups = append(insn.Groups, uint(raw.groups[i]))
+	}
 }
 
 func (e Engine) Close() (bool, error) {
@@ -51,6 +69,9 @@ func (e Engine) RegName(reg uint) string {
 	return C.GoString(C.cs_reg_name(e.Handle, C.uint(reg)))
 }
 
+func (e Engine) InsnName(insn uint) string {
+	return C.GoString(C.cs_insn_name(e.Handle, C.uint(insn)))
+}
 func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
@@ -80,7 +101,7 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		case CS_ARCH_ARM64:
 			return DecomposeArm64(insns), nil
 		case CS_ARCH_MIPS:
-			panic("Not implemented!")
+			return DecomposeMips(insns), nil
 		case CS_ARCH_X86:
 			return DecomposeX86(insns), nil
 		default:
