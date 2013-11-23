@@ -28,7 +28,7 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 					i, engine.RegName(op.Mem.Index))
 			}
 			if op.Mem.Disp != 0 {
-				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, op.Mem.Disp)
+				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint64(op.Mem.Disp))
 			}
 		case ARM64_OP_CIMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: C-IMM = %v\n", i, op.Imm)
@@ -57,7 +57,7 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\n")
 }
 
-func TestArm6464(t *testing.T) {
+func TestArm64(t *testing.T) {
 
 	final := new(bytes.Buffer)
 	spec_file := "arm64.SPEC"
@@ -66,19 +66,20 @@ func TestArm6464(t *testing.T) {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {
-			fmt.Println(err)
+			t.Errorf("Failed to initialize engine %v", err)
 			return
 		}
 		if i == 0 {
 			maj, min := engine.Version()
-			fmt.Printf("Testing Capstone Arm64. Version %v.%v - ", maj, min)
+			t.Logf("Arch: Arm64. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
 		insns, err := engine.Disasm([]byte(platform.code), 0x2c, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)
-			dumpCode(platform.code, final)
+			fmt.Fprintf(final, "Code:")
+			dumpHex([]byte(platform.code), final)
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
@@ -100,7 +101,7 @@ func TestArm6464(t *testing.T) {
 		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
-		fmt.Printf("Clean.\n")
+		t.Logf("Clean diff with %v.\n", spec_file)
 	}
 
 }

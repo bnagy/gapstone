@@ -37,7 +37,7 @@ type ArmMemoryOperand struct {
 	Base  uint
 	Index uint
 	Scale int
-	Disp  uint64
+	Disp  int64
 }
 
 func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
@@ -47,13 +47,13 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
 	insn.OpStr = C.GoString(&raw.op_str[0])
 	for i := 0; raw.regs_read[i] != 0; i++ {
-		insn.RegistersRead = append(insn.RegistersRead, Register(raw.regs_read[i]))
+		insn.RegistersRead = append(insn.RegistersRead, uint(raw.regs_read[i]))
 	}
 	for i := 0; raw.regs_write[i] != 0; i++ {
-		insn.RegistersWritten = append(insn.RegistersWritten, Register(raw.regs_write[i]))
+		insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.regs_write[i]))
 	}
 	for i := 0; raw.groups[i] != 0; i++ {
-		insn.Groups = append(insn.Groups, Group(raw.groups[i]))
+		insn.Groups = append(insn.Groups, uint(raw.groups[i]))
 	}
 }
 
@@ -95,7 +95,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 			gmop.Base = uint(cmop.base)
 			gmop.Index = uint(cmop.index)
 			gmop.Scale = int(cmop.scale)
-			gmop.Disp = uint64(cmop.disp)
+			gmop.Disp = int64(cmop.disp)
 			gop.Mem = *gmop
 		}
 		arm.Operands = append(arm.Operands, *gop)

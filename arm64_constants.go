@@ -42,7 +42,7 @@ const ARM64_CC_NV = 16 // Always (unconditional):   Always (unconditional)
 
 // Operands
 const ARM64_OP_INVALID = 0 // Uninitialized.
-const ARM64_OP_REG = 1     // Register operand.
+const ARM64_OP_REG = 1     // uint operand.
 const ARM64_OP_CIMM = 2    // C-Immediate
 const ARM64_OP_IMM = 3     // Immediate operand.
 const ARM64_OP_FP = 4      // Floating-Point immediate operand.

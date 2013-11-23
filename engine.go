@@ -11,8 +11,6 @@ import "fmt"
 
 type Arch uint
 type Mode uint
-type Register uint
-type Group uint
 
 type Engine struct {
 	Handle C.csh
@@ -26,15 +24,16 @@ type InstructionHeader struct {
 	Size             uint
 	Mnemonic         string
 	OpStr            string
-	RegistersRead    []Register
-	RegistersWritten []Register
-	Groups           []Group
+	RegistersRead    []uint
+	RegistersWritten []uint
+	Groups           []uint
 }
 
 type Instruction struct {
 	InstructionHeader
 	Arm   ArmInstruction
 	Arm64 Arm64Instruction
+	X86   X86Instruction
 }
 
 func (e Engine) Close() (bool, error) {
@@ -80,6 +79,12 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 			return DecomposeArm(insns), nil
 		case CS_ARCH_ARM64:
 			return DecomposeArm64(insns), nil
+		case CS_ARCH_MIPS:
+			panic("Not implemented!")
+		case CS_ARCH_X86:
+			return DecomposeX86(insns), nil
+		default:
+			panic("Not implemented!")
 		}
 	}
 	return nil, fmt.Errorf("Disassembly failed.")

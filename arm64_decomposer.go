@@ -44,12 +44,12 @@ type Arm64MemoryOperand struct {
 }
 
 func fillArm64Header(raw C.cs_insn, insn *Instruction) {
-	arm := new(Arm64Instruction)
+	arm64 := new(Arm64Instruction)
 	// Parse the cs_arm64 union header
 	cs_arm64 := (*C.cs_arm64)(unsafe.Pointer(&raw.anon0[0]))
-	arm.CC = Arm64CC(cs_arm64.cc)
-	arm.UpdateFlags = bool(cs_arm64.update_flags)
-	arm.Writeback = bool(cs_arm64.writeback)
+	arm64.CC = Arm64CC(cs_arm64.cc)
+	arm64.UpdateFlags = bool(cs_arm64.update_flags)
+	arm64.Writeback = bool(cs_arm64.writeback)
 
 	// Cast the op_info to a []C.cs_arm6464_op
 	var ops []C.cs_arm64_op
@@ -88,10 +88,10 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 			gop.Mem = *gmop
 		}
 
-		arm.Operands = append(arm.Operands, *gop)
+		arm64.Operands = append(arm64.Operands, *gop)
 
 	}
-	insn.Arm64 = *arm
+	insn.Arm64 = *arm64
 }
 
 func DecomposeArm64(raws []C.cs_insn) []Instruction {
