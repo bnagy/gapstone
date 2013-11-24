@@ -10,10 +10,12 @@ import "reflect"
 
 //import "fmt"
 
+// Accessed via insn.Mips.XXX
 type MipsInstruction struct {
 	Operands []MipsOperand
 }
 
+// Number of Operands of a given MIPS_OP_* type
 func (insn MipsInstruction) OpCount(optype uint) int {
 	count := 0
 	for _, op := range insn.Operands {
@@ -25,8 +27,8 @@ func (insn MipsInstruction) OpCount(optype uint) int {
 }
 
 type MipsOperand struct {
-	Type uint
-	Reg  uint // Only ONE of these four will be set
+	Type uint // MIPS_OP_* - determines which field is set below
+	Reg  uint
 	Imm  int64
 	Mem  MipsMemoryOperand
 }
@@ -77,7 +79,7 @@ func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Mips = *mips
 }
 
-func DecomposeMips(raws []C.cs_insn) []Instruction {
+func decomposeMips(raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)

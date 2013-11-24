@@ -10,6 +10,7 @@ import "reflect"
 
 //import "fmt"
 
+// Accessed via insn.Arm64.XXX
 type Arm64Instruction struct {
 	CC          uint
 	UpdateFlags bool
@@ -25,8 +26,8 @@ type Arm64Shifter struct {
 type Arm64Operand struct {
 	Shift Arm64Shifter
 	Ext   uint
-	Type  uint
-	Reg   uint // Only ONE of these four will be set
+	Type  uint // ARM64_OP_* - determines which field is set below
+	Reg   uint
 	Imm   int64
 	FP    float64
 	Mem   Arm64MemoryOperand
@@ -38,6 +39,7 @@ type Arm64MemoryOperand struct {
 	Disp  int64
 }
 
+// Number of Operands of a given ARM64_OP_* type
 func (insn Arm64Instruction) OpCount(optype uint) int {
 	count := 0
 	for _, op := range insn.Operands {
@@ -99,7 +101,7 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 	insn.Arm64 = *arm64
 }
 
-func DecomposeArm64(raws []C.cs_insn) []Instruction {
+func decomposeArm64(raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)

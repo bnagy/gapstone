@@ -8,6 +8,7 @@ import "C"
 import "unsafe"
 import "reflect"
 
+// Accessed via insn.Arm.XXX
 type ArmInstruction struct {
 	CC          uint
 	UpdateFlags bool
@@ -22,8 +23,8 @@ type ArmShifter struct {
 
 type ArmOperand struct {
 	Shift ArmShifter
-	Type  uint
-	Reg   uint // Only ONE of these four will be set
+	Type  uint // ARM_OP_* - determines which field is set below
+	Reg   uint
 	Imm   int64
 	FP    float64
 	Mem   ArmMemoryOperand
@@ -36,6 +37,7 @@ type ArmMemoryOperand struct {
 	Disp  int64
 }
 
+// Number of Operands of a given ARM_OP_* type
 func (insn ArmInstruction) OpCount(optype uint) int {
 	count := 0
 	for _, op := range insn.Operands {
@@ -92,7 +94,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Arm = *arm
 }
 
-func DecomposeArm(raws []C.cs_insn) []Instruction {
+func decomposeArm(raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)

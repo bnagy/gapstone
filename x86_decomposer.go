@@ -10,6 +10,7 @@ import "reflect"
 
 //import "fmt"
 
+// Accessed via insn.X86.XXX
 type X86Instruction struct {
 	Prefix   []byte
 	Segment  uint
@@ -27,6 +28,7 @@ type X86Instruction struct {
 	Operands []X86Operand
 }
 
+// Number of Operands of a given X86_OP_* type
 func (insn X86Instruction) OpCount(optype uint) int {
 	count := 0
 	for _, op := range insn.Operands {
@@ -38,8 +40,8 @@ func (insn X86Instruction) OpCount(optype uint) int {
 }
 
 type X86Operand struct {
-	Type uint
-	Reg  uint // Only ONE of these four will be set
+	Type uint // X86_OP_* - determines which field is set below
+	Reg  uint
 	Imm  int64
 	FP   float64
 	Mem  X86MemoryOperand
@@ -121,7 +123,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	insn.X86 = *x86
 }
 
-func DecomposeX86(raws []C.cs_insn) []Instruction {
+func decomposeX86(raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
