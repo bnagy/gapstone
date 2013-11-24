@@ -8,25 +8,21 @@ import "C"
 import "unsafe"
 import "reflect"
 
-type ArmOpType uint
-type ArmShiftType uint
-type ArmCC uint
-
 type ArmInstruction struct {
-	CC          ArmCC
+	CC          uint
 	UpdateFlags bool
 	Writeback   bool
 	Operands    []ArmOperand
 }
 
 type ArmShifter struct {
-	Type  ArmShiftType
+	Type  uint
 	Value uint
 }
 
 type ArmOperand struct {
 	Shift ArmShifter
-	Type  ArmOpType
+	Type  uint
 	Reg   uint // Only ONE of these four will be set
 	Imm   int64
 	FP    float64
@@ -40,11 +36,21 @@ type ArmMemoryOperand struct {
 	Disp  int64
 }
 
+func (insn ArmInstruction) OpCount(optype uint) int {
+	count := 0
+	for _, op := range insn.Operands {
+		if op.Type == optype {
+			count++
+		}
+	}
+	return count
+}
+
 func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	arm := new(ArmInstruction)
 	// Parse the cs_arm union header
 	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.anon0[0]))
-	arm.CC = ArmCC(cs_arm.cc)
+	arm.CC = uint(cs_arm.cc)
 	arm.UpdateFlags = bool(cs_arm.update_flags)
 	arm.Writeback = bool(cs_arm.writeback)
 
@@ -61,9 +67,9 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 			break
 		}
 		gop := new(ArmOperand)
-		gop.Shift.Type = ArmShiftType(cop.shift._type)
+		gop.Shift.Type = uint(cop.shift._type)
 		gop.Shift.Value = uint(cop.shift.value)
-		gop.Type = ArmOpType(cop._type)
+		gop.Type = uint(cop._type)
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case ARM_OP_IMM, ARM_OP_CIMM, ARM_OP_PIMM:

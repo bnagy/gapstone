@@ -37,7 +37,7 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			fmt.Fprintf(
 				buf,
 				"\tsib_index: %s, sib_scale: %v, sib_base: %s\n",
-				engine.RegName(insn.X86.SibIndex),
+				RegName(CS_ARCH_X86, insn.X86.SibIndex),
 				insn.X86.SibScale,
 				engine.RegName(insn.X86.SibBase),
 			)

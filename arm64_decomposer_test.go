@@ -98,7 +98,7 @@ func TestArm64(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		fmt.Println(fs)
+		//fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

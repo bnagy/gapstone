@@ -9,13 +9,10 @@ import "unsafe"
 import "reflect"
 import "fmt"
 
-type Arch uint
-type Mode uint
-
 type Engine struct {
 	Handle C.csh
-	Arch   Arch
-	Mode   Mode
+	Arch   uint
+	Mode   uint
 }
 
 type InstructionHeader struct {
@@ -59,10 +56,9 @@ func (e Engine) Close() (bool, error) {
 	return bool(res), err
 }
 
-func (e Engine) Version() (int, int) {
-	var maj, min int
+func (e Engine) Version() (maj, min int) {
 	C.cs_version((*C.int)(unsafe.Pointer(&maj)), (*C.int)(unsafe.Pointer(&min)))
-	return maj, min
+	return
 }
 
 func (e Engine) RegName(reg uint) string {
@@ -72,11 +68,12 @@ func (e Engine) RegName(reg uint) string {
 func (e Engine) InsnName(insn uint) string {
 	return C.GoString(C.cs_insn_name(e.Handle, C.uint(insn)))
 }
+
 func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
-
 	bptr := (*C.char)(unsafe.Pointer(&input[0]))
+
 	disassembled := C.cs_disasm_dyn(
 		e.Handle,
 		bptr,
@@ -85,9 +82,9 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		C.uint64_t(count),
 		&insn,
 	)
-	defer C.cs_free(unsafe.Pointer(insn))
 
 	if disassembled > 0 {
+		defer C.cs_free(unsafe.Pointer(insn))
 		// Create a slice, and reflect its header
 		var insns []C.cs_insn
 		h := (*reflect.SliceHeader)(unsafe.Pointer(&insns))
@@ -95,6 +92,7 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		h.Data = uintptr(unsafe.Pointer(insn))
 		h.Len = int(disassembled)
 		h.Cap = int(disassembled)
+
 		switch e.Arch {
 		case CS_ARCH_ARM:
 			return DecomposeArm(insns), nil
@@ -105,17 +103,27 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		case CS_ARCH_X86:
 			return DecomposeX86(insns), nil
 		default:
-			panic("Not implemented!")
+			panic("Internal error - unknown engine archiecture?")
 		}
 	}
 	return nil, fmt.Errorf("Disassembly failed.")
 }
 
-func New(arch Arch, mode Mode) (Engine, error) {
+func New(arch, mode uint) (Engine, error) {
 	var handle C.csh
 	res, err := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
 	if res {
 		return Engine{handle, arch, mode}, nil
 	}
-	return Engine{}, err
+	// Set an invalid Arch so if the user doesn't check err and tries to
+	// disassemble with this engine then Disasm will panic.
+	return Engine{0, CS_ARCH_MAX, 0}, err
+}
+
+func RegName(arch, reg uint) string {
+	return C.GoString(C.cs_reg_name(C.csh(arch), C.uint(reg)))
+}
+
+func InsnName(arch, insn uint) string {
+	return C.GoString(C.cs_insn_name(C.csh(arch), C.uint(insn)))
 }
