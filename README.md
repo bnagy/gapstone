@@ -26,14 +26,17 @@ import "fmt"
 
 func main() {
 
-    if ver, err := gapstone.New(0, 0); err == nil {
-        maj, min := ver.Version()
+    if engine, err := gapstone.New(0, 0); err == nil {
+        defer engine.Close()
+        maj, min := engine.Version()
+
         fmt.Printf("Adhoc Test. Capstone Version: %v.%v\n", maj, min)
-        fmt.Printf("Errno: %v\n", ver.Errno().Error())
-        if ver.Errno() == gapstone.ErrOK {
+        fmt.Printf("Errno: %v\n", engine.Errno().Error())
+
+        if engine.Errno() == gapstone.ErrOK {
             fmt.Printf("All is well.\n")
         }
-        ver.Close()
+
     }
 }
 ```
