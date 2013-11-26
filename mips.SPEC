@@ -10,20 +10,20 @@ Disasm:
 
 0x1008:	addiu	$2, $zero, 0xc
 	op_count: 3
-		operands[0].type: REG = v0
+		operands[0].type: REG = 2
 		operands[1].type: REG = zero
 		operands[2].type: IMM = 0xc
 
 0x100c:	lw	$2, ($sp)
 	op_count: 2
-		operands[0].type: REG = v0
+		operands[0].type: REG = 2
 		operands[1].type: MEM
-			operands[1].mem.base: REG = sp
+			operands[1].mem.base: REG = 29
 
 0x1010:	ori	$1, $1, 0x3456
 	op_count: 3
-		operands[0].type: REG = at
-		operands[1].type: REG = at
+		operands[0].type: REG = 1
+		operands[1].type: REG = 1
 		operands[2].type: IMM = 0x3456
 
 0x1014:
@@ -34,14 +34,14 @@ Code:0x56 0x34 0x21 0x34 0xc2 0x17 0x01 0x00
 Disasm:
 0x1000:	ori	$1, $1, 0x3456
 	op_count: 3
-		operands[0].type: REG = at
-		operands[1].type: REG = at
+		operands[0].type: REG = 1
+		operands[1].type: REG = 1
 		operands[2].type: IMM = 0x3456
 
 0x1004:	srl	$2, $1, 0x1f
 	op_count: 3
-		operands[0].type: REG = v0
-		operands[1].type: REG = at
+		operands[0].type: REG = 2
+		operands[1].type: REG = 1
 		operands[2].type: IMM = 0x1f
 
 0x1008:

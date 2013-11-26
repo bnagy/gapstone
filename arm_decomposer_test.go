@@ -7,7 +7,6 @@ import "io/ioutil"
 
 func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Arm.Operands))
-	//fmt.Printf("\n\n%#v\n\n", insn.Arm.Operands)
 
 	for i, op := range insn.Arm.Operands {
 		switch op.Type {
@@ -72,7 +71,7 @@ func TestArm(t *testing.T) {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {
-			t.Errorf("Failed to initialize engine %v", err)
+			t.Errorf("Failed to initialize engine %v", err.Error())
 			return
 		}
 		if i == 0 {

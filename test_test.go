@@ -9,9 +9,11 @@ func TestTest(t *testing.T) {
 
 	final := new(bytes.Buffer)
 	spec_file := "test.SPEC"
-	ver, err := New(0, 0)
-	maj, min := ver.Version()
-	ver.Close()
+	var maj, min int
+	if ver, err := New(0, 0); err == nil {
+		maj, min = ver.Version()
+		ver.Close()
+	}
 	t.Logf("Basic Test. Capstone Version: %v.%v", maj, min)
 	for i, platform := range basic_tests {
 		t.Logf("%2d> %s", i, platform.comment)
@@ -44,7 +46,7 @@ func TestTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		//fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

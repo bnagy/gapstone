@@ -7,7 +7,6 @@ import "io/ioutil"
 
 func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Arm64.Operands))
-	//fmt.Printf("\n\n%#v\n\n", insn.Arm64.Operands)
 
 	for i, op := range insn.Arm64.Operands {
 		switch op.Type {

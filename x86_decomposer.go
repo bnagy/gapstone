@@ -58,6 +58,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	x86 := new(X86Instruction)
 	// Parse the cs_x86 union header
 	cs_x86 := (*C.cs_x86)(unsafe.Pointer(&raw.anon0[0]))
+	// cast the prefix array to a []byte
 	var pref []byte
 	ph := (*reflect.SliceHeader)(unsafe.Pointer(&pref))
 	ph.Data = uintptr(unsafe.Pointer(&cs_x86.prefix[0]))
@@ -65,12 +66,14 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	ph.Cap = 5
 	x86.Prefix = pref
 	x86.Segment = uint(cs_x86.segment)
+	// Same for the opcode array
 	var opc []byte
 	oh := (*reflect.SliceHeader)(unsafe.Pointer(&opc))
 	oh.Data = uintptr(unsafe.Pointer(&cs_x86.opcode[0]))
 	oh.Len = 3
 	oh.Cap = 3
 	x86.Opcode = opc
+	// Then fill out the easy parts
 	x86.OpSize = byte(cs_x86.op_size)
 	x86.AddrSize = byte(cs_x86.addr_size)
 	x86.DispSize = byte(cs_x86.disp_size)

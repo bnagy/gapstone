@@ -31,13 +31,13 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\tdisp: 0x%x\n", uint32(insn.X86.Disp))
 
 	// SIB is not available in 16-bit mode
-	if (engine.Mode & CS_MODE_16) == 0 {
+	if (engine.Mode() & CS_MODE_16) == 0 {
 		fmt.Fprintf(buf, "\tsib: 0x%x\n", insn.X86.Sib)
 		if insn.X86.SibIndex != X86_REG_INVALID {
 			fmt.Fprintf(
 				buf,
 				"\tsib_index: %s, sib_scale: %v, sib_base: %s\n",
-				RegName(CS_ARCH_X86, insn.X86.SibIndex),
+				engine.RegName(insn.X86.SibIndex),
 				insn.X86.SibScale,
 				engine.RegName(insn.X86.SibBase),
 			)

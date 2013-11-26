@@ -10,9 +10,11 @@ func TestDetailTest(t *testing.T) {
 	final := new(bytes.Buffer)
 
 	spec_file := "test_detail.SPEC"
-	ver, err := New(0, 0)
-	maj, min := ver.Version()
-	ver.Close()
+	var maj, min int
+	if ver, err := New(0, 0); err == nil {
+		maj, min = ver.Version()
+		ver.Close()
+	}
 
 	// All the tests are the same except ARM64 :<
 	t.Logf("Detailed Test. Capstone Version: %v.%v", maj, min)
@@ -86,7 +88,7 @@ func TestDetailTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		//fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

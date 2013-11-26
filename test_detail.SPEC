@@ -51,7 +51,7 @@ Disasm:
 Platform: ARM
 Code: 0xed 0xff 0xff 0xeb 0x04 0xe0 0x2d 0xe5 0x00 0x00 0x00 0x00 0xe0 0x83 0x22 0xe5 0xf1 0x02 0x03 0x0e 0x00 0x00 0xa0 0xe3 0x02 0x30 0xc1 0xe7 0x00 0x00 0x53 0xe3 
 Disasm:
-0x1000:	bl		#0xffffffffffffffb4 // insn-ID: 13, insn-mnem: BL
+0x1000:	bl		#-0x4c // insn-ID: 13, insn-mnem: BL
 	Implicit registers read: sp 
 	Implicit registers modified: lr 
 	This instruction belongs to groups: 20 
@@ -61,14 +61,14 @@ Disasm:
 	This instruction belongs to groups: 20 
 0x100c:	str		r8, [r2, #-0x3e0]! // insn-ID: 212, insn-mnem: STR
 	This instruction belongs to groups: 20 
-0x1010:	mcreq		p02, #0x0, r0, c03, c01, #0x7 // insn-ID: 74, insn-mnem: MCR
+0x1010:	mcreq		p02, #0, r0, c03, c01, #0x7 // insn-ID: 74, insn-mnem: MCR
 	This instruction belongs to groups: 20 
-0x1014:	mov		r0, #0x0 // insn-ID: 80, insn-mnem: MOV
+0x1014:	mov		r0, #0 // insn-ID: 80, insn-mnem: MOV
 	This instruction belongs to groups: 20 
 0x1018:	strb		r3, [r1, r2] // insn-ID: 203, insn-mnem: STRB
 	This instruction belongs to groups: 20 
-0x101c:	cmp		r3, #0x0 // insn-ID: 23, insn-mnem: CMP
-	Implicit registers modified: cpsr 
+0x101c:	cmp		r3, #0 // insn-ID: 23, insn-mnem: CMP
+	Implicit registers modified: cpsr cpsr 
 	This instruction belongs to groups: 20 
 0x1020:
 
@@ -76,7 +76,7 @@ Disasm:
 Platform: THUMB-2
 Code: 0x4f 0xf0 0x00 0x01 0xbd 0xe8 0x00 0x88 0xd1 0xe8 0x00 0xf0 
 Disasm:
-0x1000:	mov.w		r1, #0x0 // insn-ID: 80, insn-mnem: MOV
+0x1000:	mov.w		r1, #0 // insn-ID: 80, insn-mnem: MOV
 	This instruction belongs to groups: 25 
 0x1004:	pop.w		{r11, pc} // insn-ID: 57, insn-mnem: LDM
 	This instruction belongs to groups: 25 
@@ -117,7 +117,7 @@ Platform: MIPS-32 (Big-endian)
 Code: 0x0c 0x10 0x00 0x97 0x00 0x00 0x00 0x00 0x24 0x02 0x00 0x0c 0x8f 0xa2 0x00 0x00 0x34 0x21 0x34 0x56 
 Disasm:
 0x1000:	jal		0x40025c // insn-ID: 243, insn-mnem: JAL
-	Implicit registers modified: ra 
+	Implicit registers modified: 31 
 	This instruction belongs to groups: 10 
 0x1004:	nop		 // insn-ID: 455, insn-mnem: NOP
 0x1008:	addiu		$2, $zero, 0xc // insn-ID: 20, insn-mnem: ADDIU

@@ -17,3 +17,10 @@ const CS_MODE_MICRO = 1 << 4       // MicroMips mode (MIPS architecture)
 const CS_MODE_N64 = 1 << 5         // Nintendo-64 mode (MIPS architecture)
 const CS_MODE_SYNTAX_ATT = 1 << 30 // ATT asm syntax (CS_ARCH_X86 architecture)const
 const CS_MODE_BIG_ENDIAN = 1 << 31 // big endian mode
+
+const (
+	CS_ERR_OK     = iota // No error: everything was fine
+	CS_ERR_MEM           // Out-Of-Memory error
+	CS_ERR_ARCH          // Unsupported architecture
+	CS_ERR_HANDLE        // Invalid handle
+)

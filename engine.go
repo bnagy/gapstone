@@ -1,6 +1,6 @@
 /*
 Gapstone is a Go binding for the Capstone disassembly library. For examples,
-try reading the _test.go files.
+try reading the *_test.go files.
 
 	Library Author: Ngyuen Anh Quynh
 	Binding Author: Ben Nagy
@@ -19,16 +19,40 @@ import "unsafe"
 import "reflect"
 import "fmt"
 
-// The Arch and Mode given at create time will determine how code is
+type Errno int
+
+func (e Errno) Error() string {
+	s := errText[e]
+	if s == "" {
+		return fmt.Sprintf("cs_errno: %d (%v)", e, int(e))
+	}
+	return s
+}
+
+var (
+	ErrOK     error = Errno(0)
+	ErrOOM    error = Errno(1)
+	ErrArch   error = Errno(2)
+	ErrHandle error = Errno(3)
+)
+
+var errText = map[Errno]string{
+	0: "cs_errno: 0 (No error)",
+	1: "cs_errno: 1 (Out of Memory)",
+	2: "cs_errno: 2 (Unsupported Architecture)",
+	3: "cs_errno: 3 (Invalid Handle)",
+}
+
+// The arch and mode given at create time will determine how code is
 // disassembled. After use you must close an Engine with engine.Close() to allow
 // the C lib to free resources.
 type Engine struct {
 	handle C.csh
-	Arch   uint
-	Mode   uint
+	arch   uint
+	mode   uint
 }
 
-// Information that exists for every Instruction, regardless of Arch. Structure
+// Information that exists for every Instruction, regardless of arch. Structure
 // members here will be promoted, so every Instruction will have them available.
 type InstructionHeader struct {
 	Id               uint
@@ -41,7 +65,7 @@ type InstructionHeader struct {
 	Groups           []uint
 }
 
-// Arch specific information will be filled in for exactly one of the
+// arch specific information will be filled in for exactly one of the
 // substructures. Eg, an Engine created with New(CS_ARCH_ARM, CS_MODE_ARM) will
 // fill in only the Arm structure member.
 type Instruction struct {
@@ -70,10 +94,16 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 }
 
 // Close the underlying C handle and resources used by this Engine
-func (e Engine) Close() (bool, error) {
-	res, err := C.cs_close(e.handle)
-	return bool(res), err
+func (e Engine) Close() error {
+	res := C.cs_close(e.handle)
+	return Errno(res)
 }
+
+// Accessor for the Engine architecture CS_ARCH_*
+func (e Engine) Arch() uint { return e.arch }
+
+// Accessor for the Engine mode CS_MODE_*
+func (e Engine) Mode() uint { return e.mode }
 
 // Version information.
 func (e Engine) Version() (maj, min int) {
@@ -81,17 +111,22 @@ func (e Engine) Version() (maj, min int) {
 	return
 }
 
-// The Arch is implicit in the Engine. See also the toplevel RegName() function.
+func (e Engine) Errno() error { return Errno(C.cs_errno(e.handle)) }
+
+// The arch is implicit in the Engine. Accepts either a constant like ARM_REG_R0
+// or insn.Arm.Operands[0].Reg, or anything that refers to a Register like
+// insn.X86.SibBase etc
 func (e Engine) RegName(reg uint) string {
 	return C.GoString(C.cs_reg_name(e.handle, C.uint(reg)))
 }
 
-// The Arch is implicit in the Engine. See also the toplevel InsnName() function.
+// The arch is implicit in the Engine. Accepts a constant like
+// ARM_INSN_ADD, or insn.Id
 func (e Engine) InsnName(insn uint) string {
 	return C.GoString(C.cs_insn_name(e.handle, C.uint(insn)))
 }
 
-// Disassemble a []byte full of code.
+// Disassemble a []byte full of opcodes.
 //   * offset - Starting offset to use. Will determine the Address that is created for disassembled instructions.
 //   * count - Number of instructions to disassemble, 0 to disassemble the whole []byte
 //
@@ -120,7 +155,7 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		h.Len = int(disassembled)
 		h.Cap = int(disassembled)
 
-		switch e.Arch {
+		switch e.arch {
 		case CS_ARCH_ARM:
 			return decomposeArm(insns), nil
 		case CS_ARCH_ARM64:
@@ -130,30 +165,18 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		case CS_ARCH_X86:
 			return decomposeX86(insns), nil
 		default:
-			panic("Internal error - unknown engine archiecture?")
+			return nil, ErrArch
 		}
 	}
-	return nil, fmt.Errorf("Disassembly failed.")
+	return []Instruction{}, e.Errno()
 }
 
-// Create a new Engine with the specified Arch and Mode
+// Create a new Engine with the specified arch and mode
 func New(arch, mode uint) (Engine, error) {
 	var handle C.csh
-	res, err := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
-	if res {
+	res := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
+	if Errno(res) == ErrOK {
 		return Engine{handle, arch, mode}, nil
 	}
-	// Set an invalid Arch so if the user doesn't check err and tries to
-	// disassemble with this engine then Disasm will panic.
-	return Engine{0, CS_ARCH_MAX, 0}, err
-}
-
-// Look up the register name for a constant without creating a new Engine
-func RegName(arch, reg uint) string {
-	return C.GoString(C.cs_reg_name(C.csh(arch), C.uint(reg)))
-}
-
-// Look up the Instruction name for a constant without creating a new Engine
-func InsnName(arch, insn uint) string {
-	return C.GoString(C.cs_insn_name(C.csh(arch), C.uint(insn)))
+	return Engine{0, CS_ARCH_MAX, 0}, Errno(res)
 }
