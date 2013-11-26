@@ -19,16 +19,19 @@ Take a look at the examples *_test.go
 
 Maybe something like:
 ```go
-import "gapstone"
+package main
 
-func main {
+import "github.com/aquynh/capstone-go"
+import "fmt"
+
+func main() {
 
     if ver, err := gapstone.New(0, 0); err == nil {
         maj, min := ver.Version()
-        t.Logf("Adhoc Test. Capstone Version: %v.%v", maj, min)
-        t.Logf("Errno: %v", ver.Errno().Error())
+        fmt.Printf("Adhoc Test. Capstone Version: %v.%v\n", maj, min)
+        fmt.Printf("Errno: %v\n", ver.Errno().Error())
         if ver.Errno() == gapstone.ErrOK {
-            t.Logf("All is well.")
+            fmt.Printf("All is well.\n")
         }
         ver.Close()
     }
