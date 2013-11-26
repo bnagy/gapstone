@@ -3,10 +3,11 @@ capstone-go
 
 Gapstone is a Go binding for the Capstone disassembly library.
 
+BETA BETA BETA BETA
 ---
 + This repository name is chosen for clarity. The package name is gapstone
-+ Don't commit here or I will cut you
----
++ __Don't commit here or I will cut you__
+  Commit issues or fork ( it stays private ) and send me a pull request.
 
 To install:
 ```bash
