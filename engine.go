@@ -34,6 +34,8 @@ var (
 	ErrOOM    error = Errno(1)
 	ErrArch   error = Errno(2)
 	ErrHandle error = Errno(3)
+	ErrArg    error = Errno(4)
+	ErrMode   error = Errno(5)
 )
 
 var errText = map[Errno]string{
@@ -41,6 +43,8 @@ var errText = map[Errno]string{
 	1: "cs_errno: 1 (Out of Memory)",
 	2: "cs_errno: 2 (Unsupported Architecture)",
 	3: "cs_errno: 3 (Invalid Handle)",
+	4: "cs_errno: 4 (Invalid Argument)",
+	5: "cs_errno: 5 (Invalid Mode)",
 }
 
 // The arch and mode given at create time will determine how code is
