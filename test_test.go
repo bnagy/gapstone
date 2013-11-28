@@ -23,7 +23,7 @@ func TestTest(t *testing.T) {
 			return
 		}
 		defer engine.Close()
-		insns, err := engine.Disasm([]byte(platform.code), OFFSET, 0)
+		insns, err := engine.Disasm([]byte(platform.code), offset, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)

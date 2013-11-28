@@ -79,7 +79,7 @@ func TestArm(t *testing.T) {
 			t.Logf("Arch: Arm. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
-		if insns, err := engine.Disasm([]byte(platform.code), OFFSET, 0); err == nil {
+		if insns, err := engine.Disasm([]byte(platform.code), offset, 0); err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)
 			fmt.Fprintf(final, "Code:")
