@@ -2,11 +2,11 @@ package gapstone
 
 const (
 	// Engine Architectures
-	CS_ARCH_ARM   = 0 // ARM architecture (including Thumb Thumb-2)
-	CS_ARCH_ARM64 = 1 // ARM-64, also called AArch64
-	CS_ARCH_MIPS  = 2 // Mips architecture
-	CS_ARCH_X86   = 3 // X86 architecture (including x86 & x86-64)
-	CS_ARCH_MAX   = 4
+	CS_ARCH_ARM   = iota // ARM architecture (including Thumb Thumb-2)
+	CS_ARCH_ARM64        // ARM-64, also called AArch64
+	CS_ARCH_MIPS         // Mips architecture
+	CS_ARCH_X86          // X86 architecture (including x86 & x86-64)
+	CS_ARCH_MAX
 )
 
 const (

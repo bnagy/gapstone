@@ -165,7 +165,7 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		case CS_ARCH_X86:
 			return decomposeX86(insns), nil
 		default:
-			return nil, ErrArch
+			return []Instruction{}, ErrArch
 		}
 	}
 	return []Instruction{}, e.Errno()
