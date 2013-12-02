@@ -2,9 +2,9 @@
 Platform: X86 16bit (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		cx, dword ptr [si + 0x32] // insn-ID: 286, insn-mnem: LEA
+0x1000:	lea		cx, dword ptr [si + 0x32] // insn-ID: 295, insn-mnem: LEA
 	This instruction belongs to groups: 16 
-0x1003:	or		byte ptr [bx + di], al // insn-ID: 296, insn-mnem: OR
+0x1003:	or		byte ptr [bx + di], al // insn-ID: 305, insn-mnem: OR
 	Implicit registers modified: flags 
 0x1005:	fadd		dword ptr [bx + di + 0x34c6] // insn-ID: 15, insn-mnem: FADD
 	Implicit registers modified: fpsw 
@@ -17,34 +17,34 @@ Disasm:
 Platform: X86 32bit (ATT syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	leal		DWORD PTR 0x8(%edx, %esi), %ecx // insn-ID: 286, insn-mnem: LEA
+0x1000:	leal		DWORD PTR 0x8(%edx, %esi), %ecx // insn-ID: 295, insn-mnem: LEA
 	This instruction belongs to groups: 16 
 0x1004:	addl		%ebx, %eax // insn-ID: 8, insn-mnem: ADD
-	Implicit registers modified: eflags 
+	Implicit registers modified: flags 
 0x1006:	addl		$0x1234, %esi // insn-ID: 8, insn-mnem: ADD
-	Implicit registers modified: eflags 
+	Implicit registers modified: flags 
 0x100c:
 
 ****************
 Platform: X86 32 (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		ecx, dword ptr [edx + esi + 0x8] // insn-ID: 286, insn-mnem: LEA
+0x1000:	lea		ecx, dword ptr [edx + esi + 0x8] // insn-ID: 295, insn-mnem: LEA
 	This instruction belongs to groups: 16 
 0x1004:	add		eax, ebx // insn-ID: 8, insn-mnem: ADD
-	Implicit registers modified: eflags 
+	Implicit registers modified: flags 
 0x1006:	add		esi, 0x1234 // insn-ID: 8, insn-mnem: ADD
-	Implicit registers modified: eflags 
+	Implicit registers modified: flags 
 0x100c:
 
 ****************
 Platform: X86 64 (Intel syntax)
 Code: 0x55 0x48 0x8b 0x05 0xb8 0x13 0x00 0x00 
 Disasm:
-0x1000:	push		rbp // insn-ID: 550, insn-mnem: PUSH
+0x1000:	push		rbp // insn-ID: 559, insn-mnem: PUSH
 	Implicit registers read: rsp 
 	Implicit registers modified: rsp 
-0x1001:	mov		rax, qword ptr [rip + 0x13b8] // insn-ID: 413, insn-mnem: MOV
+0x1001:	mov		rax, qword ptr [rip + 0x13b8] // insn-ID: 422, insn-mnem: MOV
 0x1008:
 
 ****************
@@ -68,7 +68,7 @@ Disasm:
 0x1018:	strb		r3, [r1, r2] // insn-ID: 203, insn-mnem: STRB
 	This instruction belongs to groups: 20 
 0x101c:	cmp		r3, #0 // insn-ID: 23, insn-mnem: CMP
-	Implicit registers modified: cpsr cpsr 
+	Implicit registers modified: cpsr 
 	This instruction belongs to groups: 20 
 0x1020:
 
@@ -80,7 +80,7 @@ Disasm:
 	This instruction belongs to groups: 25 
 0x1004:	pop.w		{r11, pc} // insn-ID: 57, insn-mnem: LDM
 	This instruction belongs to groups: 25 
-0x1008:	tbb		[r1, r0] // insn-ID: 442, insn-mnem: TBB
+0x1008:	tbb		[r1, r0] // insn-ID: 415, insn-mnem: TBB
 	This instruction belongs to groups: 25 
 0x100c:
 
@@ -145,7 +145,7 @@ Disasm:
 0x1000:	mul		x1, x1, x2 // insn-ID: 182, insn-mnem: MUL
 	This instruction belongs to groups: 1 
 0x1004:	lsr		w1, w1, #0x0 // insn-ID: 171, insn-mnem: LSR
-0x1008:	sub		w0, w0, w1, uxtw // insn-ID: 289, insn-mnem: SUB
+0x1008:	sub		w0, w0, w1, uxtw // insn-ID: 289, insn-mnem: SUBS
 0x100c:	ldr		w1, [sp, #0x8] // insn-ID: 140, insn-mnem: LDR
 0x1010:	fcmpe		s0, s1 // insn-ID: 77, insn-mnem: FCMPE
 	Implicit registers modified: nzcv 

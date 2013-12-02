@@ -4,14 +4,14 @@ Code:0xed 0xff 0xff 0xeb 0x04 0xe0 0x2d 0xe5 0x00 0x00 0x00 0x00 0xe0 0x83 0x22 
 Disasm:
 0x1000:	bl	#-0x4c
 	op_count: 1
-		operands[0].type: IMM = 0xffffffffffffffb4
+		operands[0].type: IMM = 0xffffffb4
 
 0x1004:	str	lr, [sp, #-0x4]!
 	op_count: 2
 		operands[0].type: REG = lr
 		operands[1].type: MEM
 			operands[1].mem.base: REG = sp
-			operands[1].mem.disp: 0xfffffffffffffffc
+			operands[1].mem.disp: 0xfffffffc
 	Write-back: True
 
 0x1008:	andeq	r0, r0, r0
@@ -26,7 +26,7 @@ Disasm:
 		operands[0].type: REG = r8
 		operands[1].type: MEM
 			operands[1].mem.base: REG = r2
-			operands[1].mem.disp: 0xfffffffffffffc20
+			operands[1].mem.disp: 0xfffffc20
 	Write-back: True
 
 0x1010:	mcreq	p02, #0, r0, c03, c01, #0x7
