@@ -138,14 +138,14 @@ func (e Engine) InsnName(insn uint) string {
 func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
-	bptr := (*C.char)(unsafe.Pointer(&input[0]))
+	bptr := (*C.uchar)(unsafe.Pointer(&input[0]))
 
 	disassembled := C.cs_disasm_dyn(
 		e.handle,
 		bptr,
-		C.uint64_t(len(input)),
-		C.uint64_t(offset),
-		C.uint64_t(count),
+		C.size_t(len(input)),
+		C.size_t(offset),
+		C.size_t(count),
 		&insn,
 	)
 
