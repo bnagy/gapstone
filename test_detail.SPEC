@@ -81,7 +81,7 @@ Disasm:
 0x1004:	pop.w		{r11, pc} // insn-ID: 57, insn-mnem: LDM
 	This instruction belongs to groups: 25 
 0x1008:	tbb		[r1, r0] // insn-ID: 415, insn-mnem: TBB
-	This instruction belongs to groups: 25 
+	This instruction belongs to groups: 25 32 
 0x100c:
 
 ****************
@@ -103,7 +103,7 @@ Platform: THUMB
 Code: 0x70 0x47 0xeb 0x46 0x83 0xb0 0xc9 0x68 
 Disasm:
 0x1000:	bx		lr // insn-ID: 15, insn-mnem: BX
-	This instruction belongs to groups: 23 
+	This instruction belongs to groups: 23 32 
 0x1002:	mov		r11, sp // insn-ID: 80, insn-mnem: MOV
 	This instruction belongs to groups: 23 24 
 0x1004:	sub		sp, #0xc // insn-ID: 213, insn-mnem: SUB
@@ -120,6 +120,8 @@ Disasm:
 	Implicit registers modified: 31 
 	This instruction belongs to groups: 10 
 0x1004:	nop		 // insn-ID: 455, insn-mnem: NOP
+	Implicit registers modified: dspoutflag20 
+	This instruction belongs to groups: 2 
 0x1008:	addiu		$2, $zero, 0xc // insn-ID: 20, insn-mnem: ADDIU
 	This instruction belongs to groups: 10 
 0x100c:	lw		$2, ($sp) // insn-ID: 266, insn-mnem: LW

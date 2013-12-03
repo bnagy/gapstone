@@ -667,5 +667,6 @@ const (
 	// Groups
 	ARM64_GRP_INVALID = iota
 	ARM64_GRP_NEON
+	ARM64_GRP_JUMP
 	ARM64_GRP_MAX
 )

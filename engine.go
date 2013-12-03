@@ -139,7 +139,6 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 
 	var insn *C.cs_insn
 	bptr := (*C.uchar)(unsafe.Pointer(&input[0]))
-
 	disassembled := C.cs_disasm_dyn(
 		e.handle,
 		bptr,
