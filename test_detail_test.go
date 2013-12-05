@@ -22,6 +22,7 @@ func TestDetailTest(t *testing.T) {
 	detail_tests[len(detail_tests)-1] = platform{
 		CS_ARCH_ARM64,
 		CS_MODE_ARM,
+		nil,
 		"\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9\x10\x20\x21\x1e",
 		"ARM-64",
 	}
@@ -36,7 +37,11 @@ func TestDetailTest(t *testing.T) {
 		}
 		defer engine.Close()
 
-		insns, err := engine.Disasm([]byte(platform.code), offset, 0)
+		for _, opt := range platform.options {
+			engine.SetOption(opt.ty, opt.value)
+		}
+
+		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)

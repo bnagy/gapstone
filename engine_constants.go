@@ -12,7 +12,6 @@ const (
 const (
 	// Engine Modes
 	CS_MODE_LITTLE_ENDIAN = 0       // little endian mode (default mode)
-	CS_MODE_SYNTAX_INTEL  = 0       // Intel X86 asm syntax (CS_ARCH_X86 architecture)
 	CS_MODE_ARM           = 0       // 32-bit ARM
 	CS_MODE_16            = 1 << 1  // 16-bit mode
 	CS_MODE_32            = 1 << 2  // 32-bit mode
@@ -20,8 +19,18 @@ const (
 	CS_MODE_THUMB         = 1 << 4  // ARM's Thumb mode including Thumb-2
 	CS_MODE_MICRO         = 1 << 4  // MicroMips mode (MIPS architecture)
 	CS_MODE_N64           = 1 << 5  // Nintendo-64 mode (MIPS architecture)
-	CS_MODE_SYNTAX_ATT    = 1 << 30 // ATT asm syntax (CS_ARCH_X86 architecture)const
 	CS_MODE_BIG_ENDIAN    = 1 << 31 // big endian mode
+)
+
+const (
+	// Engine Options types
+	CS_OPT_SYNTAX = 1
+)
+
+const (
+	// Engine Options values
+	CS_OPT_SYNTAX_INTEL = 1
+	CS_OPT_SYNTAX_ATT   = 2
 )
 
 const (

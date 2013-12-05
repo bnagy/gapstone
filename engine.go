@@ -130,12 +130,26 @@ func (e Engine) InsnName(insn uint) string {
 	return C.GoString(C.cs_insn_name(e.handle, C.uint(insn)))
 }
 
+// Setter for Engine options CS_OPT_*
+func (e Engine) SetOption(ty, value uint) error {
+	res := C.cs_option(
+		e.handle,
+		C.cs_opt_type(ty),
+		C.size_t(value),
+	)
+
+	if Errno(res) == ErrOK {
+		return nil
+	}
+	return Errno(res)
+}
+
 // Disassemble a []byte full of opcodes.
-//   * offset - Starting offset to use. Will determine the Address that is created for disassembled instructions.
+//   * address - Address of the first instruction in the given code buffer.
 //   * count - Number of instructions to disassemble, 0 to disassemble the whole []byte
 //
 // Underlying C resources are automatically free'd by this function.
-func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error) {
+func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
 	bptr := (*C.uchar)(unsafe.Pointer(&input[0]))
@@ -143,7 +157,7 @@ func (e Engine) Disasm(input []byte, offset, count uint64) ([]Instruction, error
 		e.handle,
 		bptr,
 		C.size_t(len(input)),
-		C.size_t(offset),
+		C.uint64_t(address),
 		C.size_t(count),
 		&insn,
 	)

@@ -23,7 +23,10 @@ func TestTest(t *testing.T) {
 			return
 		}
 		defer engine.Close()
-		insns, err := engine.Disasm([]byte(platform.code), offset, 0)
+		for _, opt := range platform.options {
+			engine.SetOption(opt.ty, opt.value)
+		}
+		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)
@@ -46,7 +49,7 @@ func TestTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		fmt.Println(fs)
+		//fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

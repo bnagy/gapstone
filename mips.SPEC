@@ -18,7 +18,7 @@ Disasm:
 	op_count: 2
 		operands[0].type: REG = 2
 		operands[1].type: MEM
-			operands[1].mem.base: REG = 29
+			operands[1].mem.base: REG = sp
 
 0x1010:	ori	$1, $1, 0x3456
 	op_count: 3

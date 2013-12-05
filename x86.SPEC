@@ -365,7 +365,7 @@ Disasm:
 		operands[0].type: REG = eax
 		operands[1].type: IMM = 0x123
 
-0x1011:	mov	eax, dword ptr ss:[ecx + 4*edx + 0x123]
+0x1011:	mov	eax, dword ptr ss:[ecx + edx*4 + 0x123]
 	Prefix:0x01 0x00 0x00 0x00 0x00 
 	Segment override: ss
 	Opcode:0x8b 0x00 0x00 

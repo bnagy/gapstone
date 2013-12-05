@@ -45,12 +45,15 @@ func TestMips(t *testing.T) {
 			t.Errorf("Failed to initialize engine %v", err)
 			return
 		}
+		for _, opt := range platform.options {
+			engine.SetOption(opt.ty, opt.value)
+		}
 		if i == 0 {
 			maj, min := engine.Version()
 			t.Logf("Arch: Mips. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
-		insns, err := engine.Disasm([]byte(platform.code), offset, 0)
+		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)
@@ -74,7 +77,7 @@ func TestMips(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		//fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
