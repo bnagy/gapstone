@@ -68,6 +68,9 @@ func TestArm64(t *testing.T) {
 			t.Errorf("Failed to initialize engine %v", err)
 			return
 		}
+		for _, opt := range platform.options {
+			engine.SetOption(opt.ty, opt.value)
+		}
 		if i == 0 {
 			maj, min := engine.Version()
 			t.Logf("Arch: Arm64. Capstone Version: %v.%v", maj, min)
