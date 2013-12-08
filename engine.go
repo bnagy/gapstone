@@ -58,18 +58,20 @@ type Engine struct {
 	mode   uint
 }
 
-// Information that exists for every Instruction, regardless of arch. Structure
-// members here will be promoted, so every Instruction will have them available.
+// Information that exists for every Instruction, regardless of arch.
+// Structure members here will be promoted, so every Instruction will have
+// them available. Check the constants for each architecture for available
+// Instruction groups etc.
 type InstructionHeader struct {
-	Id               uint
-	Address          uint
-	Size             uint
-	Bytes            []byte
-	Mnemonic         string
-	OpStr            string
-	RegistersRead    []uint
-	RegistersWritten []uint
-	Groups           []uint
+	Id               uint   // Internal id for this instruction. Subject to change.
+	Address          uint   // Nominal address ($ip) of this instruction
+	Size             uint   // Size of the instruction, in bytes
+	Bytes            []byte // Raw Instruction bytes
+	Mnemonic         string // Ascii text of instruction mnemonic
+	OpStr            string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAC
+	RegistersRead    []uint // List of implicit registers read by this instruction
+	RegistersWritten []uint // List of implicit registers written by this instruction
+	Groups           []uint // List of *_GRP_* groups this instruction belongs to.
 }
 
 // arch specific information will be filled in for exactly one of the
@@ -83,6 +85,7 @@ type Instruction struct {
 	X86   X86Instruction
 }
 
+// Called by the arch specific decomposers
 func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 
 	insn.Id = uint(raw.id)
@@ -130,6 +133,8 @@ func (e Engine) Version() (maj, min int) {
 	return
 }
 
+// Getter for the last Errno from the engine. Normal code shouldn't need to
+// access this directly, but it's exported just in case.
 func (e Engine) Errno() error { return Errno(C.cs_errno(e.handle)) }
 
 // The arch is implicit in the Engine. Accepts either a constant like ARM_REG_R0
