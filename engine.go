@@ -36,6 +36,7 @@ var (
 	ErrHandle error = Errno(3)
 	ErrArg    error = Errno(4)
 	ErrMode   error = Errno(5)
+	ErrOption error = Errno(6)
 )
 
 var errText = map[Errno]string{
@@ -45,6 +46,7 @@ var errText = map[Errno]string{
 	3: "cs_errno: 3 (Invalid Handle)",
 	4: "cs_errno: 4 (Invalid Argument)",
 	5: "cs_errno: 5 (Invalid Mode)",
+	6: "cs_errno: 6 (Invalid Option)",
 }
 
 // The arch and mode given at create time will determine how code is
@@ -62,6 +64,7 @@ type InstructionHeader struct {
 	Id               uint
 	Address          uint
 	Size             uint
+	Bytes            []byte
 	Mnemonic         string
 	OpStr            string
 	RegistersRead    []uint
@@ -81,20 +84,32 @@ type Instruction struct {
 }
 
 func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
+
 	insn.Id = uint(raw.id)
 	insn.Address = uint(raw.address)
 	insn.Size = uint(raw.size)
 	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
 	insn.OpStr = C.GoString(&raw.op_str[0])
+
 	for i := 0; i < int(raw.regs_read_count); i++ {
 		insn.RegistersRead = append(insn.RegistersRead, uint(raw.regs_read[i]))
 	}
+
 	for i := 0; i < int(raw.regs_write_count); i++ {
 		insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.regs_write[i]))
 	}
+
 	for i := 0; i < int(raw.groups_count); i++ {
 		insn.Groups = append(insn.Groups, uint(raw.groups[i]))
 	}
+
+	var bslice []byte
+	h := (*reflect.SliceHeader)(unsafe.Pointer(&bslice))
+	h.Data = uintptr(unsafe.Pointer(&raw.bytes[0]))
+	h.Len = int(raw.size)
+	h.Cap = int(raw.size)
+	insn.Bytes = bslice
+
 }
 
 // Close the underlying C handle and resources used by this Engine
