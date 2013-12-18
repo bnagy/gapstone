@@ -25,12 +25,15 @@ const (
 const (
 	// Engine Options types
 	CS_OPT_SYNTAX = 1
+	CS_OPT_DETAIL = 2
 )
 
 const (
 	// Engine Options values
-	CS_OPT_SYNTAX_INTEL = 1
-	CS_OPT_SYNTAX_ATT   = 2
+	CS_OPT_OFF = iota
+	CS_OPT_SYNTAX_INTEL
+	CS_OPT_SYNTAX_ATT
+	CS_OPT_ON
 )
 
 const (
