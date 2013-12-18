@@ -8,7 +8,7 @@ Disasm:
 		operands[1].type: REG = x1
 		operands[2].type: REG = x2
 
-0x30:	lsr	w1, w1, #0x0
+0x30:	lsr	w1, w1, #0
 	op_count: 3
 		operands[0].type: REG = w1
 		operands[1].type: REG = w1
@@ -21,7 +21,7 @@ Disasm:
 		operands[2].type: REG = w1
 			Ext: 3
 
-0x38:	ldr	w1, [sp, #0x8]
+0x38:	ldr	w1, [sp, #8]
 	op_count: 2
 		operands[0].type: REG = w1
 		operands[1].type: MEM
@@ -35,7 +35,7 @@ Disasm:
 		operands[2].type: REG = x1
 	Code condition: 1
 
-0x40:	add	x0, x1, x2, lsl #0x2
+0x40:	add	x0, x1, x2, lsl #2
 	op_count: 3
 		operands[0].type: REG = x0
 		operands[1].type: REG = x1

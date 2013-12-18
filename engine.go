@@ -172,7 +172,7 @@ func (e Engine) SetOption(ty, value uint) error {
 func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
-	bptr := (*C.uchar)(unsafe.Pointer(&input[0]))
+	bptr := (*C.uint8_t)(unsafe.Pointer(&input[0]))
 	disassembled := C.cs_disasm_dyn(
 		e.handle,
 		bptr,

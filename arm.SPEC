@@ -29,7 +29,7 @@ Disasm:
 			operands[1].mem.disp: 0xfffffc20
 	Write-back: True
 
-0x1010:	mcreq	p02, #0, r0, c03, c01, #0x7
+0x1010:	mcreq	p2, #0, r0, c3, c1, #7
 	op_count: 6
 		operands[0].type: P-IMM = 2
 		operands[1].type: IMM = 0x0
