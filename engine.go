@@ -5,8 +5,7 @@ try reading the *_test.go files.
 	Library Author: Nguyen Anh Quynh
 	Binding Author: Ben Nagy
 	License: BSD style - see LICENSE file for details
-
-(c) 2013 COSEINC. All Rights Reserved.
+    (c) 2013 COSEINC. All Rights Reserved.
 */
 package gapstone
 
@@ -63,12 +62,16 @@ type Engine struct {
 // them available. Check the constants for each architecture for available
 // Instruction groups etc.
 type InstructionHeader struct {
-	Id               uint   // Internal id for this instruction. Subject to change.
-	Address          uint   // Nominal address ($ip) of this instruction
-	Size             uint   // Size of the instruction, in bytes
-	Bytes            []byte // Raw Instruction bytes
-	Mnemonic         string // Ascii text of instruction mnemonic
-	OpStr            string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAC
+	Id       uint   // Internal id for this instruction. Subject to change.
+	Address  uint   // Nominal address ($ip) of this instruction
+	Size     uint   // Size of the instruction, in bytes
+	Bytes    []byte // Raw Instruction bytes
+	Mnemonic string // Ascii text of instruction mnemonic
+	OpStr    string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAC
+	// Nothing below is available without the
+	// decomposer. By default, CS_OPT_DETAIL is set to
+	// CS_OPT_ON, but if set to CS_OPT_OFF then the
+	// result of accessing these members is undefined.
 	RegistersRead    []uint // List of implicit registers read by this instruction
 	RegistersWritten []uint // List of implicit registers written by this instruction
 	Groups           []uint // List of *_GRP_* groups this instruction belongs to.

@@ -3,7 +3,6 @@ package gapstone
 import "testing"
 
 func TestErrno(t *testing.T) {
-
 	if ver, err := New(0, 0); err == nil {
 		maj, min := ver.Version()
 		t.Logf("Adhoc Test. Capstone Version: %v.%v", maj, min)

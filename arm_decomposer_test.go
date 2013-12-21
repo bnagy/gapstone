@@ -82,6 +82,7 @@ func TestArm(t *testing.T) {
 			t.Logf("Arch: Arm. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
+
 		if insns, err := engine.Disasm([]byte(platform.code), address, 0); err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)
@@ -95,6 +96,7 @@ func TestArm(t *testing.T) {
 			fmt.Fprintf(final, "0x%x:\n\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 		}
 	}
+
 	spec, err := ioutil.ReadFile(spec_file)
 	if err != nil {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)

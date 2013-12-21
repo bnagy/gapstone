@@ -14,18 +14,24 @@ func TestTest(t *testing.T) {
 		maj, min = ver.Version()
 		ver.Close()
 	}
+
 	t.Logf("Basic Test. Capstone Version: %v.%v", maj, min)
+
 	for i, platform := range basic_tests {
+
 		t.Logf("%2d> %s", i, platform.comment)
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {
 			t.Errorf("Failed to initialize engine %v", err)
 			return
 		}
+
 		defer engine.Close()
+
 		for _, opt := range platform.options {
 			engine.SetOption(opt.ty, opt.value)
 		}
+
 		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
@@ -49,7 +55,8 @@ func TestTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		//fmt.Println(fs)
+		// Debugging - uncomment below and run the test | diff - test.SPEC
+		// fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

@@ -110,6 +110,7 @@ func TestX86(t *testing.T) {
 			t.Logf("Arch: x86. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
+
 		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")

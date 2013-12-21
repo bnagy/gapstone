@@ -76,6 +76,7 @@ func TestArm64(t *testing.T) {
 			t.Logf("Arch: Arm64. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
+
 		insns, err := engine.Disasm([]byte(platform.code), 0x2c, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")

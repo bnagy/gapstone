@@ -210,6 +210,7 @@ var x86_tests = platforms{
 
 func dumpHex(code []byte, buf *bytes.Buffer) {
 	for _, b := range code {
+		// This deliberately leaves a stray space at EOL to match the C tests.
 		fmt.Fprintf(buf, "0x%.2x ", b)
 	}
 	fmt.Fprintf(buf, "\n")

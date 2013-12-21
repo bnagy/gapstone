@@ -53,6 +53,7 @@ func TestMips(t *testing.T) {
 			t.Logf("Arch: Mips. Capstone Version: %v.%v", maj, min)
 		}
 		defer engine.Close()
+
 		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
