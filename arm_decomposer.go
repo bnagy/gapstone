@@ -48,9 +48,15 @@ func (insn ArmInstruction) OpCount(optype uint) int {
 }
 
 func fillArmHeader(raw C.cs_insn, insn *Instruction) {
-	arm := new(ArmInstruction)
+
+	if raw.detail == nil {
+		return
+	}
+
 	// Parse the cs_arm union header
-	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.anon0[0]))
+	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.detail.anon0[0]))
+
+	arm := new(ArmInstruction)
 	arm.CC = uint(cs_arm.cc)
 	arm.UpdateFlags = bool(cs_arm.update_flags)
 	arm.Writeback = bool(cs_arm.writeback)

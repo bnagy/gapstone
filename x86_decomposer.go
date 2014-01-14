@@ -54,9 +54,16 @@ type X86MemoryOperand struct {
 }
 
 func fillX86Header(raw C.cs_insn, insn *Instruction) {
-	x86 := new(X86Instruction)
+
+	if raw.detail == nil {
+		return
+	}
+
 	// Parse the cs_x86 union header
-	cs_x86 := (*C.cs_x86)(unsafe.Pointer(&raw.anon0[0]))
+	cs_x86 := (*C.cs_x86)(unsafe.Pointer(&raw.detail.anon0[0]))
+
+	x86 := new(X86Instruction)
+
 	// cast the prefix array to a []byte
 	var pref []byte
 	ph := (*reflect.SliceHeader)(unsafe.Pointer(&pref))

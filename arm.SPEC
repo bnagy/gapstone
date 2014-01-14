@@ -67,9 +67,9 @@ Disasm:
 	op_count: 1
 		operands[0].type: REG = lr
 
-0x1002:	mov	r11, sp
+0x1002:	mov	fp, sp
 	op_count: 2
-		operands[0].type: REG = r11
+		operands[0].type: REG = fp
 		operands[1].type: REG = sp
 
 0x1004:	sub	sp, #0xc
@@ -159,9 +159,9 @@ Disasm:
 		operands[0].type: REG = r1
 		operands[1].type: IMM = 0x0
 
-0x1004:	pop.w	{r11, pc}
+0x1004:	pop.w	{fp, pc}
 	op_count: 2
-		operands[0].type: REG = r11
+		operands[0].type: REG = fp
 		operands[1].type: REG = pc
 
 0x1008:	tbb	[r1, r0]

@@ -10,6 +10,9 @@ func TestErrno(t *testing.T) {
 		if ver.Errno() == ErrOK {
 			t.Logf("All is well.")
 		}
+		if ver.Support(CS_ARCH_ALL) {
+			t.Logf("Engine supports all archs")
+		}
 		ver.Close()
 	}
 }

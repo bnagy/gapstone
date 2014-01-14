@@ -7,7 +7,7 @@ import "C"
 import "unsafe"
 import "reflect"
 
-//import "fmt"
+//import "log"
 
 // Accessed via insn.Arm64.XXX
 type Arm64Instruction struct {
@@ -50,9 +50,15 @@ func (insn Arm64Instruction) OpCount(optype uint) int {
 }
 
 func fillArm64Header(raw C.cs_insn, insn *Instruction) {
+
+	if raw.detail == nil {
+		return
+	}
+
 	arm64 := new(Arm64Instruction)
 	// Parse the cs_arm64 union header
-	cs_arm64 := (*C.cs_arm64)(unsafe.Pointer(&raw.anon0[0]))
+	cs_arm64 := (*C.cs_arm64)(unsafe.Pointer(&raw.detail.anon0[0]))
+
 	arm64.CC = uint(cs_arm64.cc)
 	arm64.UpdateFlags = bool(cs_arm64.update_flags)
 	arm64.Writeback = bool(cs_arm64.writeback)

@@ -6,7 +6,9 @@ const (
 	CS_ARCH_ARM64        // ARM-64, also called AArch64
 	CS_ARCH_MIPS         // Mips architecture
 	CS_ARCH_X86          // X86 architecture (including x86 & x86-64)
+	CS_ARCH_PPC          // PowerPC architecture
 	CS_ARCH_MAX
+	CS_ARCH_ALL = 0xFFFF
 )
 
 const (
@@ -24,25 +26,32 @@ const (
 
 const (
 	// Engine Options types
-	CS_OPT_SYNTAX = 1
-	CS_OPT_DETAIL = 2
+	CS_OPT_SYNTAX = 1 // Asssembly output syntax
+	CS_OPT_DETAIL = 2 // Break down instruction structure into details
+	CS_OPT_MODE   = 3 // Change engine's mode at run-time
+	CS_OPT_MEM    = 4 // User-defined memory malloc/calloc/free
 )
 
 const (
 	// Engine Options values
-	CS_OPT_OFF = iota
-	CS_OPT_SYNTAX_INTEL
-	CS_OPT_SYNTAX_ATT
-	CS_OPT_ON
+	CS_OPT_OFF              = 0 // Turn OFF an option - default option for CS_OPT_DETAIL.
+	CS_OPT_ON               = 3 // Turn ON an option (CS_OPT_DETAIL).
+	CS_OPT_SYNTAX_DEFAULT   = 0 // Default asm syntax (CS_OPT_SYNTAX).
+	CS_OPT_SYNTAX_INTEL     = 1 // X86 Intel asm syntax - default on X86 (CS_OPT_SYNTAX).
+	CS_OPT_SYNTAX_ATT       = 2 // X86 ATT asm syntax (CS_OPT_SYNTAX).
+	CS_OPT_SYNTAX_NOREGNAME = 3 // PPC asm syntax: Prints register name with only number (CS_OPT_SYNTAX)
 )
 
 const (
 	// All type of errors encountered by Capstone API.
 	// These are values returned by cs_errno()
-	CS_ERR_OK     = iota // No error: everything was fine
-	CS_ERR_MEM           // Out-Of-Memory error
-	CS_ERR_ARCH          // Unsupported architecture
-	CS_ERR_HANDLE        // Invalid handle
-	CS_ERR_CSH           // Invalid csh argument
-	CS_ERR_MODE          // Invalid/unsupported mode
+	CS_ERR_OK       = iota // No error: everything was fine
+	CS_ERR_MEM             // Out-Of-Memory error: cs_open(), cs_disasm_ex()
+	CS_ERR_ARCH            // Unsupported architecture: cs_open()
+	CS_ERR_HANDLE          // Invalid handle: cs_op_count(), cs_op_index()
+	CS_ERR_CSH             // Invalid csh argument: cs_close(), cs_errno(), cs_option()
+	CS_ERR_MODE            // Invalid/unsupported mode: cs_open()
+	CS_ERR_OPTION          // Invalid/unsupported option: cs_option()
+	CS_ERR_DETAIL          // Information is unavailable because detail option is OFF
+	CS_ERR_MEMSETUP        // Dynamic memory management uninitialized (see CS_OPT_MEM)
 )

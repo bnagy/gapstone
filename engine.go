@@ -20,40 +20,32 @@ import "fmt"
 type Errno int
 
 func (e Errno) Error() string {
-	s := errText[e]
+	s := C.GoString(C.cs_strerror(C.cs_err(e)))
 	if s == "" {
-		return fmt.Sprintf("cs_errno: %d (%v)", e, int(e))
+		return fmt.Sprintf("Internal Error: No Error string for Errno %v", e)
 	}
 	return s
 }
 
 var (
-	ErrOK     error = Errno(0)
-	ErrOOM    error = Errno(1)
-	ErrArch   error = Errno(2)
-	ErrHandle error = Errno(3)
-	ErrArg    error = Errno(4)
-	ErrMode   error = Errno(5)
-	ErrOption error = Errno(6)
+	ErrOK       error = Errno(0)
+	ErrOOM      error = Errno(1)
+	ErrArch     error = Errno(2)
+	ErrHandle   error = Errno(3)
+	ErrArg      error = Errno(4)
+	ErrMode     error = Errno(5)
+	ErrOption   error = Errno(6)
+	ErrDetail   error = Errno(7)
+	ErrMemSetup error = Errno(8)
 )
-
-var errText = map[Errno]string{
-	0: "cs_errno: 0 (No error)",
-	1: "cs_errno: 1 (Out of Memory)",
-	2: "cs_errno: 2 (Unsupported Architecture)",
-	3: "cs_errno: 3 (Invalid Handle)",
-	4: "cs_errno: 4 (Invalid Argument)",
-	5: "cs_errno: 5 (Invalid Mode)",
-	6: "cs_errno: 6 (Invalid Option)",
-}
 
 // The arch and mode given at create time will determine how code is
 // disassembled. After use you must close an Engine with engine.Close() to allow
 // the C lib to free resources.
 type Engine struct {
 	handle C.csh
-	arch   uint
-	mode   uint
+	arch   int
+	mode   int
 }
 
 // Information that exists for every Instruction, regardless of arch.
@@ -67,10 +59,9 @@ type InstructionHeader struct {
 	Bytes    []byte // Raw Instruction bytes
 	Mnemonic string // Ascii text of instruction mnemonic
 	OpStr    string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAC
-	// Nothing below is available without the
-	// decomposer. By default, CS_OPT_DETAIL is set to
-	// CS_OPT_ON, but if set to CS_OPT_OFF then the
-	// result of accessing these members is undefined.
+	// Nothing below is available without the decomposer. BE CAREFUL! By
+	// default, CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing
+	// these members is undefined.
 	RegistersRead    []uint // List of implicit registers read by this instruction
 	RegistersWritten []uint // List of implicit registers written by this instruction
 	Groups           []uint // List of *_GRP_* groups this instruction belongs to.
@@ -85,6 +76,7 @@ type Instruction struct {
 	Arm64 Arm64Instruction
 	Mips  MipsInstruction
 	X86   X86Instruction
+	PPC   PPCInstruction
 }
 
 // Called by the arch specific decomposers
@@ -96,24 +88,26 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
 	insn.OpStr = C.GoString(&raw.op_str[0])
 
-	for i := 0; i < int(raw.regs_read_count); i++ {
-		insn.RegistersRead = append(insn.RegistersRead, uint(raw.regs_read[i]))
-	}
-
-	for i := 0; i < int(raw.regs_write_count); i++ {
-		insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.regs_write[i]))
-	}
-
-	for i := 0; i < int(raw.groups_count); i++ {
-		insn.Groups = append(insn.Groups, uint(raw.groups[i]))
-	}
-
 	var bslice []byte
 	h := (*reflect.SliceHeader)(unsafe.Pointer(&bslice))
 	h.Data = uintptr(unsafe.Pointer(&raw.bytes[0]))
 	h.Len = int(raw.size)
 	h.Cap = int(raw.size)
 	insn.Bytes = bslice
+
+	if raw.detail != nil {
+		for i := 0; i < int(raw.detail.regs_read_count); i++ {
+			insn.RegistersRead = append(insn.RegistersRead, uint(raw.detail.regs_read[i]))
+		}
+
+		for i := 0; i < int(raw.detail.regs_write_count); i++ {
+			insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.detail.regs_write[i]))
+		}
+
+		for i := 0; i < int(raw.detail.groups_count); i++ {
+			insn.Groups = append(insn.Groups, uint(raw.detail.groups[i]))
+		}
+	}
 
 }
 
@@ -124,10 +118,14 @@ func (e Engine) Close() error {
 }
 
 // Accessor for the Engine architecture CS_ARCH_*
-func (e Engine) Arch() uint { return e.arch }
+func (e Engine) Arch() int { return e.arch }
 
 // Accessor for the Engine mode CS_MODE_*
-func (e Engine) Mode() uint { return e.mode }
+func (e Engine) Mode() int { return e.mode }
+
+// Check if a particular arch is supported by this engine.
+// To verify if this engine supports everything, use CS_ARCH_ALL
+func (e Engine) Support(arch int) bool { return bool(C.cs_support(C.int(arch))) }
 
 // Version information.
 func (e Engine) Version() (maj, min int) {
@@ -175,7 +173,7 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 
 	var insn *C.cs_insn
 	bptr := (*C.uint8_t)(unsafe.Pointer(&input[0]))
-	disassembled := C.cs_disasm_dyn(
+	disassembled := C.cs_disasm_ex(
 		e.handle,
 		bptr,
 		C.size_t(len(input)),
@@ -185,7 +183,7 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 	)
 
 	if disassembled > 0 {
-		defer C.cs_free(unsafe.Pointer(insn))
+		defer C.cs_free((*C.cs_insn)(unsafe.Pointer(insn)), C.size_t(disassembled))
 		// Create a slice, and reflect its header
 		var insns []C.cs_insn
 		h := (*reflect.SliceHeader)(unsafe.Pointer(&insns))
@@ -203,6 +201,8 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 			return decomposeMips(insns), nil
 		case CS_ARCH_X86:
 			return decomposeX86(insns), nil
+		case CS_ARCH_PPC:
+			return decomposePPC(insns), nil
 		default:
 			return []Instruction{}, ErrArch
 		}
@@ -211,7 +211,7 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 }
 
 // Create a new Engine with the specified arch and mode
-func New(arch, mode uint) (Engine, error) {
+func New(arch, mode int) (Engine, error) {
 	var handle C.csh
 	res := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
 	if Errno(res) == ErrOK {

@@ -38,8 +38,15 @@ type MipsMemoryOperand struct {
 }
 
 func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
+
+	if raw.detail == nil {
+		return
+	}
+
+	// Parse the cs_mips union header
+	cs_mips := (*C.cs_mips)(unsafe.Pointer(&raw.detail.anon0[0]))
+
 	mips := new(MipsInstruction)
-	cs_mips := (*C.cs_mips)(unsafe.Pointer(&raw.anon0[0]))
 
 	// Cast the op_info to a []C.cs_mips_op
 	var ops []C.cs_mips_op
