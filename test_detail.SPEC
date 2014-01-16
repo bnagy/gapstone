@@ -118,7 +118,7 @@ Disasm:
 0x1000:	jal		0x40025c // insn-ID: 243, insn-mnem: jal
 	Implicit registers modified: ra 
 	This instruction belongs to groups: 10 
-0x1004:	nop		 // insn-ID: 455, insn-mnem: nop
+0x1004:	nop		 // insn-ID: 453, insn-mnem: nop
 0x1008:	addiu		$v0, $zero, 0xc // insn-ID: 20, insn-mnem: addiu
 	This instruction belongs to groups: 10 
 0x100c:	lw		$v0, ($sp) // insn-ID: 266, insn-mnem: lw
@@ -133,7 +133,7 @@ Code: 0x56 0x34 0x21 0x34 0xc2 0x17 0x01 0x00
 Disasm:
 0x1000:	ori		$at, $at, 0x3456 // insn-ID: 338, insn-mnem: ori
 	This instruction belongs to groups: 10 
-0x1004:	srl		$v0, $at, 0x1f // insn-ID: 406, insn-mnem: srl
+0x1004:	srl		$v0, $at, 0x1f // insn-ID: 405, insn-mnem: srl
 	This instruction belongs to groups: 10 
 0x1008:
 

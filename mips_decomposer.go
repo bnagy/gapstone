@@ -43,7 +43,7 @@ func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
 		return
 	}
 
-	// Parse the cs_mips union header
+	// Cast the cs_detail union
 	cs_mips := (*C.cs_mips)(unsafe.Pointer(&raw.detail.anon0[0]))
 
 	mips := new(MipsInstruction)

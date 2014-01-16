@@ -53,7 +53,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		return
 	}
 
-	// Parse the cs_arm union header
+	// Cast the cs_detail union
 	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.detail.anon0[0]))
 
 	arm := new(ArmInstruction)

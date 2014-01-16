@@ -46,7 +46,7 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 		return
 	}
 
-	// Parse the cs_mips union header
+	// Cast the cs_detail union
 	cs_ppc := (*C.cs_ppc)(unsafe.Pointer(&raw.detail.anon0[0]))
 
 	ppc := new(PPCInstruction)

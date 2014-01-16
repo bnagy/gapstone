@@ -56,7 +56,7 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 	}
 
 	arm64 := new(Arm64Instruction)
-	// Parse the cs_arm64 union header
+	// Cast the cs_detail union
 	cs_arm64 := (*C.cs_arm64)(unsafe.Pointer(&raw.detail.anon0[0]))
 
 	arm64.CC = uint(cs_arm64.cc)

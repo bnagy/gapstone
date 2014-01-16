@@ -59,7 +59,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		return
 	}
 
-	// Parse the cs_x86 union header
+	// Cast the cs_detail union
 	cs_x86 := (*C.cs_x86)(unsafe.Pointer(&raw.detail.anon0[0]))
 
 	x86 := new(X86Instruction)
