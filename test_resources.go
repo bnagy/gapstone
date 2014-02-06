@@ -10,7 +10,7 @@ type option struct {
 
 type platform struct {
 	arch    int
-	mode    int
+	mode    uint
 	options []option
 	code    string
 	comment string

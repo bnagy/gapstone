@@ -45,7 +45,7 @@ var (
 type Engine struct {
 	handle C.csh
 	arch   int
-	mode   int
+	mode   uint
 }
 
 // Information that exists for every Instruction, regardless of arch.
@@ -121,7 +121,7 @@ func (e Engine) Close() error {
 func (e Engine) Arch() int { return e.arch }
 
 // Accessor for the Engine mode CS_MODE_*
-func (e Engine) Mode() int { return e.mode }
+func (e Engine) Mode() uint { return e.mode }
 
 // Check if a particular arch is supported by this engine.
 // To verify if this engine supports everything, use CS_ARCH_ALL
@@ -211,7 +211,7 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 }
 
 // Create a new Engine with the specified arch and mode
-func New(arch, mode int) (Engine, error) {
+func New(arch int, mode uint) (Engine, error) {
 	var handle C.csh
 	res := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
 	if Errno(res) == ErrOK {
