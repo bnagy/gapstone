@@ -2,8 +2,8 @@
 Platform: X86 16bit (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		cx, dword ptr [si + 0x32] // insn-ID: 295, insn-mnem: lea
-0x1003:	or		byte ptr [bx + di], al // insn-ID: 305, insn-mnem: or
+0x1000:	lea		cx, dword ptr [si + 0x32] // insn-ID: 296, insn-mnem: lea
+0x1003:	or		byte ptr [bx + di], al // insn-ID: 306, insn-mnem: or
 	Implicit registers modified: flags 
 0x1005:	fadd		dword ptr [bx + di + 0x34c6] // insn-ID: 15, insn-mnem: fadd
 	Implicit registers modified: fpsw 
@@ -16,8 +16,8 @@ Disasm:
 Platform: X86 32bit (ATT syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	leal		dword ptr 8(%edx, %esi), %ecx // insn-ID: 295, insn-mnem: lea
-	This instruction belongs to groups: 16 
+0x1000:	leal		dword ptr 8(%edx, %esi), %ecx // insn-ID: 296, insn-mnem: lea
+	This instruction belongs to groups: 33 
 0x1004:	addl		%ebx, %eax // insn-ID: 8, insn-mnem: add
 	Implicit registers modified: eflags 
 0x1006:	addl		$0x1234, %esi // insn-ID: 8, insn-mnem: add
@@ -28,8 +28,8 @@ Disasm:
 Platform: X86 32 (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		ecx, dword ptr [edx + esi + 8] // insn-ID: 295, insn-mnem: lea
-	This instruction belongs to groups: 16 
+0x1000:	lea		ecx, dword ptr [edx + esi + 8] // insn-ID: 296, insn-mnem: lea
+	This instruction belongs to groups: 33 
 0x1004:	add		eax, ebx // insn-ID: 8, insn-mnem: add
 	Implicit registers modified: eflags 
 0x1006:	add		esi, 0x1234 // insn-ID: 8, insn-mnem: add
@@ -40,10 +40,11 @@ Disasm:
 Platform: X86 64 (Intel syntax)
 Code: 0x55 0x48 0x8b 0x05 0xb8 0x13 0x00 0x00 
 Disasm:
-0x1000:	push		rbp // insn-ID: 559, insn-mnem: push
+0x1000:	push		rbp // insn-ID: 562, insn-mnem: push
 	Implicit registers read: rsp 
 	Implicit registers modified: rsp 
-0x1001:	mov		rax, qword ptr [rip + 0x13b8] // insn-ID: 422, insn-mnem: mov
+	This instruction belongs to groups: 17 
+0x1001:	mov		rax, qword ptr [rip + 0x13b8] // insn-ID: 424, insn-mnem: mov
 0x1008:
 
 ****************
