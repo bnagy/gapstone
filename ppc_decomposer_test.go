@@ -10,7 +10,6 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	if len(insn.PPC.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.PPC.Operands))
 	}
-
 	for i, op := range insn.PPC.Operands {
 		switch op.Type {
 		case PPC_OP_REG:

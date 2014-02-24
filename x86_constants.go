@@ -2,11 +2,11 @@ package gapstone
 
 const (
 	// Operand Types
-	X86_OP_INVALID = iota // Uninitialized.
-	X86_OP_REG            // uint operand.
-	X86_OP_IMM            // Immediate operand.
-	X86_OP_FP             // Floating-Point immediate operand.
-	X86_OP_MEM            // Memory operand
+	X86_OP_INVALID = 0
+	X86_OP_REG     = 1
+	X86_OP_IMM     = 2
+	X86_OP_FP      = 3
+	X86_OP_MEM     = 4
 )
 
 const (
