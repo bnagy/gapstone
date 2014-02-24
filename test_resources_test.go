@@ -15,6 +15,53 @@ type platform struct {
 	code    string
 	comment string
 }
+
+type sanityCheck struct {
+	maj    int
+	min    int
+	insMax int
+	regMax int
+	grpMax int
+}
+
+var sanityChecks = map[int]sanityCheck{
+	CS_ARCH_ARM64: sanityCheck{
+		maj:    2,
+		min:    1,
+		regMax: 226,
+		insMax: 446,
+		grpMax: 5,
+	},
+	CS_ARCH_ARM: sanityCheck{
+		maj:    2,
+		min:    1,
+		regMax: 111,
+		insMax: 422,
+		grpMax: 33,
+	},
+	CS_ARCH_MIPS: sanityCheck{
+		maj:    2,
+		min:    1,
+		regMax: 123,
+		insMax: 456,
+		grpMax: 20,
+	},
+	CS_ARCH_PPC: sanityCheck{
+		maj:    2,
+		min:    1,
+		regMax: 137,
+		insMax: 436,
+		grpMax: 7,
+	},
+	CS_ARCH_X86: sanityCheck{
+		maj:    2,
+		min:    1,
+		regMax: 233,
+		insMax: 1259,
+		grpMax: 35,
+	},
+}
+
 type platforms []platform
 
 var address = uint64(0x1000)

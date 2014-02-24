@@ -80,6 +80,14 @@ func TestArm(t *testing.T) {
 		if i == 0 {
 			maj, min := engine.Version()
 			t.Logf("Arch: Arm. Capstone Version: %v.%v", maj, min)
+			check := sanityChecks[CS_ARCH_ARM]
+			if check.grpMax != ARM_GRP_MAX ||
+				check.insMax != ARM_INS_MAX ||
+				check.regMax != ARM_REG_MAX {
+				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+			} else {
+				t.Logf("Sanity Check: PASS")
+			}
 		}
 		defer engine.Close()
 

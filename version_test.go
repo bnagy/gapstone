@@ -19,6 +19,7 @@ func TestVersion(t *testing.T) {
 				min,
 			)
 		}
+
 		c.Close()
 	}
 }
