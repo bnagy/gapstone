@@ -9,9 +9,9 @@ try reading the *_test.go files.
 */
 package gapstone
 
-// #cgo LDFLAGS: -lcapstone
+// #cgo pkg-config: capstone
 // #include <stdlib.h>
-// #include <capstone/capstone.h>
+// #include <capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
