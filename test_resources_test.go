@@ -57,7 +57,7 @@ var sanityChecks = map[int]sanityCheck{
 		maj:    2,
 		min:    1,
 		regMax: 233,
-		insMax: 1259,
+		insMax: 1258,
 		grpMax: 35,
 	},
 }

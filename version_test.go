@@ -2,24 +2,23 @@ package gapstone
 
 import "testing"
 
-const EXPECTED_MAJ = 2
-const EXPECTED_MIN = 1
-
 func TestVersion(t *testing.T) {
 	if c, err := New(0, 0); err == nil {
+		defer c.Close()
 		maj, min := c.Version()
-		if maj == EXPECTED_MAJ && min == EXPECTED_MIN {
+		check := sanityChecks[0]
+		if maj == check.maj && min == check.min {
 			t.Logf("Libary version %v.%v, OK.", maj, min)
 		} else {
 			t.Errorf(
 				"Version mismatch. These bindings for %v.%v, Installed lib %v.%v",
-				EXPECTED_MAJ,
-				EXPECTED_MIN,
+				check.maj,
+				check.min,
 				maj,
 				min,
 			)
 		}
-
-		c.Close()
+		return
 	}
+	t.Errorf("Failed to initialize engine.")
 }
