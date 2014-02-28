@@ -59,4 +59,8 @@ const (
 	CS_ERR_OPTION   = C.CS_ERR_OPTION   // Invalid/unsupported option: cs_option()
 	CS_ERR_DETAIL   = C.CS_ERR_DETAIL   // Information is unavailable because detail option is OFF
 	CS_ERR_MEMSETUP = C.CS_ERR_MEMSETUP // Dynamic memory management uninitialized (see CS_OPT_MEM)
+	CS_ERR_VERSION  = C.CS_ERR_VERSION  // Unsupported version (bindings)
+	CS_ERR_DIET     = C.CS_ERR_DIET     // Information irrelevant in diet engine
 )
+
+const CS_SUPPRT_DIET = C.CS_SUPPORT_DIET
