@@ -4,7 +4,6 @@ import "testing"
 
 func TestVersion(t *testing.T) {
 	if c, err := New(0, 0); err == nil {
-		defer c.Close()
 		maj, min := c.Version()
 		check := sanityChecks[0]
 		if maj == check.maj && min == check.min {
@@ -18,6 +17,11 @@ func TestVersion(t *testing.T) {
 				min,
 			)
 		}
+		err = c.Close()
+		if err != ErrOK {
+			t.Errorf("Failed to close: %v", err)
+		}
+
 		return
 	}
 	t.Errorf("Failed to initialize engine.")
