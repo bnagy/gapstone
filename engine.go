@@ -37,6 +37,8 @@ var (
 	ErrOption   error = Errno(6)
 	ErrDetail   error = Errno(7)
 	ErrMemSetup error = Errno(8)
+	ErrVersion  error = Errno(9)
+	ErrDiet     error = Errno(10)
 )
 
 // The arch and mode given at create time will determine how code is
@@ -113,7 +115,7 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 
 // Close the underlying C handle and resources used by this Engine
 func (e Engine) Close() error {
-	res := C.cs_close(e.handle)
+	res := C.cs_close(&e.handle)
 	return Errno(res)
 }
 
