@@ -62,7 +62,7 @@ func TestPPC(t *testing.T) {
 		if i == 0 {
 			maj, min := engine.Version()
 			t.Logf("Arch: PPC. Capstone Version: %v.%v", maj, min)
-			check := sanityChecks[CS_ARCH_PPC]
+			check := checks[CS_ARCH_PPC]
 			if check.grpMax != PPC_GRP_MAX ||
 				check.insMax != PPC_INS_MAX ||
 				check.regMax != PPC_REG_MAX {

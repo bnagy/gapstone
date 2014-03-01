@@ -5,14 +5,13 @@ import "testing"
 func TestVersion(t *testing.T) {
 	if c, err := New(0, 0); err == nil {
 		maj, min := c.Version()
-		check := sanityChecks[0]
-		if maj == check.maj && min == check.min {
+		if maj == checks.Maj() && min == checks.Min() {
 			t.Logf("Libary version %v.%v, OK.", maj, min)
 		} else {
 			t.Errorf(
 				"Version mismatch. These bindings for %v.%v, Installed lib %v.%v",
-				check.maj,
-				check.min,
+				checks.Maj(),
+				checks.Min(),
 				maj,
 				min,
 			)

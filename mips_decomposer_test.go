@@ -51,7 +51,7 @@ func TestMips(t *testing.T) {
 		if i == 0 {
 			maj, min := engine.Version()
 			t.Logf("Arch: Mips. Capstone Version: %v.%v", maj, min)
-			check := sanityChecks[CS_ARCH_MIPS]
+			check := checks[CS_ARCH_MIPS]
 			if check.grpMax != MIPS_GRP_MAX ||
 				check.insMax != MIPS_INS_MAX ||
 				check.regMax != MIPS_REG_MAX {

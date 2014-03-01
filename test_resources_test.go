@@ -3,6 +3,10 @@ package gapstone
 import "bytes"
 import "fmt"
 
+// Maintain these manually, so we can verify the C lib version
+const expectedMaj = 2
+const expectedMin = 1
+
 type option struct {
 	ty    uint
 	value uint
@@ -17,45 +21,38 @@ type platform struct {
 }
 
 type sanityCheck struct {
-	maj    int
-	min    int
 	insMax int
 	regMax int
 	grpMax int
 }
 
-var sanityChecks = map[int]sanityCheck{
+type sanityChecks map[int]sanityCheck
+
+func (s *sanityChecks) Maj() int { return expectedMaj }
+func (s *sanityChecks) Min() int { return expectedMin }
+
+var checks = sanityChecks{
 	CS_ARCH_ARM64: sanityCheck{
-		maj:    2,
-		min:    1,
 		regMax: 226,
 		insMax: 446,
 		grpMax: 5,
 	},
 	CS_ARCH_ARM: sanityCheck{
-		maj:    2,
-		min:    1,
 		regMax: 111,
 		insMax: 422,
 		grpMax: 33,
 	},
 	CS_ARCH_MIPS: sanityCheck{
-		maj:    2,
-		min:    1,
 		regMax: 123,
 		insMax: 456,
 		grpMax: 20,
 	},
 	CS_ARCH_PPC: sanityCheck{
-		maj:    2,
-		min:    1,
 		regMax: 137,
 		insMax: 436,
 		grpMax: 7,
 	},
 	CS_ARCH_X86: sanityCheck{
-		maj:    2,
-		min:    1,
 		regMax: 233,
 		insMax: 1258,
 		grpMax: 35,
