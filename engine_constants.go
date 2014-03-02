@@ -63,4 +63,4 @@ const (
 	CS_ERR_DIET     = C.CS_ERR_DIET     // Information irrelevant in diet engine
 )
 
-const CS_SUPPRT_DIET = C.CS_SUPPORT_DIET
+const CS_SUPPORT_DIET = C.CS_SUPPORT_DIET
