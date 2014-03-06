@@ -7,6 +7,7 @@ func TestVersion(t *testing.T) {
 		maj, min := c.Version()
 		if maj == checks.Maj() && min == checks.Min() {
 			t.Logf("Libary version %v.%v, OK.", maj, min)
+			t.Logf("CAPSTONE_DIET: %v", dietMode)
 		} else {
 			t.Errorf(
 				"Version mismatch. These bindings for %v.%v, Installed lib %v.%v",
