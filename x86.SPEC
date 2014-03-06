@@ -5,7 +5,7 @@ Disasm:
 0x1000:	lea	cx, dword ptr [si + 0x32]
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x8d 0x00 0x00 
-	op_size: 2, addr_size: 2, disp_size: 2, imm_size: 2
+	op_size: 2, addr_size: 2, disp_size: 1, imm_size: 2
 	modrm: 0x4c
 	disp: 0x32
 	op_count: 2
@@ -113,7 +113,7 @@ Disasm:
 0x1018:	add	byte ptr [bx + di - 0x73], al
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x00 0x00 0x00 
-	op_size: 1, addr_size: 2, disp_size: 2, imm_size: 2
+	op_size: 1, addr_size: 2, disp_size: 1, imm_size: 2
 	modrm: 0x41
 	disp: 0xffffff8d
 	op_count: 2
@@ -138,7 +138,7 @@ Disasm:
 0x101d:	mov	word ptr [bx], sp
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x89 0x00 0x00 
-	op_size: 2, addr_size: 2, disp_size: 2, imm_size: 2
+	op_size: 2, addr_size: 2, disp_size: 1, imm_size: 2
 	modrm: 0x67
 	disp: 0x0
 	op_count: 2
@@ -190,7 +190,7 @@ Disasm:
 0x1000:	leal	dword ptr 8(%edx, %esi), %ecx
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x8d 0x00 0x00 
-	op_size: 4, addr_size: 4, disp_size: 4, imm_size: 4
+	op_size: 4, addr_size: 4, disp_size: 1, imm_size: 4
 	modrm: 0x4c
 	disp: 0x8
 	sib: 0x32
@@ -316,7 +316,7 @@ Disasm:
 0x1000:	lea	ecx, dword ptr [edx + esi + 8]
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x8d 0x00 0x00 
-	op_size: 4, addr_size: 4, disp_size: 4, imm_size: 4
+	op_size: 4, addr_size: 4, disp_size: 1, imm_size: 4
 	modrm: 0x4c
 	disp: 0x8
 	sib: 0x32

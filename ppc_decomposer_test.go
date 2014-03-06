@@ -10,7 +10,6 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	if len(insn.PPC.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.PPC.Operands))
 	}
-
 	for i, op := range insn.PPC.Operands {
 		switch op.Type {
 		case PPC_OP_REG:
@@ -63,6 +62,14 @@ func TestPPC(t *testing.T) {
 		if i == 0 {
 			maj, min := engine.Version()
 			t.Logf("Arch: PPC. Capstone Version: %v.%v", maj, min)
+			check := checks[CS_ARCH_PPC]
+			if check.grpMax != PPC_GRP_MAX ||
+				check.insMax != PPC_INS_MAX ||
+				check.regMax != PPC_REG_MAX {
+				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+			} else {
+				t.Logf("Sanity Check: PASS")
+			}
 		}
 		defer engine.Close()
 
