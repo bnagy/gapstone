@@ -41,6 +41,15 @@ var (
 	ErrDiet     error = Errno(10)
 )
 
+// Since this is a build-time option for the C lib, it seems logical to have
+// this as a static flag.
+// Diet Mode Changes:
+// - No regs_read, regs_written or groups
+// - No response to reg_name or insn_name
+// - No mnemonic or op_str
+// If you want to see any operands in diet mode, then you need CS_DETAIL.
+var dietMode = bool(C.cs_support(CS_SUPPORT_DIET))
+
 // The arch and mode given at create time will determine how code is
 // disassembled. After use you must close an Engine with engine.Close() to allow
 // the C lib to free resources.
@@ -55,15 +64,16 @@ type Engine struct {
 // them available. Check the constants for each architecture for available
 // Instruction groups etc.
 type InstructionHeader struct {
-	Id       uint   // Internal id for this instruction. Subject to change.
-	Address  uint   // Nominal address ($ip) of this instruction
-	Size     uint   // Size of the instruction, in bytes
-	Bytes    []byte // Raw Instruction bytes
+	Id      uint   // Internal id for this instruction. Subject to change.
+	Address uint   // Nominal address ($ip) of this instruction
+	Size    uint   // Size of the instruction, in bytes
+	Bytes   []byte // Raw Instruction bytes
+	// Not available in diet mode ( capstone built with CAPSTONE_DIET=yes )
 	Mnemonic string // Ascii text of instruction mnemonic
 	OpStr    string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAC
-	// Nothing below is available without the decomposer. BE CAREFUL! By
-	// default, CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing
-	// these members is undefined.
+	// Not available without the decomposer. BE CAREFUL! By default,
+	// CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing these
+	// members is undefined.
 	RegistersRead    []uint // List of implicit registers read by this instruction
 	RegistersWritten []uint // List of implicit registers written by this instruction
 	Groups           []uint // List of *_GRP_* groups this instruction belongs to.
@@ -87,8 +97,11 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Id = uint(raw.id)
 	insn.Address = uint(raw.address)
 	insn.Size = uint(raw.size)
-	insn.Mnemonic = C.GoString(&raw.mnemonic[0])
-	insn.OpStr = C.GoString(&raw.op_str[0])
+
+	if !dietMode {
+		insn.Mnemonic = C.GoString(&raw.mnemonic[0])
+		insn.OpStr = C.GoString(&raw.op_str[0])
+	}
 
 	var bslice []byte
 	h := (*reflect.SliceHeader)(unsafe.Pointer(&bslice))
@@ -97,7 +110,7 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	h.Cap = int(raw.size)
 	insn.Bytes = bslice
 
-	if raw.detail != nil {
+	if raw.detail != nil && !dietMode {
 		for i := 0; i < int(raw.detail.regs_read_count); i++ {
 			insn.RegistersRead = append(insn.RegistersRead, uint(raw.detail.regs_read[i]))
 		}
@@ -142,13 +155,23 @@ func (e Engine) Errno() error { return Errno(C.cs_errno(e.handle)) }
 // The arch is implicit in the Engine. Accepts either a constant like ARM_REG_R0
 // or insn.Arm.Operands[0].Reg, or anything that refers to a Register like
 // insn.X86.SibBase etc
+//
+// WARNING: Always returns "" if capstone built with CAPSTONE_DIET
 func (e Engine) RegName(reg uint) string {
+	if dietMode {
+		return ""
+	}
 	return C.GoString(C.cs_reg_name(e.handle, C.uint(reg)))
 }
 
 // The arch is implicit in the Engine. Accepts a constant like
 // ARM_INSN_ADD, or insn.Id
+//
+// WARNING: Always returns "" if capstone built with CAPSTONE_DIET
 func (e Engine) InsnName(insn uint) string {
+	if dietMode {
+		return ""
+	}
 	return C.GoString(C.cs_insn_name(e.handle, C.uint(insn)))
 }
 
