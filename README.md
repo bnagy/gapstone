@@ -6,7 +6,7 @@ Gapstone is a Go binding for the Capstone disassembly library.
 IMPORTANT
 ===
 
-Welcome to the "next" branch. This should be merged around Jan 21, 2014. API v2.0 is a BREAKING CHANGE, sorry.
+Welcome to the "next" branch. Latest API in master is 2.1.
 
 ( FROM THE CAPSTONE README )
 
