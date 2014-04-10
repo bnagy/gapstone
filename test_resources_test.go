@@ -5,7 +5,7 @@ import "fmt"
 
 // Maintain these manually, so we can verify the C lib version
 const expectedMaj = 2
-const expectedMin = 1
+const expectedMin = 2
 
 type option struct {
 	ty    uint
@@ -52,6 +52,11 @@ var checks = sanityChecks{
 		insMax: 436,
 		grpMax: 7,
 	},
+	CS_ARCH_SYSZ: sanityCheck{
+		regMax: 35,
+		insMax: 679,
+		grpMax: 7,
+	},
 	CS_ARCH_X86: sanityCheck{
 		regMax: 233,
 		insMax: 1258,
@@ -83,6 +88,8 @@ var basicMipsCode = "\x0C\x10\x00\x97\x00\x00\x00\x00\x24\x02\x00\x0c\x8f\xa2\x0
 var basicMipsCode2 = "\x56\x34\x21\x34\xc2\x17\x01\x00"
 var basicArm64Code = "\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9"
 var ppcCode = "\x80\x20\x00\x00\x80\x3f\x00\x00\x10\x43\x23\x0e\xd0\x44\x00\x80\x4c\x43\x22\x02\x2d\x03\x00\x80\x7c\x43\x20\x14\x7c\x43\x20\x93\x4f\x20\x00\x21\x4c\xc8\x00\x21"
+var sysZcode = "\xed\x00\x00\x00\x00\x1a\x5a\x0f\x1f\xff\xc2\x09\x80\x00\x00\x00\x07\xf7\xeb\x2a\xff\xff\x7f\x57\xe3\x01\xff\xff\x7f\x57\xeb\x00\xf0\x00\x00\x24\xb2\x4f\x00\x78"
+
 var basic_tests = platforms{
 	{
 		CS_ARCH_X86,
@@ -202,9 +209,12 @@ var arm_tests = platforms{
 	platform{
 		CS_ARCH_ARM,
 		CS_MODE_THUMB,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		[]option{
+			{CS_OPT_DETAIL, CS_OPT_ON},
+			{CS_OPT_SYNTAX, CS_OPT_SYNTAX_NOREGNAME},
+		},
 		thumbCode2,
-		"Thumb-2",
+		"Thumb-2 & register named with numbers",
 	},
 }
 
@@ -273,6 +283,16 @@ var ppc_tests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		ppcCode,
 		"PPC-64",
+	},
+}
+
+var sysZ_tests = platforms{
+	platform{
+		CS_ARCH_SYSZ,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sysZcode,
+		"SystemZ",
 	},
 }
 

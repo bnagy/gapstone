@@ -84,10 +84,10 @@ Disasm:
 			operands[1].mem.base: REG = r1
 			operands[1].mem.disp: 0xc
 
-0x1008:	cbz	r7, #0x1012
+0x1008:	cbz	r7, #6
 	op_count: 2
 		operands[0].type: REG = r7
-		operands[1].type: IMM = 0x1012
+		operands[1].type: IMM = 0x6
 
 0x100a:
 
@@ -151,7 +151,7 @@ Disasm:
 0x1014:
 
 ****************
-Platform: Thumb-2
+Platform: Thumb-2 & register named with numbers
 Code:0x4f 0xf0 0x00 0x01 0xbd 0xe8 0x00 0x88 0xd1 0xe8 0x00 0xf0 
 Disasm:
 0x1000:	mov.w	r1, #0
@@ -159,7 +159,7 @@ Disasm:
 		operands[0].type: REG = r1
 		operands[1].type: IMM = 0x0
 
-0x1004:	pop.w	{fp, pc}
+0x1004:	pop.w	{r11, pc}
 	op_count: 2
 		operands[0].type: REG = fp
 		operands[1].type: REG = pc
