@@ -6,7 +6,9 @@ Gapstone is a Go binding for the Capstone disassembly library.
 IMPORTANT
 ===
 
-Welcome to the "next" branch. Latest API in master is 2.1.
+Welcome to the "next" branch. Upstream is 2.2.
+
+Latest API in master is 2.1.
 
 ( FROM THE CAPSTONE README )
 
@@ -16,7 +18,7 @@ disasm engine for binary analysis and reversing in the security community.
 Created by Nguyen Anh Quynh, then developed and maintained by a small community,
 Capstone offers some unparalleled features:
 
-- Support multiple hardware architectures: ARM, ARM64 (aka ARMv8), Mips & X86.
+- Support multiple hardware architectures: ARM, ARM64 (aka ARMv8), Mips, X86, PPC, Sparc & SystemZ
 
 - Having clean/simple/lightweight/intuitive architecture-neutral API.
 
