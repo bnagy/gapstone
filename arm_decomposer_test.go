@@ -67,7 +67,7 @@ func TestArm(t *testing.T) {
 	final := new(bytes.Buffer)
 	spec_file := "arm.SPEC"
 
-	for i, platform := range arm_tests {
+	for i, platform := range armTests {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {

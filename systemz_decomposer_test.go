@@ -51,7 +51,7 @@ func TestSysZ(t *testing.T) {
 	final := new(bytes.Buffer)
 	spec_file := "sysZ.SPEC"
 
-	for i, platform := range sysZ_tests {
+	for i, platform := range sysZTests {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {

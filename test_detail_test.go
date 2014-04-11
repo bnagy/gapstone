@@ -16,20 +16,9 @@ func TestDetailTest(t *testing.T) {
 		ver.Close()
 	}
 
-	// All the tests are the same except ARM64, and no final PPC with
-	// reg numbers only.
 	t.Logf("Detailed Test. Capstone Version: %v.%v", maj, min)
-	detail_tests := append([]platform{}, basic_tests...)
-	detail_tests[len(detail_tests)-3] = platform{
-		CS_ARCH_ARM64,
-		CS_MODE_ARM,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		"\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9\x10\x20\x21\x1e",
-		"ARM-64",
-	}
-	detail_tests = detail_tests[:len(detail_tests)-1]
 
-	for i, platform := range detail_tests {
+	for i, platform := range detailTests {
 
 		t.Logf("%2d> %s", i, platform.comment)
 		engine, err := New(platform.arch, platform.mode)

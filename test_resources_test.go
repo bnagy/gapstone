@@ -53,7 +53,7 @@ var checks = sanityChecks{
 		grpMax: 7,
 	},
 	CS_ARCH_SYSZ: sanityCheck{
-		regMax: 87,
+		regMax: 35,
 		insMax: 679,
 		grpMax: 7,
 	},
@@ -97,7 +97,7 @@ var sysZcode = "\xed\x00\x00\x00\x00\x1a\x5a\x0f\x1f\xff\xc2\x09\x80\x00\x00\x00
 var sparcCode = "\x80\xa0\x40\x02\x85\xc2\x60\x08\x85\xe8\x20\x01\x81\xe8\x00\x00\x90\x10\x20\x01\xd5\xf6\x10\x16\x21\x00\x00\x0a\x86\x00\x40\x02\x01\x00\x00\x00\x12\xbf\xff\xff\x10\xbf\xff\xff\xa0\x02\x00\x09\x0d\xbf\xff\xff\xd4\x20\x60\x00\xd4\x4e\x00\x16\x2a\xc2\x80\x03"
 var sparcV9Code = "\x81\xa8\x0a\x24\x89\xa0\x10\x20\x89\xa0\x1a\x60\x89\xa0\x00\xe0"
 
-var basic_tests = platforms{
+var basicTests = platforms{
 	{
 		CS_ARCH_X86,
 		CS_MODE_16,
@@ -189,9 +189,141 @@ var basic_tests = platforms{
 		ppcCode,
 		"PPC-64, print register with number only",
 	},
+	platform{
+		CS_ARCH_SPARC,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sparcCode,
+		"Sparc",
+	},
+	platform{
+		CS_ARCH_SPARC,
+		CS_MODE_BIG_ENDIAN + CS_MODE_V9,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sparcV9Code,
+		"SparcV9",
+	},
+	platform{
+		CS_ARCH_SYSZ,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sysZcode,
+		"SystemZ",
+	},
 }
 
-var arm_tests = platforms{
+// Honestly, these are _almost_ identical, but it's just easier to maintain
+// them as a separate list and not mess about modifying the slice in the test
+// code.
+var detailTests = platforms{
+	{
+		CS_ARCH_X86,
+		CS_MODE_16,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicX86Code16,
+		"X86 16bit (Intel syntax)",
+	},
+	{
+		CS_ARCH_X86,
+		CS_MODE_32,
+		[]option{{CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT}, {CS_OPT_DETAIL, CS_OPT_ON}},
+		basicX86Code32,
+		"X86 32bit (ATT syntax)",
+	},
+	{
+		CS_ARCH_X86,
+		CS_MODE_32,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicX86Code32,
+		"X86 32 (Intel syntax)",
+	},
+	{
+		CS_ARCH_X86,
+		CS_MODE_64,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicX86Code64,
+		"X86 64 (Intel syntax)",
+	},
+	{
+		CS_ARCH_ARM,
+		CS_MODE_ARM,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicArmCode,
+		"ARM",
+	},
+	{
+		CS_ARCH_ARM,
+		CS_MODE_THUMB,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicThumbCode2,
+		"THUMB-2",
+	},
+	{
+		CS_ARCH_ARM,
+		CS_MODE_ARM,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicArmCode2,
+		"ARM: Cortex-A15 + NEON",
+	},
+	{
+		CS_ARCH_ARM,
+		CS_MODE_THUMB,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicThumbCode,
+		"THUMB",
+	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_32 + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicMipsCode,
+		"MIPS-32 (Big-endian)",
+	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_64 + CS_MODE_LITTLE_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicMipsCode2,
+		"MIPS-64-EL (Little-endian)",
+	},
+	platform{
+		CS_ARCH_ARM64,
+		CS_MODE_ARM,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		"\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9\x10\x20\x21\x1e",
+		"ARM-64",
+	},
+	platform{
+		CS_ARCH_PPC,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		ppcCode,
+		"PPC-64",
+	},
+	platform{
+		CS_ARCH_SPARC,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sparcCode,
+		"Sparc",
+	},
+	platform{
+		CS_ARCH_SPARC,
+		CS_MODE_BIG_ENDIAN + CS_MODE_V9,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sparcV9Code,
+		"SparcV9",
+	},
+	platform{
+		CS_ARCH_SYSZ,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		sysZcode,
+		"SystemZ",
+	},
+}
+
+var armTests = platforms{
 	platform{
 		CS_ARCH_ARM,
 		CS_MODE_ARM,
@@ -225,7 +357,7 @@ var arm_tests = platforms{
 	},
 }
 
-var arm64_tests = platforms{
+var arm64Tests = platforms{
 	platform{
 		CS_ARCH_ARM64,
 		CS_MODE_ARM,
@@ -252,7 +384,7 @@ var mips_tests = platforms{
 	},
 }
 
-var x86_tests = platforms{
+var x86Tests = platforms{
 	platform{
 		CS_ARCH_X86,
 		CS_MODE_16,
@@ -283,7 +415,7 @@ var x86_tests = platforms{
 	},
 }
 
-var ppc_tests = platforms{
+var ppcTests = platforms{
 	platform{
 		CS_ARCH_PPC,
 		CS_MODE_BIG_ENDIAN,
@@ -293,7 +425,7 @@ var ppc_tests = platforms{
 	},
 }
 
-var sysZ_tests = platforms{
+var sysZTests = platforms{
 	platform{
 		CS_ARCH_SYSZ,
 		CS_MODE_BIG_ENDIAN,
@@ -303,7 +435,7 @@ var sysZ_tests = platforms{
 	},
 }
 
-var sparc_tests = platforms{
+var sparcTests = platforms{
 	platform{
 		CS_ARCH_SPARC,
 		CS_MODE_BIG_ENDIAN,

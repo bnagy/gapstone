@@ -49,7 +49,7 @@ func TestSparc(t *testing.T) {
 	final := new(bytes.Buffer)
 	spec_file := "sparc.SPEC"
 
-	for i, platform := range sparc_tests {
+	for i, platform := range sparcTests {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {

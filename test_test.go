@@ -17,7 +17,7 @@ func TestTest(t *testing.T) {
 
 	t.Logf("Basic Test. Capstone Version: %v.%v", maj, min)
 
-	for i, platform := range basic_tests {
+	for i, platform := range basicTests {
 
 		t.Logf("%2d> %s", i, platform.comment)
 		engine, err := New(platform.arch, platform.mode)
