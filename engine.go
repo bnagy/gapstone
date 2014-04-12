@@ -7,11 +7,14 @@ try reading the *_test.go files.
 	License: BSD style - see LICENSE file for details
     (c) 2013 COSEINC. All Rights Reserved.
 */
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"

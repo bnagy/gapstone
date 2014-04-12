@@ -1,8 +1,20 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
@@ -50,11 +62,11 @@ func fillSparcHeader(raw C.cs_insn, insn *Instruction) {
 	// Cast the cs_detail union
 	cs_sparc := (*C.cs_sparc)(unsafe.Pointer(&raw.detail.anon0[0]))
 
-	sparc := new(SparcInstruction)
-
-	sparc.CC = uint(cs_sparc.cc)
-	sparc.Hint = uint(cs_sparc.hint)
-	sparc.OpCnt = uint8(cs_sparc.op_count)
+	sparc := SparcInstruction{
+		CC:    uint(cs_sparc.cc),
+		Hint:  uint(cs_sparc.hint),
+		OpCnt: uint8(cs_sparc.op_count),
+	}
 
 	// Cast the op_info to a []C.cs_sparc_op
 	var ops []C.cs_sparc_op
@@ -80,18 +92,18 @@ func fillSparcHeader(raw C.cs_insn, insn *Instruction) {
 		case SPARC_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case SPARC_OP_MEM:
-			gmop := new(SparcMemoryOperand)
 			cmop := (*C.sparc_op_mem)(unsafe.Pointer(&cop.anon0[0]))
-			gmop.Base = uint8(cmop.base)
-			gmop.Index = uint8(cmop.index)
-			gmop.Disp = int32(cmop.disp)
-			gop.Mem = *gmop
+			gop.Mem = SparcMemoryOperand{
+				Base:  uint8(cmop.base),
+				Index: uint8(cmop.index),
+				Disp:  int32(cmop.disp),
+			}
 		}
 
 		sparc.Operands = append(sparc.Operands, *gop)
 
 	}
-	insn.Sparc = *sparc
+	insn.Sparc = sparc
 }
 
 func decomposeSparc(raws []C.cs_insn) []Instruction {

@@ -1,8 +1,20 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
@@ -72,11 +84,11 @@ func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
 		case MIPS_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case MIPS_OP_MEM:
-			gmop := new(MipsMemoryOperand)
 			cmop := (*C.mips_op_mem)(unsafe.Pointer(&cop.anon0[0]))
-			gmop.Base = uint(cmop.base)
-			gmop.Disp = int64(cmop.disp)
-			gop.Mem = *gmop
+			gop.Mem = MipsMemoryOperand{
+				Base: uint(cmop.base),
+				Disp: int64(cmop.disp),
+			}
 		}
 
 		mips.Operands = append(mips.Operands, *gop)
