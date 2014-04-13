@@ -13,22 +13,10 @@ package gapstone
 import "bytes"
 import "fmt"
 
-// Maintain these manually, so we can verify the C lib version
+// Maintain the expected version and sanity checks manually, so we can verify
+// against the installed C lib. Not foolproof, but should save 90% of accidents
 const expectedMaj = 2
 const expectedMin = 2
-
-type option struct {
-	ty    uint
-	value uint
-}
-
-type platform struct {
-	arch    int
-	mode    uint
-	options []option
-	code    string
-	comment string
-}
 
 type sanityCheck struct {
 	insMax int
@@ -41,6 +29,9 @@ type sanityChecks map[int]sanityCheck
 func (s *sanityChecks) Maj() int { return expectedMaj }
 func (s *sanityChecks) Min() int { return expectedMin }
 
+// Remember the all the constants CONST are direct refs to C.CONST, so in
+// combination with these we should be _fairly_ sure we're getting the
+// disassembly capstone expects to provide.
 var checks = sanityChecks{
 	CS_ARCH_ARM64: sanityCheck{
 		regMax: 226,
@@ -77,6 +68,19 @@ var checks = sanityChecks{
 		insMax: 1258,
 		grpMax: 35,
 	},
+}
+
+type option struct {
+	ty    uint
+	value uint
+}
+
+type platform struct {
+	arch    int
+	mode    uint
+	options []option
+	code    string
+	comment string
 }
 
 type platforms []platform
