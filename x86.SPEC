@@ -110,7 +110,7 @@ Disasm:
 			operands[0].mem.index: REG = si
 		operands[1].type: REG = ax
 
-0x1018:	add	byte ptr [bx + di - 0x73], al
+0x1018:	add	byte ptr [bx + di + 0xff8d], al
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x00 0x00 0x00 
 	op_size: 1, addr_size: 2, disp_size: 1, imm_size: 2
@@ -146,7 +146,7 @@ Disasm:
 			operands[0].mem.base: REG = bx
 		operands[1].type: REG = sp
 
-0x1020:	add	byte ptr [di - 0x7679], cl
+0x1020:	add	byte ptr [di + 0x8987], cl
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x00 0x00 0x00 
 	op_size: 1, addr_size: 2, disp_size: 2, imm_size: 2

@@ -15,22 +15,27 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func sparcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
-	if len(insn.PPC.Operands) > 0 {
-		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.PPC.Operands))
+	if len(insn.Sparc.Operands) > 0 {
+		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Sparc.Operands))
 	}
-	for i, op := range insn.PPC.Operands {
+
+	for i, op := range insn.Sparc.Operands {
 		switch op.Type {
-		case PPC_OP_REG:
+		case SPARC_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
-		case PPC_OP_IMM:
+		case SPARC_OP_IMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint64(op.Imm)))
-		case PPC_OP_MEM:
+		case SPARC_OP_MEM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: MEM\n", i)
-			if op.Mem.Base != PPC_REG_INVALID {
+			if op.Mem.Base != SPARC_REG_INVALID {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.base: REG = %s\n",
-					i, engine.RegName(op.Mem.Base))
+					i, engine.RegName(uint(op.Mem.Base)))
+			}
+			if op.Mem.Index != SPARC_REG_INVALID {
+				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.index: REG = %s\n",
+					i, engine.RegName(uint(op.Mem.Index)))
 			}
 			if op.Mem.Disp != 0 {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint64(op.Mem.Disp))
@@ -39,27 +44,22 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	}
 
-	if insn.PPC.BC != 0 {
-		fmt.Fprintf(buf, "\tBranch code: %v\n", insn.PPC.BC)
+	if insn.Sparc.CC != 0 {
+		fmt.Fprintf(buf, "\tCode condition: %v\n", insn.Sparc.CC)
 	}
-
-	if insn.PPC.BH != 0 {
-		fmt.Fprintf(buf, "\tBranch hint: %v\n", insn.PPC.BH)
-	}
-
-	if insn.PPC.UpdateCR0 {
-		fmt.Fprintf(buf, "\tUpdate-CR0: True\n")
+	if insn.Sparc.Hint != 0 {
+		fmt.Fprintf(buf, "\tHint code: %v\n", insn.Sparc.Hint)
 	}
 
 	fmt.Fprintf(buf, "\n")
 }
 
-func TestPPC(t *testing.T) {
+func TestSparc(t *testing.T) {
 
 	final := new(bytes.Buffer)
-	spec_file := "ppc.SPEC"
+	spec_file := "sparc.SPEC"
 
-	for i, platform := range ppcTests {
+	for i, platform := range sparcTests {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {
@@ -71,11 +71,11 @@ func TestPPC(t *testing.T) {
 		}
 		if i == 0 {
 			maj, min := engine.Version()
-			t.Logf("Arch: PPC. Capstone Version: %v.%v", maj, min)
-			check := checks[CS_ARCH_PPC]
-			if check.grpMax != PPC_GRP_MAX ||
-				check.insMax != PPC_INS_MAX ||
-				check.regMax != PPC_REG_MAX {
+			t.Logf("Arch: Sparc. Capstone Version: %v.%v", maj, min)
+			check := checks[CS_ARCH_SPARC]
+			if check.grpMax != SPARC_GRP_MAX ||
+				check.insMax != SPARC_INS_MAX ||
+				check.regMax != SPARC_REG_MAX {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")
@@ -92,7 +92,7 @@ func TestPPC(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				ppcInsnDetail(insn, &engine, final)
+				sparcInsnDetail(insn, &engine, final)
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")

@@ -7,11 +7,14 @@ try reading the *_test.go files.
 	License: BSD style - see LICENSE file for details
     (c) 2013 COSEINC. All Rights Reserved.
 */
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
@@ -89,6 +92,8 @@ type Instruction struct {
 	Mips  MipsInstruction
 	X86   X86Instruction
 	PPC   PPCInstruction
+	SysZ  SysZInstruction
+	Sparc SparcInstruction
 }
 
 // Called by the arch specific decomposers
@@ -228,6 +233,10 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 			return decomposeX86(insns), nil
 		case CS_ARCH_PPC:
 			return decomposePPC(insns), nil
+		case CS_ARCH_SYSZ:
+			return decomposeSysZ(insns), nil
+		case CS_ARCH_SPARC:
+			return decomposeSparc(insns), nil
 		default:
 			return []Instruction{}, ErrArch
 		}

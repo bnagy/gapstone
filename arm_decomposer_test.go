@@ -1,3 +1,13 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
 import "testing"
@@ -67,7 +77,7 @@ func TestArm(t *testing.T) {
 	final := new(bytes.Buffer)
 	spec_file := "arm.SPEC"
 
-	for i, platform := range arm_tests {
+	for i, platform := range armTests {
 
 		engine, err := New(platform.arch, platform.mode)
 		if err != nil {
@@ -110,7 +120,7 @@ func TestArm(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		// fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

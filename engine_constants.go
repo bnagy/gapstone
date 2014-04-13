@@ -1,8 +1,20 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 
 const (
@@ -12,6 +24,8 @@ const (
 	CS_ARCH_MIPS  = C.CS_ARCH_MIPS  // Mips architecture
 	CS_ARCH_X86   = C.CS_ARCH_X86   // X86 architecture (including x86 & x86-64)
 	CS_ARCH_PPC   = C.CS_ARCH_PPC   // PowerPC architecture
+	CS_ARCH_SPARC = C.CS_ARCH_SPARC // Sparc architecture
+	CS_ARCH_SYSZ  = C.CS_ARCH_SYSZ  // SystemZ architecture
 	CS_ARCH_MAX   = C.CS_ARCH_MAX
 	CS_ARCH_ALL   = C.CS_ARCH_ALL
 )
@@ -26,6 +40,7 @@ const (
 	CS_MODE_THUMB         = C.CS_MODE_THUMB         // ARM's Thumb mode including Thumb-2
 	CS_MODE_MICRO         = C.CS_MODE_MICRO         // MicroMips mode (MIPS architecture)
 	CS_MODE_N64           = C.CS_MODE_N64           // Nintendo-64 mode (MIPS architecture)
+	CS_MODE_V9            = C.CS_MODE_V9            // SparcV9 mode (Sparc architecture)
 	CS_MODE_BIG_ENDIAN    = 1 << 31                 // big endian mode
 )
 

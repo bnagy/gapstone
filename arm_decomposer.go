@@ -1,8 +1,20 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
@@ -56,10 +68,11 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	// Cast the cs_detail union
 	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.detail.anon0[0]))
 
-	arm := new(ArmInstruction)
-	arm.CC = uint(cs_arm.cc)
-	arm.UpdateFlags = bool(cs_arm.update_flags)
-	arm.Writeback = bool(cs_arm.writeback)
+	arm := ArmInstruction{
+		CC:          uint(cs_arm.cc),
+		UpdateFlags: bool(cs_arm.update_flags),
+		Writeback:   bool(cs_arm.writeback),
+	}
 
 	// Cast the op_info to a []C.cs_arm_op
 	var ops []C.cs_arm_op
@@ -86,17 +99,17 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		case ARM_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM_OP_MEM:
-			gmop := new(ArmMemoryOperand)
 			cmop := (*C.arm_op_mem)(unsafe.Pointer(&cop.anon0[0]))
-			gmop.Base = uint(cmop.base)
-			gmop.Index = uint(cmop.index)
-			gmop.Scale = int(cmop.scale)
-			gmop.Disp = int64(cmop.disp)
-			gop.Mem = *gmop
+			gop.Mem = ArmMemoryOperand{
+				Base:  uint(cmop.base),
+				Index: uint(cmop.index),
+				Scale: int(cmop.scale),
+				Disp:  int64(cmop.disp),
+			}
 		}
 		arm.Operands = append(arm.Operands, *gop)
 	}
-	insn.Arm = *arm
+	insn.Arm = arm
 }
 
 func decomposeArm(raws []C.cs_insn) []Instruction {

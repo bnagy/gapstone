@@ -1,8 +1,20 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
@@ -49,12 +61,11 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 	// Cast the cs_detail union
 	cs_ppc := (*C.cs_ppc)(unsafe.Pointer(&raw.detail.anon0[0]))
 
-	ppc := new(PPCInstruction)
-
-	// Set the insn members
-	ppc.BC = int(cs_ppc.bc)
-	ppc.BH = int(cs_ppc.bh)
-	ppc.UpdateCR0 = bool(cs_ppc.update_cr0)
+	ppc := PPCInstruction{
+		BC:        int(cs_ppc.bc),
+		BH:        int(cs_ppc.bh),
+		UpdateCR0: bool(cs_ppc.update_cr0),
+	}
 
 	// Cast the op_info to a []C.cs_ppc_op
 	var ops []C.cs_ppc_op
@@ -80,17 +91,18 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 		case PPC_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case PPC_OP_MEM:
-			gmop := new(PPCMemoryOperand)
 			cmop := (*C.ppc_op_mem)(unsafe.Pointer(&cop.anon0[0]))
-			gmop.Base = uint(cmop.base)
-			gmop.Disp = int(cmop.disp)
-			gop.Mem = *gmop
+			gop.Mem = PPCMemoryOperand{
+				Base: uint(cmop.base),
+				Disp: int(cmop.disp),
+			}
+
 		}
 
 		ppc.Operands = append(ppc.Operands, *gop)
 
 	}
-	insn.PPC = *ppc
+	insn.PPC = ppc
 }
 
 func decomposePPC(raws []C.cs_insn) []Instruction {

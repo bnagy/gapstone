@@ -1,8 +1,20 @@
+/*
+Gapstone is a Go binding for the Capstone disassembly library. For examples,
+try reading the *_test.go files.
+
+	Library Author: Nguyen Anh Quynh
+	Binding Author: Ben Nagy
+	License: BSD style - see LICENSE file for details
+    (c) 2013 COSEINC. All Rights Reserved.
+*/
+
 package gapstone
 
-// #cgo pkg-config: capstone
+// #cgo LDFLAGS: -lcapstone
+// #cgo freebsd CFLAGS: -I/usr/local/include
+// #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
-// #include <capstone.h>
+// #include <capstone/capstone.h>
 import "C"
 import "unsafe"
 import "reflect"
@@ -62,34 +74,35 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	// Cast the cs_detail union
 	cs_x86 := (*C.cs_x86)(unsafe.Pointer(&raw.detail.anon0[0]))
 
-	x86 := new(X86Instruction)
-
 	// cast the prefix array to a []byte
 	var pref []byte
 	ph := (*reflect.SliceHeader)(unsafe.Pointer(&pref))
 	ph.Data = uintptr(unsafe.Pointer(&cs_x86.prefix[0]))
 	ph.Len = 5
 	ph.Cap = 5
-	x86.Prefix = pref
-	x86.Segment = uint(cs_x86.segment)
+
 	// Same for the opcode array
 	var opc []byte
 	oh := (*reflect.SliceHeader)(unsafe.Pointer(&opc))
 	oh.Data = uintptr(unsafe.Pointer(&cs_x86.opcode[0]))
 	oh.Len = 3
 	oh.Cap = 3
-	x86.Opcode = opc
-	// Then fill out the easy parts
-	x86.OpSize = byte(cs_x86.op_size)
-	x86.AddrSize = byte(cs_x86.addr_size)
-	x86.DispSize = byte(cs_x86.disp_size)
-	x86.ImmSize = byte(cs_x86.imm_size)
-	x86.ModRM = byte(cs_x86.modrm)
-	x86.Sib = byte(cs_x86.sib)
-	x86.Disp = int(cs_x86.disp)
-	x86.SibIndex = uint(cs_x86.sib_index)
-	x86.SibScale = int8(cs_x86.sib_scale)
-	x86.SibBase = uint(cs_x86.sib_base)
+
+	x86 := X86Instruction{
+		Prefix:   pref,
+		Segment:  uint(cs_x86.segment),
+		Opcode:   opc,
+		OpSize:   byte(cs_x86.op_size),
+		AddrSize: byte(cs_x86.addr_size),
+		DispSize: byte(cs_x86.disp_size),
+		ImmSize:  byte(cs_x86.imm_size),
+		ModRM:    byte(cs_x86.modrm),
+		Sib:      byte(cs_x86.sib),
+		Disp:     int(cs_x86.disp),
+		SibIndex: uint(cs_x86.sib_index),
+		SibScale: int8(cs_x86.sib_scale),
+		SibBase:  uint(cs_x86.sib_base),
+	}
 
 	// Cast the op_info to a []C.cs_x86_op
 	var ops []C.cs_x86_op
@@ -117,19 +130,19 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		case X86_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case X86_OP_MEM:
-			gmop := new(X86MemoryOperand)
 			cmop := (*C.x86_op_mem)(unsafe.Pointer(&cop.anon0[0]))
-			gmop.Base = uint(cmop.base)
-			gmop.Index = uint(cmop.index)
-			gmop.Scale = int(cmop.scale)
-			gmop.Disp = int64(cmop.disp)
-			gop.Mem = *gmop
+			gop.Mem = X86MemoryOperand{
+				Base:  uint(cmop.base),
+				Index: uint(cmop.index),
+				Scale: int(cmop.scale),
+				Disp:  int64(cmop.disp),
+			}
 		}
 
 		x86.Operands = append(x86.Operands, *gop)
-
 	}
-	insn.X86 = *x86
+
+	insn.X86 = x86
 }
 
 func decomposeX86(raws []C.cs_insn) []Instruction {
