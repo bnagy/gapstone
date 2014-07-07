@@ -3,12 +3,11 @@ gapstone
 
 Gapstone is a Go binding for the Capstone disassembly library.
 
-RECENT CHANGES
+CURRENT UPSTREAM VERSION: 2.2
 ===
 
-Changed the way libs are found, which reverted the change to use pkg-config. If
-you can't use go get for your platform, please check the cflags / ldflags trick
-we used for freebsd and submit a patch for your OS.
+SUMMARY
+===
 
 ( FROM THE CAPSTONE README )
 
@@ -18,23 +17,30 @@ disasm engine for binary analysis and reversing in the security community.
 Created by Nguyen Anh Quynh, then developed and maintained by a small community,
 Capstone offers some unparalleled features:
 
-- Support multiple hardware architectures: ARM, ARM64 (aka ARMv8), Mips, X86, PPC, Sparc & SystemZ
+- Support multiple hardware architectures: ARM, ARM64 (ARMv8), Mips, PPC, Sparc,
+  SystemZ, XCore and X86.
 
 - Having clean/simple/lightweight/intuitive architecture-neutral API.
 
 - Provide details on disassembled instruction (called “decomposer” by others).
 
 - Provide semantics of the disassembled instruction, such as list of implicit
-     registers read & written.
+  registers read & written.
 
-- Implemented in pure C language, with lightweight wrappers for C++, Python,
-     Ruby, OCaml, C#, Java and Go available.
+- Implemented in pure C language, with lightweight wrappers for C++, C#, Go,
+  Java, NodeJS, Ocaml, Python, Ruby & Vala ready (available in main code,
+  or provided externally by the community).
 
-- Native support for Windows & *nix platforms (MacOSX, Linux & *BSD confirmed).
+- Native support for all popular platforms: Windows, Mac OSX, iOS, Android,
+  Linux, *BSD, Solaris, etc.
 
 - Thread-safe by design.
 
+- Special support for embedding into firmware or OS kernel.
+
 - Distributed under the open source BSD license.
+
+Further information is available at http://www.capstone-engine.org
 
 To install:
 ----
