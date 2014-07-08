@@ -468,7 +468,9 @@ const (
 	ARM_INS_VCEQ      = C.ARM_INS_VCEQ
 	ARM_INS_VCGE      = C.ARM_INS_VCGE
 	ARM_INS_VCGT      = C.ARM_INS_VCGT
+	ARM_INS_VCLE      = C.ARM_INS_VCLE
 	ARM_INS_VCLS      = C.ARM_INS_VCLS
+	ARM_INS_VCLT      = C.ARM_INS_VCLT
 	ARM_INS_VCLZ      = C.ARM_INS_VCLZ
 	ARM_INS_VCMP      = C.ARM_INS_VCMP
 	ARM_INS_VCMPE     = C.ARM_INS_VCMPE
@@ -600,6 +602,8 @@ const (
 	ARM_INS_IT        = C.ARM_INS_IT
 	ARM_INS_LSL       = C.ARM_INS_LSL
 	ARM_INS_LSR       = C.ARM_INS_LSR
+	ARM_INS_ASRS      = C.ARM_INS_ASRS
+	ARM_INS_LSRS      = C.ARM_INS_LSRS
 	ARM_INS_ORN       = C.ARM_INS_ORN
 	ARM_INS_ROR       = C.ARM_INS_ROR
 	ARM_INS_RRX       = C.ARM_INS_RRX
@@ -612,7 +616,8 @@ const (
 	ARM_INS_MOVS      = C.ARM_INS_MOVS
 	ARM_INS_POP       = C.ARM_INS_POP
 	ARM_INS_PUSH      = C.ARM_INS_PUSH
-	ARM_INS_MAX       = C.ARM_INS_MAX
+	ARM_INS_MAX       = C.ARM_INS_MAX // <-- mark the end of the list of instructions
+
 )
 
 const (
