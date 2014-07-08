@@ -34,13 +34,13 @@ func (s *sanityChecks) Min() int { return expectedMin }
 // disassembly capstone expects to provide.
 var checks = sanityChecks{
 	CS_ARCH_ARM64: sanityCheck{
-		regMax: 226,
+		regMax: 228,
 		insMax: 446,
 		grpMax: 5,
 	},
 	CS_ARCH_ARM: sanityCheck{
 		regMax: 111,
-		insMax: 422,
+		insMax: 426,
 		grpMax: 33,
 	},
 	CS_ARCH_MIPS: sanityCheck{
@@ -65,8 +65,8 @@ var checks = sanityChecks{
 	},
 	CS_ARCH_X86: sanityCheck{
 		regMax: 233,
-		insMax: 1258,
-		grpMax: 35,
+		insMax: 1260,
+		grpMax: 40,
 	},
 	CS_ARCH_XCORE: sanityCheck{
 		regMax: 26,

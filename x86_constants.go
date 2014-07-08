@@ -859,6 +859,7 @@ const (
 	X86_INS_RSQRTPS          = C.X86_INS_RSQRTPS
 	X86_INS_RSQRTSS          = C.X86_INS_RSQRTSS
 	X86_INS_SAHF             = C.X86_INS_SAHF
+	X86_INS_SAL              = C.X86_INS_SAL
 	X86_INS_SALC             = C.X86_INS_SALC
 	X86_INS_SAR              = C.X86_INS_SAR
 	X86_INS_SARX             = C.X86_INS_SARX
@@ -924,6 +925,7 @@ const (
 	X86_INS_STR              = C.X86_INS_STR
 	X86_INS_FST              = C.X86_INS_FST
 	X86_INS_FSTP             = C.X86_INS_FSTP
+	X86_INS_FSTPNCE          = C.X86_INS_FSTPNCE
 	X86_INS_SUBPD            = C.X86_INS_SUBPD
 	X86_INS_SUBPS            = C.X86_INS_SUBPS
 	X86_INS_FSUBR            = C.X86_INS_FSUBR
@@ -1560,6 +1562,11 @@ const (
 	X86_GRP_TBM          = C.X86_GRP_TBM
 	X86_GRP_16BITMODE    = C.X86_GRP_16BITMODE
 	X86_GRP_NOT64BITMODE = C.X86_GRP_NOT64BITMODE
-	X86_GRP_JUMP         = C.X86_GRP_JUMP
+	X86_GRP_JUMP         = C.X86_GRP_JUMP // all jump instructions (conditional+direct+indirect jumps)
+	X86_GRP_VM           = C.X86_GRP_VM   // all virtualization instructions (VT-x + AMD-V)
+	X86_GRP_INT          = C.X86_GRP_INT  // all interrupt instructions (int+syscall)
+	X86_GRP_IRET         = C.X86_GRP_IRET // all interrupt return instructions
+	X86_GRP_CALL         = C.X86_GRP_CALL // all call instructions
+	X86_GRP_RET          = C.X86_GRP_RET  // all call return instructions
 	X86_GRP_MAX          = C.X86_GRP_MAX
 )

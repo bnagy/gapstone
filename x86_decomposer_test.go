@@ -46,10 +46,10 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		if insn.X86.SibIndex != X86_REG_INVALID {
 			fmt.Fprintf(
 				buf,
-				"\tsib_index: %s, sib_scale: %v, sib_base: %s\n",
+				"\t\tsib_base: %s\n\t\tsib_index: %s\n\t\tsib_scale: %v\n",
+				engine.RegName(insn.X86.SibBase),
 				engine.RegName(insn.X86.SibIndex),
 				insn.X86.SibScale,
-				engine.RegName(insn.X86.SibBase),
 			)
 		}
 	}
@@ -153,7 +153,7 @@ func TestX86(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		//fmt.Println(fs)
+		// fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
