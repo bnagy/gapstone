@@ -16,7 +16,7 @@ Disasm:
 Platform: X86 32bit (ATT syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	leal		dword ptr 8(%edx, %esi), %ecx // insn-ID: 296, insn-mnem: lea
+0x1000:	leal		8(%edx, %esi), %ecx // insn-ID: 296, insn-mnem: lea
 	This instruction belongs to groups: 33 
 0x1004:	addl		%ebx, %eax // insn-ID: 8, insn-mnem: add
 	Implicit registers modified: eflags 
@@ -51,11 +51,11 @@ Disasm:
 Platform: ARM
 Code: 0xed 0xff 0xff 0xeb 0x04 0xe0 0x2d 0xe5 0x00 0x00 0x00 0x00 0xe0 0x83 0x22 0xe5 0xf1 0x02 0x03 0x0e 0x00 0x00 0xa0 0xe3 0x02 0x30 0xc1 0xe7 0x00 0x00 0x53 0xe3 
 Disasm:
-0x1000:	bl		#-0x4c // insn-ID: 13, insn-mnem: bl
+0x1000:	bl		#0xfbc // insn-ID: 13, insn-mnem: bl
 	Implicit registers read: sp 
 	Implicit registers modified: lr 
 	This instruction belongs to groups: 20 
-0x1004:	str		lr, [sp, #-0x4]! // insn-ID: 212, insn-mnem: str
+0x1004:	str		lr, [sp, #-4]! // insn-ID: 212, insn-mnem: str
 	This instruction belongs to groups: 20 
 0x1008:	andeq		r0, r0, r0 // insn-ID: 8, insn-mnem: and
 	This instruction belongs to groups: 20 
@@ -80,7 +80,7 @@ Disasm:
 	This instruction belongs to groups: 25 
 0x1004:	pop.w		{fp, pc} // insn-ID: 57, insn-mnem: ldm
 	This instruction belongs to groups: 25 
-0x1008:	tbb		[r1, r0] // insn-ID: 415, insn-mnem: tbb
+0x1008:	tbb		[r1, r0] // insn-ID: 419, insn-mnem: tbb
 	This instruction belongs to groups: 25 32 
 0x100c:
 
@@ -237,4 +237,20 @@ Disasm:
 0x101e:	stmg		%r0, %r0, 0(%r15) // insn-ID: 654, insn-mnem: stmg
 0x1024:	ear		%r7, %a8 // insn-ID: 383, insn-mnem: ear
 0x1028:
+
+****************
+Platform: XCore
+Code: 0xfe 0x0f 0xfe 0x17 0x13 0x17 0xc6 0xfe 0xec 0x17 0x97 0xf8 0xec 0x4f 0x1f 0xfd 0xec 0x37 0x07 0xf2 0x45 0x5b 0xf9 0xfa 0x02 0x06 0x1b 0x10 
+Disasm:
+0x1000:	get		r11, ed // insn-ID: 43, insn-mnem: get
+	Implicit registers modified: r11 
+0x1002:	ldw		et, sp[4] // insn-ID: 66, insn-mnem: ldw
+0x1004:	setd		res[r3], r4 // insn-ID: 93, insn-mnem: setd
+0x1006:	init		t[r2]:lr, r1 // insn-ID: 50, insn-mnem: init
+0x100a:	divu		r9, r1, r3 // insn-ID: 26, insn-mnem: divu
+0x100e:	lda16		r9, r3[-r11] // insn-ID: 62, insn-mnem: lda16
+0x1012:	ldw		dp, dp[0x81c5] // insn-ID: 66, insn-mnem: ldw
+0x1016:	lmul		r11, r0, r2, r5, r8, r10 // insn-ID: 68, insn-mnem: lmul
+0x101a:	add		r1, r2, r3 // insn-ID: 1, insn-mnem: add
+0x101c:
 

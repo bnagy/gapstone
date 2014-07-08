@@ -26,6 +26,7 @@ const (
 	CS_ARCH_PPC   = C.CS_ARCH_PPC   // PowerPC architecture
 	CS_ARCH_SPARC = C.CS_ARCH_SPARC // Sparc architecture
 	CS_ARCH_SYSZ  = C.CS_ARCH_SYSZ  // SystemZ architecture
+	CS_ARCH_XCORE = C.CS_ARCH_XCORE // Xcore architecture
 	CS_ARCH_MAX   = C.CS_ARCH_MAX
 	CS_ARCH_ALL   = C.CS_ARCH_ALL
 )
@@ -46,10 +47,13 @@ const (
 
 const (
 	// Engine Options types
-	CS_OPT_SYNTAX = C.CS_OPT_SYNTAX // Asssembly output syntax
-	CS_OPT_DETAIL = C.CS_OPT_DETAIL // Break down instruction structure into details
-	CS_OPT_MODE   = C.CS_OPT_MODE   // Change engine's mode at run-time
-	CS_OPT_MEM    = C.CS_OPT_MEM    // User-defined memory malloc/calloc/free
+	CS_OPT_SYNTAX         = C.CS_OPT_SYNTAX         // Asssembly output syntax
+	CS_OPT_DETAIL         = C.CS_OPT_DETAIL         // Break down instruction structure into details
+	CS_OPT_MODE           = C.CS_OPT_MODE           // Change engine's mode at run-time
+	CS_OPT_MEM            = C.CS_OPT_MEM            // User-defined memory malloc/calloc/free
+	CS_OPT_SKIPDATA       = C.CS_OPT_SKIPDATA       // Skip data when disassembling. Then engine is in SKIPDATA mode.
+	CS_OPT_SKIPDATA_SETUP = C.CS_OPT_SKIPDATA_SETUP // Setup user-defined function for SKIPDATA option
+
 )
 
 const (
@@ -79,3 +83,5 @@ const (
 )
 
 const CS_SUPPORT_DIET = C.CS_SUPPORT_DIET
+
+const CS_SUPPORT_X86_REDUCE = C.CS_SUPPORT_X86_REDUCE

@@ -51,7 +51,7 @@ Disasm:
 0x1024:	bne	0x3fffff
 	op_count: 1
 		operands[0].type: IMM = 0x3fffff
-	Code condition: 9
+	Code condition: 265
 
 0x1028:	ba	0x3fffff
 	op_count: 1
@@ -66,7 +66,7 @@ Disasm:
 0x1030:	fbg	0x3fffff
 	op_count: 1
 		operands[0].type: IMM = 0x3fffff
-	Code condition: 22
+	Code condition: 278
 
 0x1034:	st	%o2, [%g1]
 	op_count: 2

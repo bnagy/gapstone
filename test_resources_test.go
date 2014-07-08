@@ -68,6 +68,11 @@ var checks = sanityChecks{
 		insMax: 1258,
 		grpMax: 35,
 	},
+	CS_ARCH_XCORE: sanityCheck{
+		regMax: 26,
+		insMax: 121,
+		grpMax: 2,
+	},
 }
 
 type option struct {
@@ -110,6 +115,7 @@ var ppcCode = "\x80\x20\x00\x00\x80\x3f\x00\x00\x10\x43\x23\x0e\xd0\x44\x00\x80\
 var sysZcode = "\xed\x00\x00\x00\x00\x1a\x5a\x0f\x1f\xff\xc2\x09\x80\x00\x00\x00\x07\xf7\xeb\x2a\xff\xff\x7f\x57\xe3\x01\xff\xff\x7f\x57\xeb\x00\xf0\x00\x00\x24\xb2\x4f\x00\x78"
 var sparcCode = "\x80\xa0\x40\x02\x85\xc2\x60\x08\x85\xe8\x20\x01\x81\xe8\x00\x00\x90\x10\x20\x01\xd5\xf6\x10\x16\x21\x00\x00\x0a\x86\x00\x40\x02\x01\x00\x00\x00\x12\xbf\xff\xff\x10\xbf\xff\xff\xa0\x02\x00\x09\x0d\xbf\xff\xff\xd4\x20\x60\x00\xd4\x4e\x00\x16\x2a\xc2\x80\x03"
 var sparcV9Code = "\x81\xa8\x0a\x24\x89\xa0\x10\x20\x89\xa0\x1a\x60\x89\xa0\x00\xe0"
+var xcoreCode = "\xfe\x0f\xfe\x17\x13\x17\xc6\xfe\xec\x17\x97\xf8\xec\x4f\x1f\xfd\xec\x37\x07\xf2\x45\x5b\xf9\xfa\x02\x06\x1b\x10\x09\xfd\xec\xa7"
 
 var basicTests = platforms{
 	{
@@ -224,6 +230,13 @@ var basicTests = platforms{
 		sysZcode,
 		"SystemZ",
 	},
+	platform{
+		CS_ARCH_XCORE,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		xcoreCode,
+		"XCore",
+	},
 }
 
 // Honestly, these are _almost_ identical, but it's just easier to maintain
@@ -334,6 +347,13 @@ var detailTests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		sysZcode,
 		"SystemZ",
+	},
+	platform{
+		CS_ARCH_XCORE,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		xcoreCode,
+		"XCore",
 	},
 }
 
@@ -463,6 +483,16 @@ var sparcTests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		sparcV9Code,
 		"SparcV9",
+	},
+}
+
+var xcoreTests = platforms{
+	platform{
+		CS_ARCH_XCORE,
+		CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		xcoreCode,
+		"XCore",
 	},
 }
 

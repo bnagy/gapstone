@@ -86,7 +86,7 @@ Disasm:
 		operands[1].type: REG = al
 
 0x1011:	mov	ax, word ptr ss:[si + 0x2391]
-	Prefix:0x01 0x00 0x00 0x00 0x00 
+	Prefix:0x00 0x36 0x00 0x00 0x00 
 	Segment override: ss
 	Opcode:0x8b 0x00 0x00 
 	op_size: 2, addr_size: 2, disp_size: 2, imm_size: 2
@@ -159,7 +159,7 @@ Disasm:
 		operands[1].type: REG = cl
 
 0x1024:	add	byte ptr [eax], al
-	Prefix:0x01 0x00 0x00 0x00 0x00 
+	Prefix:0x00 0x00 0x00 0x67 0x00 
 	Opcode:0x00 0x00 0x00 
 	op_size: 1, addr_size: 4, disp_size: 4, imm_size: 2
 	modrm: 0x0
@@ -187,14 +187,16 @@ Disasm:
 Platform: X86 32 (AT&T syntax)
 Code:0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 0x05 0x23 0x01 0x00 0x00 0x36 0x8b 0x84 0x91 0x23 0x01 0x00 0x00 0x41 0x8d 0x84 0x39 0x89 0x67 0x00 0x00 0x8d 0x87 0x89 0x67 0x00 0x00 0xb4 0xc6 
 Disasm:
-0x1000:	leal	dword ptr 8(%edx, %esi), %ecx
+0x1000:	leal	8(%edx, %esi), %ecx
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x8d 0x00 0x00 
 	op_size: 4, addr_size: 4, disp_size: 1, imm_size: 4
 	modrm: 0x4c
 	disp: 0x8
 	sib: 0x32
-	sib_index: esi, sib_scale: 1, sib_base: edx
+		sib_base: edx
+		sib_index: esi
+		sib_scale: 1
 	op_count: 2
 		operands[0].type: MEM
 			operands[0].mem.base: REG = edx
@@ -239,15 +241,17 @@ Disasm:
 		operands[0].type: IMM = 0x123
 		operands[1].type: REG = eax
 
-0x1011:	movl	dword ptr %ss:0x123(%ecx, %edx, 4), %eax
-	Prefix:0x01 0x00 0x00 0x00 0x00 
+0x1011:	movl	%ss:0x123(%ecx, %edx, 4), %eax
+	Prefix:0x00 0x36 0x00 0x00 0x00 
 	Segment override: ss
 	Opcode:0x8b 0x00 0x00 
 	op_size: 4, addr_size: 4, disp_size: 4, imm_size: 4
 	modrm: 0x84
 	disp: 0x123
 	sib: 0x91
-	sib_index: edx, sib_scale: 4, sib_base: ecx
+		sib_base: ecx
+		sib_index: edx
+		sib_scale: 4
 	op_count: 2
 		operands[0].type: MEM
 			operands[0].mem.base: REG = ecx
@@ -266,14 +270,16 @@ Disasm:
 	op_count: 1
 		operands[0].type: REG = ecx
 
-0x101a:	leal	dword ptr 0x6789(%ecx, %edi), %eax
+0x101a:	leal	0x6789(%ecx, %edi), %eax
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x8d 0x00 0x00 
 	op_size: 4, addr_size: 4, disp_size: 4, imm_size: 4
 	modrm: 0x84
 	disp: 0x6789
 	sib: 0x39
-	sib_index: edi, sib_scale: 1, sib_base: ecx
+		sib_base: ecx
+		sib_index: edi
+		sib_scale: 1
 	op_count: 2
 		operands[0].type: MEM
 			operands[0].mem.base: REG = ecx
@@ -281,7 +287,7 @@ Disasm:
 			operands[0].mem.disp: 0x6789
 		operands[1].type: REG = eax
 
-0x1021:	leal	dword ptr 0x6789(%edi), %eax
+0x1021:	leal	0x6789(%edi), %eax
 	Prefix:0x00 0x00 0x00 0x00 0x00 
 	Opcode:0x8d 0x00 0x00 
 	op_size: 4, addr_size: 4, disp_size: 4, imm_size: 4
@@ -320,7 +326,9 @@ Disasm:
 	modrm: 0x4c
 	disp: 0x8
 	sib: 0x32
-	sib_index: esi, sib_scale: 1, sib_base: edx
+		sib_base: edx
+		sib_index: esi
+		sib_scale: 1
 	op_count: 2
 		operands[0].type: REG = ecx
 		operands[1].type: MEM
@@ -366,14 +374,16 @@ Disasm:
 		operands[1].type: IMM = 0x123
 
 0x1011:	mov	eax, dword ptr ss:[ecx + edx*4 + 0x123]
-	Prefix:0x01 0x00 0x00 0x00 0x00 
+	Prefix:0x00 0x36 0x00 0x00 0x00 
 	Segment override: ss
 	Opcode:0x8b 0x00 0x00 
 	op_size: 4, addr_size: 4, disp_size: 4, imm_size: 4
 	modrm: 0x84
 	disp: 0x123
 	sib: 0x91
-	sib_index: edx, sib_scale: 4, sib_base: ecx
+		sib_base: ecx
+		sib_index: edx
+		sib_scale: 4
 	op_count: 2
 		operands[0].type: REG = eax
 		operands[1].type: MEM
@@ -399,7 +409,9 @@ Disasm:
 	modrm: 0x84
 	disp: 0x6789
 	sib: 0x39
-	sib_index: edi, sib_scale: 1, sib_base: ecx
+		sib_base: ecx
+		sib_index: edi
+		sib_scale: 1
 	op_count: 2
 		operands[0].type: REG = eax
 		operands[1].type: MEM
