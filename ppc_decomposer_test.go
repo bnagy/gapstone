@@ -56,6 +56,8 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 func TestPPC(t *testing.T) {
 
+	t.Parallel()
+
 	final := new(bytes.Buffer)
 	spec_file := "ppc.SPEC"
 

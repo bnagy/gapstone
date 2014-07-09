@@ -102,6 +102,8 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 func TestX86(t *testing.T) {
 
+	t.Parallel()
+
 	final := new(bytes.Buffer)
 	spec_file := "x86.SPEC"
 

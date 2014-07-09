@@ -68,6 +68,8 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 func TestArm64(t *testing.T) {
 
+	t.Parallel()
+
 	final := new(bytes.Buffer)
 	spec_file := "arm64.SPEC"
 

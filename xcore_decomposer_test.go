@@ -53,6 +53,8 @@ func xcoreInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 func TestXcore(t *testing.T) {
 
+	t.Parallel()
+
 	final := new(bytes.Buffer)
 	spec_file := "xcore.SPEC"
 

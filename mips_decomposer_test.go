@@ -45,6 +45,8 @@ func mipsInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 func TestMips(t *testing.T) {
 
+	t.Parallel()
+
 	final := new(bytes.Buffer)
 	spec_file := "mips.SPEC"
 
