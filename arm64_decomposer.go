@@ -116,7 +116,7 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 		arm64.Operands = append(arm64.Operands, *gop)
 
 	}
-	insn.Arm64 = arm64
+	insn.Arm64 = &arm64
 }
 
 func decomposeArm64(raws []C.cs_insn) []Instruction {

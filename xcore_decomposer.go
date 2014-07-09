@@ -100,7 +100,7 @@ func fillXcoreHeader(raw C.cs_insn, insn *Instruction) {
 		xcore.Operands = append(xcore.Operands, gop)
 
 	}
-	insn.Xcore = xcore
+	insn.Xcore = &xcore
 }
 
 func decomposeXcore(raws []C.cs_insn) []Instruction {

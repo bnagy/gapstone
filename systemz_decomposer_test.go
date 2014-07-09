@@ -40,7 +40,7 @@ func sysZInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 					i, engine.RegName(uint(op.Mem.Index)))
 			}
 			if op.Mem.Length != 0 {
-				fmt.Fprintf(buf, "\t\t\toperands[%u].mem.length: 0x%x\n", i, uint64(op.Mem.Length))
+				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.length: 0x%x\n", i, uint64(op.Mem.Length))
 			}
 			if op.Mem.Disp != 0 {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint64(op.Mem.Disp))
@@ -60,7 +60,6 @@ func TestSysZ(t *testing.T) {
 
 	final := new(bytes.Buffer)
 	spec_file := "sysZ.SPEC"
-
 	for i, platform := range sysZTests {
 
 		engine, err := New(platform.arch, platform.mode)
@@ -68,6 +67,8 @@ func TestSysZ(t *testing.T) {
 			t.Errorf("Failed to initialize engine %v", err)
 			return
 		}
+		defer engine.Close()
+
 		for _, opt := range platform.options {
 			engine.SetOption(opt.ty, opt.value)
 		}
@@ -83,7 +84,6 @@ func TestSysZ(t *testing.T) {
 				t.Logf("Sanity Check: PASS")
 			}
 		}
-		defer engine.Close()
 
 		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
@@ -114,5 +114,6 @@ func TestSysZ(t *testing.T) {
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
 	}
+	final.Reset()
 
 }

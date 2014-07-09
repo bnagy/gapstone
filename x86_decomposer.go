@@ -142,7 +142,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		x86.Operands = append(x86.Operands, *gop)
 	}
 
-	insn.X86 = x86
+	insn.X86 = &x86
 }
 
 func decomposeX86(raws []C.cs_insn) []Instruction {

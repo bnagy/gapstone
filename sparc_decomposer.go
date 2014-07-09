@@ -19,7 +19,7 @@ import "C"
 import "unsafe"
 import "reflect"
 
-//import "fmt"
+// import "fmt"
 
 // Accessed via insn.Sparc.XXX
 type SparcInstruction struct {
@@ -103,7 +103,7 @@ func fillSparcHeader(raw C.cs_insn, insn *Instruction) {
 		sparc.Operands = append(sparc.Operands, *gop)
 
 	}
-	insn.Sparc = sparc
+	insn.Sparc = &sparc
 }
 
 func decomposeSparc(raws []C.cs_insn) []Instruction {

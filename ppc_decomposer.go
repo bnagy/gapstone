@@ -87,7 +87,7 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case PPC_OP_IMM:
-			gop.Imm = int(*(*C.int64_t)(unsafe.Pointer(&cop.anon0[0])))
+			gop.Imm = int(*(*C.int32_t)(unsafe.Pointer(&cop.anon0[0])))
 		case PPC_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case PPC_OP_MEM:
@@ -102,7 +102,7 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 		ppc.Operands = append(ppc.Operands, *gop)
 
 	}
-	insn.PPC = ppc
+	insn.PPC = &ppc
 }
 
 func decomposePPC(raws []C.cs_insn) []Instruction {

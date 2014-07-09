@@ -58,7 +58,7 @@ func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
 	// Cast the cs_detail union
 	cs_mips := (*C.cs_mips)(unsafe.Pointer(&raw.detail.anon0[0]))
 
-	mips := new(MipsInstruction)
+	mips := MipsInstruction{}
 
 	// Cast the op_info to a []C.cs_mips_op
 	var ops []C.cs_mips_op
@@ -94,7 +94,7 @@ func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
 		mips.Operands = append(mips.Operands, *gop)
 
 	}
-	insn.Mips = *mips
+	insn.Mips = &mips
 }
 
 func decomposeMips(raws []C.cs_insn) []Instruction {

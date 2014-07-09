@@ -19,7 +19,7 @@ import "C"
 import "unsafe"
 import "reflect"
 
-//import "fmt"
+// import "fmt"
 
 // Accessed via insn.SysZ.XXX
 type SysZInstruction struct {
@@ -103,7 +103,7 @@ func fillSysZHeader(raw C.cs_insn, insn *Instruction) {
 		sysz.Operands = append(sysz.Operands, *gop)
 
 	}
-	insn.SysZ = sysz
+	insn.SysZ = &sysz
 }
 
 func decomposeSysZ(raws []C.cs_insn) []Instruction {

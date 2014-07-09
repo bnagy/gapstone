@@ -66,7 +66,7 @@ func TestTest(t *testing.T) {
 	}
 	if fs := final.String(); string(spec) != fs {
 		// Debugging - uncomment below and run the test | diff - test.SPEC
-		// fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

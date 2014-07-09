@@ -109,7 +109,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		}
 		arm.Operands = append(arm.Operands, *gop)
 	}
-	insn.Arm = arm
+	insn.Arm = &arm
 }
 
 func decomposeArm(raws []C.cs_insn) []Instruction {

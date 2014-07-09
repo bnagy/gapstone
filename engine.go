@@ -87,14 +87,14 @@ type InstructionHeader struct {
 // fill in only the Arm structure member.
 type Instruction struct {
 	InstructionHeader
-	Arm   ArmInstruction
-	Arm64 Arm64Instruction
-	Mips  MipsInstruction
-	X86   X86Instruction
-	PPC   PPCInstruction
-	SysZ  SysZInstruction
-	Sparc SparcInstruction
-	Xcore XcoreInstruction
+	Arm   *ArmInstruction
+	Arm64 *Arm64Instruction
+	Mips  *MipsInstruction
+	X86   *X86Instruction
+	PPC   *PPCInstruction
+	SysZ  *SysZInstruction
+	Sparc *SparcInstruction
+	Xcore *XcoreInstruction
 }
 
 // Called by the arch specific decomposers

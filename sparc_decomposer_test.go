@@ -66,6 +66,8 @@ func TestSparc(t *testing.T) {
 			t.Errorf("Failed to initialize engine %v", err)
 			return
 		}
+		defer engine.Close()
+
 		for _, opt := range platform.options {
 			engine.SetOption(opt.ty, opt.value)
 		}
@@ -81,7 +83,6 @@ func TestSparc(t *testing.T) {
 				t.Logf("Sanity Check: PASS")
 			}
 		}
-		defer engine.Close()
 
 		insns, err := engine.Disasm([]byte(platform.code), address, 0)
 		if err == nil {
