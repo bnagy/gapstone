@@ -10,10 +10,12 @@ try reading the *_test.go files.
 
 package gapstone
 
-import "testing"
-import "bytes"
-import "fmt"
-import "io/ioutil"
+import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"testing"
+)
 
 func TestDetailTest(t *testing.T) {
 
@@ -94,7 +96,6 @@ func TestDetailTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
