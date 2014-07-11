@@ -252,8 +252,10 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 	return []Instruction{}, e.Errno()
 }
 
+// user callback function prototype
 type SkipDataCB func(buffer []byte, offset int, userData interface{}) int
 
+// configuration options for CS_OPT_SKIPDATA, passed via SkipDataStart()
 type SkipDataConfig struct {
 	Mnemonic string
 	Callback SkipDataCB
@@ -267,17 +269,36 @@ type cbWrapper struct {
 
 //export trampoline
 func trampoline(buffer *C.uint8_t, buflen C.size_t, offset C.size_t, user_data unsafe.Pointer) C.size_t {
-	// convert buffer to a []byte
+	/*
+	   This is all a little confusing. Basically the callback system works as follows:
+	     - forward declaration above: extern size_t trampoline(...
+	     - export this Go function so it is visible to C
+	     - register this (and only this) trampoline as the capstone C callback
+	     - use the capstone user_data opaque pointer to pass a wrapped struct. That
+	       struct contains both the Go level UserData and the Go user callback
+	       function
+	     - When this function is invoked by capstone, we create the Go args,
+	       unwrap the end-user's callback and then invoke it and return the
+	       result to C
+	*/
+
+	// convert buffer to a []byte. This provides memory safety, so we don't
+	// need to pass the buflen param to the Go end-user
 	var data []byte
 	sh := (*reflect.SliceHeader)(unsafe.Pointer(&data))
 	sh.Data = uintptr(unsafe.Pointer(buffer))
 	sh.Len = int(buflen)
 	sh.Cap = int(buflen)
 
+	// Unwrap the Callback and UserData struct ( ud can be nil )
 	cbw := (*cbWrapper)(user_data)
 	return (C.size_t)(cbw.fn(data, int(offset), cbw.ud))
 }
 
+// Enables capstone CS_OPT_SKIPDATA. If no SkipDataConfig is passed ( nil )
+// the default behaviour will be enabled. It is valid to pass any combination
+// of the SkipDataConfig options, although UserData without a Callback will be
+// ignored.
 func (e *Engine) SkipDataStart(config *SkipDataConfig) {
 
 	if config != nil {
@@ -309,6 +330,8 @@ func (e *Engine) SkipDataStart(config *SkipDataConfig) {
 	C.cs_option(e.handle, CS_OPT_SKIPDATA, CS_OPT_ON)
 }
 
+// Disable CS_OPT_SKIPDATA. Removes any registered callbacks and frees
+// resources.
 func (e *Engine) SkipDataStop() {
 	C.cs_option(e.handle, CS_OPT_SKIPDATA, CS_OPT_OFF)
 	if e.skipdata == nil {

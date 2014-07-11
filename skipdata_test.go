@@ -110,6 +110,44 @@ func TestMnemonicOnly(t *testing.T) {
 	}
 }
 
+func TestCallbackOnly(t *testing.T) {
+
+	t.Parallel()
+	thack = t
+	mnem := ".byte"
+
+	engine, err := New(
+		CS_ARCH_X86,
+		CS_MODE_32,
+	)
+	if err != nil {
+		t.Fatalf("Unable to open engine: %v", err)
+	}
+	defer engine.Close()
+
+	engine.SkipDataStart(
+		&SkipDataConfig{
+			Callback: myCallback,
+			UserData: someRandomStruct{Baz: 3.141},
+		},
+	)
+	defer engine.SkipDataStop()
+
+	insns, err := engine.Disasm(
+		[]byte(x86Skip), // code buffer
+		0x10000,         // starting address
+		0,               // insns to disassemble, 0 for all
+	)
+
+	if err == nil {
+		if len(insns) < 4 || insns[3].Mnemonic != mnem {
+			t.Errorf("Want default mnemonic %v, got %v", mnem, insns[3].Mnemonic)
+		} else {
+			t.Logf("SkipData with callback only: [OK]\n")
+		}
+		return
+	}
+}
 func TestNilConfig(t *testing.T) {
 
 	t.Parallel()
