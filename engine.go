@@ -15,6 +15,7 @@ package gapstone
 // #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
+// extern size_t trampoline(uint8_t *buffer, size_t buflen, size_t offset, void *user_data);
 import "C"
 import "unsafe"
 import "reflect"
@@ -57,9 +58,10 @@ var dietMode = bool(C.cs_support(CS_SUPPORT_DIET))
 // disassembled. After use you must close an Engine with engine.Close() to allow
 // the C lib to free resources.
 type Engine struct {
-	handle C.csh
-	arch   int
-	mode   uint
+	handle   C.csh
+	arch     int
+	mode     uint
+	skipdata *C.cs_opt_skipdata
 }
 
 // Information that exists for every Instruction, regardless of arch.
@@ -73,7 +75,7 @@ type InstructionHeader struct {
 	Bytes   []byte // Raw Instruction bytes
 	// Not available in diet mode ( capstone built with CAPSTONE_DIET=yes )
 	Mnemonic string // Ascii text of instruction mnemonic
-	OpStr    string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAC
+	OpStr    string // Ascii text of instruction operands - Syntax depends on CS_OPT_SYNTAX
 	// Not available without the decomposer. BE CAREFUL! By default,
 	// CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing these
 	// members is undefined.
@@ -135,6 +137,9 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 // Close the underlying C handle and resources used by this Engine
 func (e Engine) Close() error {
 	res := C.cs_close(&e.handle)
+	if e.skipdata != nil {
+		C.free(unsafe.Pointer(e.skipdata.mnemonic))
+	}
 	return Errno(res)
 }
 
@@ -247,12 +252,69 @@ func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, erro
 	return []Instruction{}, e.Errno()
 }
 
+type SkipDataCB func(buffer []byte, offset int, userData interface{}) int
+
+type SkipDataConfig struct {
+	Mnemonic string
+	Callback SkipDataCB
+	UserData interface{}
+}
+
+type cbWrapper struct {
+	fn SkipDataCB
+	ud interface{}
+}
+
+//export trampoline
+func trampoline(buffer *C.uint8_t, buflen C.size_t, offset C.size_t, user_data unsafe.Pointer) C.size_t {
+	// convert buffer to a []byte
+	var data []byte
+	sh := (*reflect.SliceHeader)(unsafe.Pointer(&data))
+	sh.Data = uintptr(unsafe.Pointer(buffer))
+	sh.Len = int(buflen)
+	sh.Cap = int(buflen)
+
+	cbw := (*cbWrapper)(user_data)
+	return (C.size_t)(cbw.fn(data, int(offset), cbw.ud))
+}
+
+func (e Engine) SkipDataStart(config SkipDataConfig) {
+
+	e.skipdata = &C.cs_opt_skipdata{}
+
+	if config.Callback != nil {
+		e.skipdata.callback = (C.cs_skipdata_cb_t)(C.trampoline)
+		// Happily, we can use the opaque user_data pointer in C to hold both
+		// the Go callback function and the Go userData
+		e.skipdata.user_data = unsafe.Pointer(
+			&cbWrapper{
+				fn: config.Callback,
+				ud: config.UserData,
+			},
+		)
+	}
+	if config.Mnemonic != "" {
+		e.skipdata.mnemonic = C.CString(config.Mnemonic)
+	} else {
+		e.skipdata.mnemonic = C.CString(".byte")
+	}
+
+	C.cs_option(e.handle, CS_OPT_SKIPDATA_SETUP, C.size_t(uintptr(unsafe.Pointer(e.skipdata))))
+	C.cs_option(e.handle, CS_OPT_SKIPDATA, CS_OPT_ON)
+}
+
+func (e Engine) SkipDataStop() {
+	C.cs_option(e.handle, CS_OPT_SKIPDATA, CS_OPT_OFF)
+	C.free(unsafe.Pointer(e.skipdata.mnemonic))
+	e.skipdata = nil
+}
+
 // Create a new Engine with the specified arch and mode
 func New(arch int, mode uint) (Engine, error) {
 	var handle C.csh
 	res := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
 	if Errno(res) == ErrOK {
-		return Engine{handle, arch, mode}, nil
+		return Engine{handle, arch, mode, nil}, nil
 	}
-	return Engine{0, CS_ARCH_MAX, 0}, Errno(res)
+	return Engine{0, CS_ARCH_MAX, 0, nil}, Errno(res)
 }
