@@ -11,26 +11,30 @@ try reading the *_test.go files.
 package gapstone
 
 import (
-	"log"
 	"testing"
 )
 
 var x86Skip = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x00\x91\x92"
+var thack *testing.T
+
+type someRandomStruct struct {
+	Foo int
+	Bar string
+	Baz float64
+}
 
 func myCallback(data []byte, offset int, ud interface{}) int {
-	log.Printf("Got len %v, offset %v, userdata: %v", len(data), offset, ud)
+	if ud.(someRandomStruct).Baz != 3.141 {
+		thack.Errorf("error in userdata, want Baz: 3.141, got %v", ud.(someRandomStruct).Baz)
+	}
 	return 2
 }
 
-func TestSkipData(t *testing.T) {
+func TestFullCallback(t *testing.T) {
 
-	var maj, min int
-	if ver, err := New(0, 0); err == nil {
-		maj, min = ver.Version()
-		ver.Close()
-	}
-
-	t.Logf("Skipdata Test. Capstone Version: %v.%v", maj, min)
+	t.Parallel()
+	thack = t
+	mnem := "NOTCODE"
 
 	engine, err := New(
 		CS_ARCH_X86,
@@ -42,12 +46,13 @@ func TestSkipData(t *testing.T) {
 	defer engine.Close()
 
 	engine.SkipDataStart(
-		SkipDataConfig{
-			Mnemonic: "db",
+		&SkipDataConfig{
+			Mnemonic: mnem,
 			Callback: myCallback,
-			UserData: 42,
+			UserData: someRandomStruct{Baz: 3.141},
 		},
 	)
+	defer engine.SkipDataStop()
 
 	insns, err := engine.Disasm(
 		[]byte(x86Skip), // code buffer
@@ -56,11 +61,85 @@ func TestSkipData(t *testing.T) {
 	)
 
 	if err == nil {
-		log.Printf("Disasm:\n")
-		for _, insn := range insns {
-			log.Printf("0x%x:\t%s\t\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
+		if len(insns) < 4 || insns[3].Mnemonic != mnem {
+			t.Errorf("Want custom mnemonic %v, got %v", mnem, insns[3].Mnemonic)
+		} else {
+			t.Logf("SkipData with full callback: [OK]\n")
+		}
+		// Erroneous extra call to SkipDataStop()
+		engine.SkipDataStop()
+		return
+	}
+}
+
+func TestMnemonicOnly(t *testing.T) {
+
+	t.Parallel()
+	thack = t
+	mnem := "rabbits"
+
+	engine, err := New(
+		CS_ARCH_X86,
+		CS_MODE_32,
+	)
+	if err != nil {
+		t.Fatalf("Unable to open engine: %v", err)
+	}
+	defer engine.Close()
+
+	engine.SkipDataStart(
+		&SkipDataConfig{
+			Mnemonic: mnem,
+		},
+	)
+	defer engine.SkipDataStop()
+
+	insns, err := engine.Disasm(
+		[]byte(x86Skip), // code buffer
+		0x10000,         // starting address
+		0,               // insns to disassemble, 0 for all
+	)
+
+	if err == nil {
+		if len(insns) < 4 || insns[3].Mnemonic != mnem {
+			t.Errorf("Want custom mnemonic %v, got %v", mnem, insns[3].Mnemonic)
+		} else {
+			t.Logf("SkipData with mnemonic only: [OK]\n")
 		}
 		return
 	}
-	engine.SkipDataStop()
+}
+
+func TestNilConfig(t *testing.T) {
+
+	t.Parallel()
+	thack = t
+	mnem := ".byte"
+
+	engine, err := New(
+		CS_ARCH_X86,
+		CS_MODE_32,
+	)
+	if err != nil {
+		t.Fatalf("Unable to open engine: %v", err)
+	}
+	defer engine.Close()
+
+	engine.SkipDataStart(nil)
+	defer engine.SkipDataStop()
+
+	insns, err := engine.Disasm(
+		[]byte(x86Skip), // code buffer
+		0x10000,         // starting address
+		0,               // insns to disassemble, 0 for all
+	)
+
+	if err == nil {
+		if len(insns) < 4 || insns[3].Mnemonic != mnem {
+			t.Errorf("Want default mnemonic %v, got %v", mnem, insns[3].Mnemonic)
+		} else {
+			t.Logf("SkipData with default: [OK]\n")
+		}
+		return
+	}
 }

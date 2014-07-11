@@ -135,7 +135,7 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 }
 
 // Close the underlying C handle and resources used by this Engine
-func (e Engine) Close() error {
+func (e *Engine) Close() error {
 	res := C.cs_close(&e.handle)
 	if e.skipdata != nil {
 		C.free(unsafe.Pointer(e.skipdata.mnemonic))
@@ -144,31 +144,31 @@ func (e Engine) Close() error {
 }
 
 // Accessor for the Engine architecture CS_ARCH_*
-func (e Engine) Arch() int { return e.arch }
+func (e *Engine) Arch() int { return e.arch }
 
 // Accessor for the Engine mode CS_MODE_*
-func (e Engine) Mode() uint { return e.mode }
+func (e *Engine) Mode() uint { return e.mode }
 
 // Check if a particular arch is supported by this engine.
 // To verify if this engine supports everything, use CS_ARCH_ALL
-func (e Engine) Support(arch int) bool { return bool(C.cs_support(C.int(arch))) }
+func (e *Engine) Support(arch int) bool { return bool(C.cs_support(C.int(arch))) }
 
 // Version information.
-func (e Engine) Version() (maj, min int) {
+func (e *Engine) Version() (maj, min int) {
 	C.cs_version((*C.int)(unsafe.Pointer(&maj)), (*C.int)(unsafe.Pointer(&min)))
 	return
 }
 
 // Getter for the last Errno from the engine. Normal code shouldn't need to
 // access this directly, but it's exported just in case.
-func (e Engine) Errno() error { return Errno(C.cs_errno(e.handle)) }
+func (e *Engine) Errno() error { return Errno(C.cs_errno(e.handle)) }
 
 // The arch is implicit in the Engine. Accepts either a constant like ARM_REG_R0
 // or insn.Arm.Operands[0].Reg, or anything that refers to a Register like
 // insn.X86.SibBase etc
 //
 // WARNING: Always returns "" if capstone built with CAPSTONE_DIET
-func (e Engine) RegName(reg uint) string {
+func (e *Engine) RegName(reg uint) string {
 	if dietMode {
 		return ""
 	}
@@ -179,7 +179,7 @@ func (e Engine) RegName(reg uint) string {
 // ARM_INSN_ADD, or insn.Id
 //
 // WARNING: Always returns "" if capstone built with CAPSTONE_DIET
-func (e Engine) InsnName(insn uint) string {
+func (e *Engine) InsnName(insn uint) string {
 	if dietMode {
 		return ""
 	}
@@ -187,7 +187,7 @@ func (e Engine) InsnName(insn uint) string {
 }
 
 // Setter for Engine options CS_OPT_*
-func (e Engine) SetOption(ty, value uint) error {
+func (e *Engine) SetOption(ty, value uint) error {
 	res := C.cs_option(
 		e.handle,
 		C.cs_opt_type(ty),
@@ -205,7 +205,7 @@ func (e Engine) SetOption(ty, value uint) error {
 //   * count - Number of instructions to disassemble, 0 to disassemble the whole []byte
 //
 // Underlying C resources are automatically free'd by this function.
-func (e Engine) Disasm(input []byte, address, count uint64) ([]Instruction, error) {
+func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, error) {
 
 	var insn *C.cs_insn
 	bptr := (*C.uint8_t)(unsafe.Pointer(&input[0]))
@@ -278,33 +278,42 @@ func trampoline(buffer *C.uint8_t, buflen C.size_t, offset C.size_t, user_data u
 	return (C.size_t)(cbw.fn(data, int(offset), cbw.ud))
 }
 
-func (e Engine) SkipDataStart(config SkipDataConfig) {
+func (e *Engine) SkipDataStart(config *SkipDataConfig) {
 
-	e.skipdata = &C.cs_opt_skipdata{}
+	if config != nil {
 
-	if config.Callback != nil {
-		e.skipdata.callback = (C.cs_skipdata_cb_t)(C.trampoline)
-		// Happily, we can use the opaque user_data pointer in C to hold both
-		// the Go callback function and the Go userData
-		e.skipdata.user_data = unsafe.Pointer(
-			&cbWrapper{
-				fn: config.Callback,
-				ud: config.UserData,
-			},
-		)
+		e.skipdata = &C.cs_opt_skipdata{}
+
+		if config.Callback != nil {
+			e.skipdata.callback = (C.cs_skipdata_cb_t)(C.trampoline)
+			// Happily, we can use the opaque user_data pointer in C to hold both
+			// the Go callback function and the Go userData
+			e.skipdata.user_data = unsafe.Pointer(
+				&cbWrapper{
+					fn: config.Callback,
+					ud: config.UserData,
+				},
+			)
+		}
+
+		if config.Mnemonic != "" {
+			e.skipdata.mnemonic = C.CString(config.Mnemonic)
+		} else {
+			e.skipdata.mnemonic = C.CString(".byte")
+		}
+
+		C.cs_option(e.handle, CS_OPT_SKIPDATA_SETUP, C.size_t(uintptr(unsafe.Pointer(e.skipdata))))
 	}
-	if config.Mnemonic != "" {
-		e.skipdata.mnemonic = C.CString(config.Mnemonic)
-	} else {
-		e.skipdata.mnemonic = C.CString(".byte")
-	}
 
-	C.cs_option(e.handle, CS_OPT_SKIPDATA_SETUP, C.size_t(uintptr(unsafe.Pointer(e.skipdata))))
+	// If there's no config, just turn on skipdata with the default behaviour
 	C.cs_option(e.handle, CS_OPT_SKIPDATA, CS_OPT_ON)
 }
 
-func (e Engine) SkipDataStop() {
+func (e *Engine) SkipDataStop() {
 	C.cs_option(e.handle, CS_OPT_SKIPDATA, CS_OPT_OFF)
+	if e.skipdata == nil {
+		return
+	}
 	C.free(unsafe.Pointer(e.skipdata.mnemonic))
 	e.skipdata = nil
 }
