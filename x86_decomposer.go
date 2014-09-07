@@ -24,18 +24,19 @@ import "reflect"
 // Accessed via insn.X86.XXX
 type X86Instruction struct {
 	Prefix   []byte
-	Segment  uint
 	Opcode   []byte
-	OpSize   byte
+	Rex      byte
 	AddrSize byte
-	DispSize byte
-	ImmSize  byte
 	ModRM    byte
 	Sib      byte
-	Disp     int
+	Disp     int32
 	SibIndex uint
 	SibScale int8
 	SibBase  uint
+	SseCC    uint
+	AvxCC    uint
+	AvxSAE   bool
+	AvxRM    uint
 	Operands []X86Operand
 }
 
@@ -59,10 +60,11 @@ type X86Operand struct {
 }
 
 type X86MemoryOperand struct {
-	Base  uint
-	Index uint
-	Scale int
-	Disp  int64
+	Segment uint
+	Base    uint
+	Index   uint
+	Scale   int
+	Disp    int64
 }
 
 func fillX86Header(raw C.cs_insn, insn *Instruction) {
@@ -90,18 +92,19 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 
 	x86 := X86Instruction{
 		Prefix:   pref,
-		Segment:  uint(cs_x86.segment),
 		Opcode:   opc,
-		OpSize:   byte(cs_x86.op_size),
+		Rex:      byte(cs_x86.rex),
 		AddrSize: byte(cs_x86.addr_size),
-		DispSize: byte(cs_x86.disp_size),
-		ImmSize:  byte(cs_x86.imm_size),
 		ModRM:    byte(cs_x86.modrm),
 		Sib:      byte(cs_x86.sib),
-		Disp:     int(cs_x86.disp),
+		Disp:     int32(cs_x86.disp),
 		SibIndex: uint(cs_x86.sib_index),
 		SibScale: int8(cs_x86.sib_scale),
 		SibBase:  uint(cs_x86.sib_base),
+		SseCC:    uint(cs_x86.sse_cc),
+		AvxCC:    uint(cs_x86.avx_cc),
+		AvxSAE:   bool(cs_x86.avx_sae),
+		AvxRM:    uint(cs_x86.avx_rm),
 	}
 
 	// Cast the op_info to a []C.cs_x86_op
@@ -132,10 +135,11 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		case X86_OP_MEM:
 			cmop := (*C.x86_op_mem)(unsafe.Pointer(&cop.anon0[0]))
 			gop.Mem = X86MemoryOperand{
-				Base:  uint(cmop.base),
-				Index: uint(cmop.index),
-				Scale: int(cmop.scale),
-				Disp:  int64(cmop.disp),
+				Segment: uint(cmop.segment),
+				Base:    uint(cmop.base),
+				Index:   uint(cmop.index),
+				Scale:   int(cmop.scale),
+				Disp:    int64(cmop.disp),
 			}
 		}
 

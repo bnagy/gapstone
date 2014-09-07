@@ -6,7 +6,7 @@ Disasm:
 	op_count: 2
 		operands[0].type: REG = r1
 		operands[1].type: MEM
-			operands[1].mem.base: REG = cr0
+			operands[1].mem.base: REG = r0
 
 0x1004:	lwz	r1, (r31)
 	op_count: 2
@@ -29,9 +29,9 @@ Disasm:
 
 0x1010:	crand	2, 3, 4
 	op_count: 3
-		operands[0].type: REG = cr2
-		operands[1].type: REG = cr3
-		operands[2].type: REG = cr4
+		operands[0].type: REG = r2
+		operands[1].type: REG = r3
+		operands[2].type: REG = r4
 
 0x1014:	cmpwi	cr2, r3, 0x80
 	op_count: 3
@@ -55,11 +55,10 @@ Disasm:
 0x1020:	bdnzlrl+	
 	Branch hint: 1
 
-0x1024:	bclrl	6, 8, 0
-	op_count: 3
+0x1024:	bclrl	6, 8
+	op_count: 2
 		operands[0].type: IMM = 0x6
-		operands[1].type: REG = cr8
-		operands[2].type: IMM = 0x0
+		operands[1].type: REG = r8
 
 0x1028:
 

@@ -35,19 +35,26 @@ type Arm64Shifter struct {
 }
 
 type Arm64Operand struct {
-	Shift Arm64Shifter
-	Ext   uint
-	Type  uint // ARM64_OP_* - determines which field is set below
-	Reg   uint
-	Imm   int64
-	FP    float64
-	Mem   Arm64MemoryOperand
+	VectorIndex int
+	Vas         int
+	Vess        int
+	Shift       Arm64Shifter
+	Ext         uint
+	Type        uint // ARM64_OP_* - determines which field is set below
+	Reg         uint
+	Imm         int64
+	FP          float64
+	Mem         Arm64MemoryOperand
+	PState      int
+	Sys         uint
+	Prefetch    int
+	Barrier     int
 }
 
 type Arm64MemoryOperand struct {
 	Base  uint
 	Index uint
-	Disp  int64
+	Disp  int32
 }
 
 // Number of Operands of a given ARM64_OP_* type
@@ -98,19 +105,27 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 
 		switch cop._type {
 		// fake a union by setting only the correct struct member
-		case ARM64_OP_IMM:
+		case ARM64_OP_IMM, ARM64_OP_CIMM:
 			gop.Imm = int64(*(*C.int64_t)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM64_OP_FP:
 			gop.FP = float64(*(*C.double)(unsafe.Pointer(&cop.anon0[0])))
-		case ARM64_OP_REG:
+		case ARM64_OP_REG, ARM64_OP_REG_MRS, ARM64_OP_REG_MSR:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM64_OP_MEM:
 			cmop := (*C.arm64_op_mem)(unsafe.Pointer(&cop.anon0[0]))
 			gop.Mem = Arm64MemoryOperand{
 				Base:  uint(cmop.base),
 				Index: uint(cmop.index),
-				Disp:  int64(cmop.disp),
+				Disp:  int32(cmop.disp),
 			}
+		case ARM64_OP_PREFETCH:
+			gop.Prefetch = int(*(*C.int)(unsafe.Pointer(&cop.anon0[0])))
+		case ARM64_OP_PSTATE:
+			gop.PState = int(*(*C.int)(unsafe.Pointer(&cop.anon0[0])))
+		case ARM64_OP_BARRIER:
+			gop.Barrier = int(*(*C.int)(unsafe.Pointer(&cop.anon0[0])))
+		case ARM64_OP_SYS:
+			gop.Sys = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		}
 
 		arm64.Operands = append(arm64.Operands, *gop)

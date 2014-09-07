@@ -2,7 +2,7 @@
 Platform: X86 16bit (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		cx, dword ptr [si + 0x32]
+0x1000:	lea		cx, word ptr [si + 0x32]
 0x1003:	or		byte ptr [bx + di], al
 0x1005:	fadd		dword ptr [bx + di + 0x34c6]
 0x1009:	adc		al, byte ptr [bx + si]
@@ -79,6 +79,23 @@ Disasm:
 
 ****************
 Platform: MIPS-32 (Big-endian)
+Frag-0: 1
+Frag-1: 3
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 0
+Frag-5: 0
+Frag-0: 1
+Frag-1: 0
+Frag-2: 6
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 2
+Frag-5: 0
 Code: 0x0c 0x10 0x00 0x97 0x00 0x00 0x00 0x00 0x24 0x02 0x00 0x0c 0x8f 0xa2 0x00 0x00 0x34 0x21 0x34 0x56 
 Disasm:
 0x1000:	jal		0x40025c
@@ -90,6 +107,18 @@ Disasm:
 
 ****************
 Platform: MIPS-64-EL (Little-endian)
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 2
+Frag-5: 0
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 2
+Frag-5: 0
 Code: 0x56 0x34 0x21 0x34 0xc2 0x17 0x01 0x00 
 Disasm:
 0x1000:	ori		$at, $at, 0x3456
@@ -119,7 +148,7 @@ Disasm:
 0x1018:	addc		r2, r3, r4
 0x101c:	mulhd.		r2, r3, r4
 0x1020:	bdnzlrl+		
-0x1024:	bclrl		6, 8, 0
+0x1024:	bclrl		6, 8
 0x1028:
 
 ****************
@@ -135,7 +164,7 @@ Disasm:
 0x1018:	addc		2, 3, 4
 0x101c:	mulhd.		2, 3, 4
 0x1020:	bdnzlrl+		
-0x1024:	bclrl		6, 8, 0
+0x1024:	bclrl		6, 8
 0x1028:
 
 ****************
@@ -146,7 +175,7 @@ Disasm:
 0x1004:	jmpl		%o1+8, %g2
 0x1008:	restore		%g0, 1, %g2
 0x100c:	restore		
-0x1010:	or		%g0, 1, %o0
+0x1010:	mov		1, %o0
 0x1014:	casx		[%i0], %l6, %o2
 0x1018:	sethi		0xa, %l0
 0x101c:	add		%g1, %g2, %g3
@@ -164,7 +193,7 @@ Disasm:
 Platform: SparcV9
 Code: 0x81 0xa8 0x0a 0x24 0x89 0xa0 0x10 0x20 0x89 0xa0 0x1a 0x60 0x89 0xa0 0x00 0xe0 
 Disasm:
-0x1000:	fcmps		%fcc0, %f0, %f4
+0x1000:	fcmps		%f0, %f4
 0x1004:	fstox		%f0, %f4
 0x1008:	fqtoi		%f0, %f4
 0x100c:	fnegq		%f0, %f4

@@ -21,6 +21,11 @@ import "reflect"
 
 // Accessed via insn.Arm.XXX
 type ArmInstruction struct {
+	UserMode    bool
+	VectorSize  int
+	VectorData  int
+	CPSMode     int
+	CPSFlag     int
 	CC          uint
 	UpdateFlags bool
 	Writeback   bool
@@ -33,19 +38,21 @@ type ArmShifter struct {
 }
 
 type ArmOperand struct {
-	Shift ArmShifter
-	Type  uint // ARM_OP_* - determines which field is set below
-	Reg   uint
-	Imm   int64
-	FP    float64
-	Mem   ArmMemoryOperand
+	VectorIndex int
+	Shift       ArmShifter
+	Type        uint // ARM_OP_* - determines which field is set below
+	Reg         uint
+	Imm         int32
+	FP          float64
+	Mem         ArmMemoryOperand
+	Setend      int
 }
 
 type ArmMemoryOperand struct {
 	Base  uint
 	Index uint
 	Scale int
-	Disp  int64
+	Disp  int
 }
 
 // Number of Operands of a given ARM_OP_* type
@@ -69,6 +76,11 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	cs_arm := (*C.cs_arm)(unsafe.Pointer(&raw.detail.anon0[0]))
 
 	arm := ArmInstruction{
+		UserMode:    bool(cs_arm.usermode),
+		VectorSize:  int(cs_arm.vector_size),
+		VectorData:  int(cs_arm.vector_data),
+		CPSMode:     int(cs_arm.cps_mode),
+		CPSFlag:     int(cs_arm.cps_flag),
 		CC:          uint(cs_arm.cc),
 		UpdateFlags: bool(cs_arm.update_flags),
 		Writeback:   bool(cs_arm.writeback),
@@ -93,10 +105,10 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case ARM_OP_IMM, ARM_OP_CIMM, ARM_OP_PIMM:
-			gop.Imm = int64(*(*C.int64_t)(unsafe.Pointer(&cop.anon0[0])))
+			gop.Imm = int32(*(*C.int32_t)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM_OP_FP:
 			gop.FP = float64(*(*C.double)(unsafe.Pointer(&cop.anon0[0])))
-		case ARM_OP_REG:
+		case ARM_OP_REG, ARM_OP_SYSREG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case ARM_OP_MEM:
 			cmop := (*C.arm_op_mem)(unsafe.Pointer(&cop.anon0[0]))
@@ -104,8 +116,10 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 				Base:  uint(cmop.base),
 				Index: uint(cmop.index),
 				Scale: int(cmop.scale),
-				Disp:  int64(cmop.disp),
+				Disp:  int(cmop.disp),
 			}
+		case ARM_OP_SETEND:
+			gop.Setend = int(*(*C.int)(unsafe.Pointer(&cop.anon0[0])))
 		}
 		arm.Operands = append(arm.Operands, *gop)
 	}

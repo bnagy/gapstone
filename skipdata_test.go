@@ -30,7 +30,7 @@ func myCallback(data []byte, offset int, ud interface{}) int {
 	return 2
 }
 
-func TestFullCallback(t *testing.T) {
+func TestFullConfig(t *testing.T) {
 
 	t.Parallel()
 	thack = t
@@ -64,12 +64,13 @@ func TestFullCallback(t *testing.T) {
 		if len(insns) < 4 || insns[3].Mnemonic != mnem {
 			t.Errorf("Want custom mnemonic %v, got %v", mnem, insns[3].Mnemonic)
 		} else {
-			t.Logf("SkipData with full callback: [OK]\n")
+			t.Logf("SkipData with full config: [OK]\n")
 		}
 		// Erroneous extra call to SkipDataStop()
 		engine.SkipDataStop()
 		return
 	}
+	t.Errorf("Disassembly failed: %v", err)
 }
 
 func TestMnemonicOnly(t *testing.T) {
@@ -108,6 +109,8 @@ func TestMnemonicOnly(t *testing.T) {
 		}
 		return
 	}
+	t.Errorf("Disassembly failed: %v", err)
+
 }
 
 func TestCallbackOnly(t *testing.T) {
@@ -147,6 +150,8 @@ func TestCallbackOnly(t *testing.T) {
 		}
 		return
 	}
+	t.Errorf("Disassembly failed: %v", err)
+
 }
 func TestNilConfig(t *testing.T) {
 
@@ -180,4 +185,6 @@ func TestNilConfig(t *testing.T) {
 		}
 		return
 	}
+	t.Errorf("Disassembly failed: %v", err)
+
 }

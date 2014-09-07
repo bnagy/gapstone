@@ -22,11 +22,10 @@ Disasm:
 
 0x100c:	restore	
 
-0x1010:	or	%g0, 1, %o0
-	op_count: 3
-		operands[0].type: REG = g0
-		operands[1].type: IMM = 0x1
-		operands[2].type: REG = o0
+0x1010:	mov	1, %o0
+	op_count: 2
+		operands[0].type: IMM = 0x1
+		operands[1].type: REG = o0
 
 0x1014:	casx	[%i0], %l6, %o2
 	op_count: 3
@@ -93,11 +92,10 @@ Disasm:
 Platform: SparcV9
 Code:0x81 0xa8 0x0a 0x24 0x89 0xa0 0x10 0x20 0x89 0xa0 0x1a 0x60 0x89 0xa0 0x00 0xe0 
 Disasm:
-0x1000:	fcmps	%fcc0, %f0, %f4
-	op_count: 3
-		operands[0].type: REG = fcc0
-		operands[1].type: REG = f0
-		operands[2].type: REG = f4
+0x1000:	fcmps	%f0, %f4
+	op_count: 2
+		operands[0].type: REG = f0
+		operands[1].type: REG = f4
 
 0x1004:	fstox	%f0, %f4
 	op_count: 2

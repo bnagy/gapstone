@@ -32,17 +32,21 @@ func (e Errno) Error() string {
 }
 
 var (
-	ErrOK       error = Errno(0)
-	ErrOOM      error = Errno(1)
-	ErrArch     error = Errno(2)
-	ErrHandle   error = Errno(3)
-	ErrArg      error = Errno(4)
-	ErrMode     error = Errno(5)
-	ErrOption   error = Errno(6)
-	ErrDetail   error = Errno(7)
-	ErrMemSetup error = Errno(8)
-	ErrVersion  error = Errno(9)
-	ErrDiet     error = Errno(10)
+	ErrOK       = Errno(0)  // No error: everything was fine
+	ErrMem      = Errno(1)  // Out-Of-Memory error: cs_open(), cs_disasm()
+	ErrArch     = Errno(2)  // Unsupported architecture: cs_open()
+	ErrHandle   = Errno(3)  // Invalid handle: cs_op_count(), cs_op_index()
+	ErrCsh      = Errno(4)  // Invalid csh argument: cs_close(), cs_errno(), cs_option()
+	ErrMode     = Errno(5)  // Invalid/unsupported mode: cs_open()
+	ErrOption   = Errno(6)  // Invalid/unsupported option: cs_option()
+	ErrDetail   = Errno(7)  // Information is unavailable because detail option is OFF
+	ErrMemSetup = Errno(8)  // Dynamic memory management uninitialized (see CS_OPT_MEM)
+	ErrVersion  = Errno(9)  // Unsupported version (bindings)
+	ErrDiet     = Errno(10) // Access irrelevant data in "diet" engine
+	ErrSkipdata = Errno(11) // Access irrelevant data for "data" instruction in SKIPDATA mode
+	ErrX86ATT   = Errno(12) // X86 AT&T syntax is unsupported (opt-out at compile time)
+	ErrX86Intel = Errno(13) // X86 Intel syntax is unsupported (opt-out at compile time)
+
 )
 
 // Since this is a build-time option for the C lib, it seems logical to have
@@ -209,7 +213,7 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 
 	var insn *C.cs_insn
 	bptr := (*C.uint8_t)(unsafe.Pointer(&input[0]))
-	disassembled := C.cs_disasm_ex(
+	disassembled := C.cs_disasm(
 		e.handle,
 		bptr,
 		C.size_t(len(input)),

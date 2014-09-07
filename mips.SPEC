@@ -1,3 +1,20 @@
+Frag-0: 1
+Frag-1: 3
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 0
+Frag-5: 0
+Frag-0: 1
+Frag-1: 0
+Frag-2: 6
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 2
+Frag-5: 0
 ****************
 Platform: MIPS-32 (Big-endian)
 Code:0x0c 0x10 0x00 0x97 0x00 0x00 0x00 0x00 0x24 0x02 0x00 0x0c 0x8f 0xa2 0x00 0x00 0x34 0x21 0x34 0x56 
@@ -28,6 +45,18 @@ Disasm:
 
 0x1014:
 
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 2
+Frag-5: 0
+Frag-0: 1
+Frag-1: 0
+Frag-2: 0
+Frag-3: 1
+Frag-4: 2
+Frag-5: 0
 ****************
 Platform: MIPS-64-EL (Little-endian)
 Code:0x56 0x34 0x21 0x34 0xc2 0x17 0x01 0x00 

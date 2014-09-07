@@ -17,14 +17,16 @@ package gapstone
 // #include <capstone/capstone.h>
 import "C"
 
+// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT [xcore_const.py]
+// Operand type for instruction's operands
 const (
-	// Operands
-	XCORE_OP_INVALID = C.XCORE_OP_INVALID // Uninitialized.
-	XCORE_OP_REG     = C.XCORE_OP_REG     // Register operand.
-	XCORE_OP_IMM     = C.XCORE_OP_IMM     // Immediate operand.
-	XCORE_OP_MEM     = C.XCORE_OP_MEM     // Memory operand
+	XCORE_OP_INVALID = C.XCORE_OP_INVALID
+	XCORE_OP_REG     = C.XCORE_OP_REG
+	XCORE_OP_IMM     = C.XCORE_OP_IMM
+	XCORE_OP_MEM     = C.XCORE_OP_MEM
 )
 
+// XCore registers
 const (
 	XCORE_REG_INVALID = C.XCORE_REG_INVALID
 	XCORE_REG_CP      = C.XCORE_REG_CP
@@ -43,25 +45,24 @@ const (
 	XCORE_REG_R9      = C.XCORE_REG_R9
 	XCORE_REG_R10     = C.XCORE_REG_R10
 	XCORE_REG_R11     = C.XCORE_REG_R11
+)
 
-	// pseudo registers
-	XCORE_REG_PC = C.XCORE_REG_PC // pc
-
-	// internal thread registers
-	// see The-XMOS-XS1-Architecture(X7879A).pdf
-	XCORE_REG_SCP = C.XCORE_REG_SCP // save pc
-	XCORE_REG_SSR = C.XCORE_REG_SSR // save status
-	XCORE_REG_ET  = C.XCORE_REG_ET  // exception type
-	XCORE_REG_ED  = C.XCORE_REG_ED  // exception data
-	XCORE_REG_SED = C.XCORE_REG_SED // save exception data
-	XCORE_REG_KEP = C.XCORE_REG_KEP // kernel entry pointer
-	XCORE_REG_KSP = C.XCORE_REG_KSP // kernel stack pointer
-	XCORE_REG_ID  = C.XCORE_REG_ID  // thread ID
+// pseudo registers
+const (
+	XCORE_REG_PC  = C.XCORE_REG_PC
+	XCORE_REG_SCP = C.XCORE_REG_SCP
+	XCORE_REG_SSR = C.XCORE_REG_SSR
+	XCORE_REG_ET  = C.XCORE_REG_ET
+	XCORE_REG_ED  = C.XCORE_REG_ED
+	XCORE_REG_SED = C.XCORE_REG_SED
+	XCORE_REG_KEP = C.XCORE_REG_KEP
+	XCORE_REG_KSP = C.XCORE_REG_KSP
+	XCORE_REG_ID  = C.XCORE_REG_ID
 	XCORE_REG_MAX = C.XCORE_REG_MAX
 )
 
+// XCore instruction
 const (
-	// Instructions
 	XCORE_INS_INVALID = C.XCORE_INS_INVALID
 	XCORE_INS_ADD     = C.XCORE_INS_ADD
 	XCORE_INS_ANDNOT  = C.XCORE_INS_ANDNOT
@@ -186,8 +187,8 @@ const (
 	XCORE_INS_MAX     = C.XCORE_INS_MAX
 )
 
+// Group of XCore instructions
 const (
-	// Groups
 	XCORE_GRP_INVALID = C.XCORE_GRP_INVALID
 	XCORE_GRP_JUMP    = C.XCORE_GRP_JUMP
 	XCORE_GRP_MAX     = C.XCORE_GRP_MAX

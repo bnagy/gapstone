@@ -17,12 +17,15 @@ package gapstone
 // #include <capstone/capstone.h>
 import "C"
 
+// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT [sparc_const.py]
+// Enums corresponding to Sparc condition codes, both icc's and fcc's.
 const (
 	SPARC_CC_INVALID = C.SPARC_CC_INVALID
+)
 
-	// Integer condition codes
-	SPARC_CC_ICC_A = C.SPARC_CC_ICC_A
-
+// Integer condition codes
+const (
+	SPARC_CC_ICC_A   = C.SPARC_CC_ICC_A
 	SPARC_CC_ICC_N   = C.SPARC_CC_ICC_N
 	SPARC_CC_ICC_NE  = C.SPARC_CC_ICC_NE
 	SPARC_CC_ICC_E   = C.SPARC_CC_ICC_E
@@ -38,8 +41,10 @@ const (
 	SPARC_CC_ICC_NEG = C.SPARC_CC_ICC_NEG
 	SPARC_CC_ICC_VC  = C.SPARC_CC_ICC_VC
 	SPARC_CC_ICC_VS  = C.SPARC_CC_ICC_VS
+)
 
-	// Floating condition codes
+// Floating condition codes
+const (
 	SPARC_CC_FCC_A   = C.SPARC_CC_FCC_A
 	SPARC_CC_FCC_N   = C.SPARC_CC_FCC_N
 	SPARC_CC_FCC_U   = C.SPARC_CC_FCC_U
@@ -58,21 +63,23 @@ const (
 	SPARC_CC_FCC_O   = C.SPARC_CC_FCC_O
 )
 
+// Branch hint
 const (
-	//Branch hints
 	SPARC_HINT_INVALID = C.SPARC_HINT_INVALID
 	SPARC_HINT_A       = C.SPARC_HINT_A
 	SPARC_HINT_PT      = C.SPARC_HINT_PT
 	SPARC_HINT_PN      = C.SPARC_HINT_PN
 )
+
+// Operand type for instruction's operands
 const (
-	// Operands
 	SPARC_OP_INVALID = C.SPARC_OP_INVALID
 	SPARC_OP_REG     = C.SPARC_OP_REG
 	SPARC_OP_IMM     = C.SPARC_OP_IMM
 	SPARC_OP_MEM     = C.SPARC_OP_MEM
 )
 
+// SPARC registers
 const (
 	SPARC_REG_INVALID = C.SPARC_REG_INVALID
 	SPARC_REG_F0      = C.SPARC_REG_F0
@@ -166,8 +173,8 @@ const (
 	SPARC_REG_I6      = C.SPARC_REG_I6
 )
 
+// SPARC instruction
 const (
-	// Instructions
 	SPARC_INS_INVALID     = C.SPARC_INS_INVALID
 	SPARC_INS_ADDCC       = C.SPARC_INS_ADDCC
 	SPARC_INS_ADDX        = C.SPARC_INS_ADDX
@@ -184,7 +191,6 @@ const (
 	SPARC_INS_ARRAY16     = C.SPARC_INS_ARRAY16
 	SPARC_INS_ARRAY32     = C.SPARC_INS_ARRAY32
 	SPARC_INS_ARRAY8      = C.SPARC_INS_ARRAY8
-	SPARC_INS_BA          = C.SPARC_INS_BA
 	SPARC_INS_B           = C.SPARC_INS_B
 	SPARC_INS_JMP         = C.SPARC_INS_JMP
 	SPARC_INS_BMASK       = C.SPARC_INS_BMASK
@@ -424,7 +430,6 @@ const (
 	SPARC_INS_SUBXCC      = C.SPARC_INS_SUBXCC
 	SPARC_INS_SUB         = C.SPARC_INS_SUB
 	SPARC_INS_SWAP        = C.SPARC_INS_SWAP
-	SPARC_INS_TA          = C.SPARC_INS_TA
 	SPARC_INS_TADDCCTV    = C.SPARC_INS_TADDCCTV
 	SPARC_INS_TADDCC      = C.SPARC_INS_TADDCC
 	SPARC_INS_T           = C.SPARC_INS_T
@@ -450,8 +455,8 @@ const (
 	SPARC_INS_MAX         = C.SPARC_INS_MAX
 )
 
+// Group of SPARC instructions
 const (
-	// Groups
 	SPARC_GRP_INVALID  = C.SPARC_GRP_INVALID
 	SPARC_GRP_HARDQUAD = C.SPARC_GRP_HARDQUAD
 	SPARC_GRP_V9       = C.SPARC_GRP_V9

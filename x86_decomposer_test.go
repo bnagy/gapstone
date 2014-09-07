@@ -19,23 +19,20 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\tPrefix:")
 	dumpHex(insn.X86.Prefix, buf)
 
-	if insn.X86.Segment != X86_REG_INVALID {
-		fmt.Fprintf(
-			buf,
-			"\tSegment override: %s\n",
-			engine.RegName(insn.X86.Segment),
-		)
-	}
+	// if insn.X86.Segment != X86_REG_INVALID {
+	// 	fmt.Fprintf(
+	// 		buf,
+	// 		"\tSegment override: %s\n",
+	// 		engine.RegName(insn.X86.Segment),
+	// 	)
+	// }
 
 	fmt.Fprintf(buf, "\tOpcode:")
 	dumpHex(insn.X86.Opcode, buf)
 	fmt.Fprintf(
 		buf,
-		"\top_size: %v, addr_size: %v, disp_size: %v, imm_size: %v\n",
-		insn.X86.OpSize,
+		"\taddr_size: %v",
 		insn.X86.AddrSize,
-		insn.X86.DispSize,
-		insn.X86.ImmSize,
 	)
 	fmt.Fprintf(buf, "\tmodrm: 0x%x\n", insn.X86.ModRM)
 	fmt.Fprintf(buf, "\tdisp: 0x%x\n", uint32(insn.X86.Disp))
