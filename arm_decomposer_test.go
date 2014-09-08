@@ -16,7 +16,9 @@ import "fmt"
 import "io/ioutil"
 
 func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
-	fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Arm.Operands))
+	if oplen := len(insn.Arm.Operands); oplen > 0 {
+		fmt.Fprintf(buf, "\top_count: %v\n", oplen)
+	}
 
 	for i, op := range insn.Arm.Operands {
 		switch op.Type {
@@ -46,6 +48,15 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			fmt.Fprintf(buf, "\t\toperands[%v].type: P-IMM = %v\n", i, op.Imm)
 		case ARM_OP_CIMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: C-IMM = %v\n", i, op.Imm)
+		case ARM_OP_SETEND:
+			if op.Setend == ARM_SETEND_BE {
+				fmt.Fprintf(buf, "\t\toperands[%v].type: SETEND = be\n", i)
+			} else {
+				fmt.Fprintf(buf, "\t\toperands[%v].type: SETEND = le\n", i)
+			}
+		case ARM_OP_SYSREG:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: SYSREG = %v\n", i, op.Reg)
+
 		}
 
 		if op.Shift.Type != ARM_SFT_INVALID && op.Shift.Value != 0 {
@@ -58,6 +69,10 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			}
 		}
 
+		if op.VectorIndex != -1 {
+			fmt.Fprintf(buf, "\t\toperands[%v].vector_index = %v\n", i, op.VectorIndex)
+		}
+
 	}
 
 	if insn.Arm.CC != ARM_CC_AL && insn.Arm.CC != ARM_CC_INVALID {
@@ -68,6 +83,26 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 	if insn.Arm.Writeback {
 		fmt.Fprintf(buf, "\tWrite-back: True\n")
+	}
+
+	if insn.Arm.CPSMode != 0 {
+		fmt.Fprintf(buf, "\tCPSI-mode: %v\n", insn.Arm.CPSMode)
+	}
+
+	if insn.Arm.CPSFlag != 0 {
+		fmt.Fprintf(buf, "\tCPSI-flag: %v\n", insn.Arm.CPSFlag)
+	}
+
+	if insn.Arm.VectorData != 0 {
+		fmt.Fprintf(buf, "\tVector-data: %v\n", insn.Arm.VectorData)
+	}
+
+	if insn.Arm.VectorSize != 0 {
+		fmt.Fprintf(buf, "\tVector-size: %v\n", insn.Arm.VectorSize)
+	}
+
+	if insn.Arm.UserMode {
+		fmt.Fprintf(buf, "\tUser-mode: True\n")
 	}
 
 	fmt.Fprintf(buf, "\n")
@@ -123,7 +158,7 @@ func TestArm(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		// fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

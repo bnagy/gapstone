@@ -98,10 +98,14 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		if cop._type == ARM_OP_INVALID {
 			break
 		}
-		gop := new(ArmOperand)
-		gop.Shift.Type = uint(cop.shift._type)
-		gop.Shift.Value = uint(cop.shift.value)
-		gop.Type = uint(cop._type)
+		gop := ArmOperand{
+			Shift: ArmShifter{
+				Type:  uint(cop.shift._type),
+				Value: uint(cop.shift.value),
+			},
+			Type:        uint(cop._type),
+			VectorIndex: int(cop.vector_index),
+		}
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case ARM_OP_IMM, ARM_OP_CIMM, ARM_OP_PIMM:
@@ -121,7 +125,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		case ARM_OP_SETEND:
 			gop.Setend = int(*(*C.int)(unsafe.Pointer(&cop.anon0[0])))
 		}
-		arm.Operands = append(arm.Operands, *gop)
+		arm.Operands = append(arm.Operands, gop)
 	}
 	insn.Arm = &arm
 }

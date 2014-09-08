@@ -16,7 +16,10 @@ import "fmt"
 import "io/ioutil"
 
 func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
-	fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Arm64.Operands))
+
+	if oplen := len(insn.Arm64.Operands); oplen > 0 {
+		fmt.Fprintf(buf, "\top_count: %v\n", oplen)
+	}
 
 	for i, op := range insn.Arm64.Operands {
 		switch op.Type {
@@ -41,6 +44,18 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			}
 		case ARM64_OP_CIMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: C-IMM = %v\n", i, op.Imm)
+		case ARM64_OP_REG_MRS:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: REG_MRS = 0x%x\n", i, op.Reg)
+		case ARM64_OP_REG_MSR:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: REG_MSR = 0x%x\n", i, op.Reg)
+		case ARM64_OP_PSTATE:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: PSTATE = 0x%x\n", i, op.PState)
+		case ARM64_OP_SYS:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: SYS = 0x%x\n", i, op.Sys)
+		case ARM64_OP_PREFETCH:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: PREFETCH = 0x%x\n", i, op.Prefetch)
+		case ARM64_OP_BARRIER:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: BARRIER = 0x%x\n", i, op.Barrier)
 		}
 
 		if op.Shift.Type != ARM64_SFT_INVALID && op.Shift.Value != 0 {
@@ -50,19 +65,26 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		if op.Ext != ARM64_EXT_INVALID {
 			fmt.Fprintf(buf, "\t\t\tExt: %v\n", op.Ext)
 		}
-
+		if op.Vas != ARM64_VAS_INVALID {
+			fmt.Fprintf(buf, "\t\t\tVector Arrangement Specifier: 0x%x\n", op.Vas)
+		}
+		if op.Vess != ARM64_VESS_INVALID {
+			fmt.Fprintf(buf, "\t\t\tVector Element Size Specifier: %v\n", op.Vess)
+		}
+		if op.VectorIndex != -1 {
+			fmt.Fprintf(buf, "\t\t\tVector Index: %v\n", op.VectorIndex)
+		}
 	}
 
-	if insn.Arm64.CC != ARM64_CC_AL && insn.Arm64.CC != ARM64_CC_INVALID {
-		fmt.Fprintf(buf, "\tCode condition: %v\n", insn.Arm64.CC)
-	}
 	if insn.Arm64.UpdateFlags {
 		fmt.Fprintf(buf, "\tUpdate-flags: True\n")
 	}
 	if insn.Arm64.Writeback {
 		fmt.Fprintf(buf, "\tWrite-back: True\n")
 	}
-
+	if insn.Arm64.CC != ARM64_CC_AL && insn.Arm64.CC != ARM64_CC_INVALID {
+		fmt.Fprintf(buf, "\tCode-condition: %v\n", insn.Arm64.CC)
+	}
 	fmt.Fprintf(buf, "\n")
 }
 
@@ -101,7 +123,7 @@ func TestArm64(t *testing.T) {
 		if err == nil {
 			fmt.Fprintf(final, "****************\n")
 			fmt.Fprintf(final, "Platform: %s\n", platform.comment)
-			fmt.Fprintf(final, "Code:")
+			fmt.Fprintf(final, "Code: ")
 			dumpHex([]byte(platform.code), final)
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
@@ -121,7 +143,7 @@ func TestArm64(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		//fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

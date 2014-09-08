@@ -97,11 +97,17 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 			break
 		}
 
-		gop := new(Arm64Operand)
-		gop.Shift.Type = uint(cop.shift._type)
-		gop.Shift.Value = uint(cop.shift.value)
-		gop.Type = uint(cop._type)
-		gop.Ext = uint(cop.ext)
+		gop := Arm64Operand{
+			Shift: Arm64Shifter{
+				Type:  uint(cop.shift._type),
+				Value: uint(cop.shift.value),
+			},
+			Type:        uint(cop._type),
+			Ext:         uint(cop.ext),
+			VectorIndex: int(cop.vector_index),
+			Vas:         int(cop.vas),
+			Vess:        int(cop.vess),
+		}
 
 		switch cop._type {
 		// fake a union by setting only the correct struct member
@@ -128,7 +134,7 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 			gop.Sys = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		}
 
-		arm64.Operands = append(arm64.Operands, *gop)
+		arm64.Operands = append(arm64.Operands, gop)
 
 	}
 	insn.Arm64 = &arm64

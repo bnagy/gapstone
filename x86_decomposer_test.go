@@ -19,21 +19,11 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	fmt.Fprintf(buf, "\tPrefix:")
 	dumpHex(insn.X86.Prefix, buf)
 
-	// if insn.X86.Segment != X86_REG_INVALID {
-	// 	fmt.Fprintf(
-	// 		buf,
-	// 		"\tSegment override: %s\n",
-	// 		engine.RegName(insn.X86.Segment),
-	// 	)
-	// }
-
 	fmt.Fprintf(buf, "\tOpcode:")
 	dumpHex(insn.X86.Opcode, buf)
-	fmt.Fprintf(
-		buf,
-		"\taddr_size: %v",
-		insn.X86.AddrSize,
-	)
+
+	fmt.Fprintf(buf, "\trex: 0x%x\n", insn.X86.Rex)
+	fmt.Fprintf(buf, "\taddr_size: %v\n", insn.X86.AddrSize)
 	fmt.Fprintf(buf, "\tmodrm: 0x%x\n", insn.X86.ModRM)
 	fmt.Fprintf(buf, "\tdisp: 0x%x\n", uint32(insn.X86.Disp))
 
@@ -50,6 +40,25 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			)
 		}
 	}
+	// SSE code condition
+	if insn.X86.SseCC != X86_SSE_CC_INVALID {
+		fmt.Fprintf(buf, "\tsse_cc: %v\n", insn.X86.SseCC)
+	}
+
+	// AVX code condition
+	if insn.X86.AvxCC != X86_AVX_CC_INVALID {
+		fmt.Fprintf(buf, "\tavx_cc: %v\n", insn.X86.AvxCC)
+	}
+
+	// AVX Suppress All Exception
+	if insn.X86.AvxSAE {
+		fmt.Fprintf(buf, "\tavx_sae: %v\n", insn.X86.AvxSAE)
+	}
+
+	// AVX Rounding Mode
+	if insn.X86.AvxRM != X86_AVX_RM_INVALID {
+		fmt.Fprintf(buf, "\tavx_rm: %v\n", insn.X86.AvxRM)
+	}
 
 	if immcount := insn.X86.OpCount(X86_OP_IMM); immcount > 0 {
 		fmt.Fprintf(buf, "\timm_count: %v\n", immcount)
@@ -65,7 +74,9 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		}
 	}
 
-	fmt.Fprintf(buf, "\top_count: %v\n", len(insn.X86.Operands))
+	if oplen := len(insn.X86.Operands); oplen > 0 {
+		fmt.Fprintf(buf, "\top_count: %v\n", oplen)
+	}
 
 	for i, op := range insn.X86.Operands {
 		switch op.Type {
@@ -77,6 +88,9 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			fmt.Fprintf(buf, "\t\toperands[%v].type: FP = %f\n", i, op.FP)
 		case X86_OP_MEM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: MEM\n", i)
+			if op.Mem.Segment != X86_REG_INVALID {
+				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.segment: REG = %s\n", i, engine.RegName(op.Mem.Segment))
+			}
 			if op.Mem.Base != X86_REG_INVALID {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.base: REG = %s\n",
 					i, engine.RegName(op.Mem.Base))
@@ -92,6 +106,19 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint64(op.Mem.Disp))
 			}
 		}
+
+		// AVX broadcast type
+		if op.AvxBcast != X86_AVX_BCAST_INVALID {
+			fmt.Fprintf(buf, "\t\toperands[%v].avx_bcast: %v\n", i, op.AvxBcast)
+		}
+
+		// AVX zero opmask {z}
+		if op.AvxZeroOpmask {
+			fmt.Fprintf(buf, "\t\toperands[%v].avx_zero_opmask: TRUE\n", i)
+		}
+
+		fmt.Fprintf(buf, "\t\toperands[%v].size: %v\n", i, op.Size)
+
 	}
 
 	fmt.Fprintf(buf, "\n")
@@ -152,7 +179,7 @@ func TestX86(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		// fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

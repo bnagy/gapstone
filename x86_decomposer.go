@@ -52,11 +52,14 @@ func (insn X86Instruction) OpCount(optype uint) int {
 }
 
 type X86Operand struct {
-	Type uint // X86_OP_* - determines which field is set below
-	Reg  uint
-	Imm  int64
-	FP   float64
-	Mem  X86MemoryOperand
+	Type          uint // X86_OP_* - determines which field is set below
+	Reg           uint
+	Imm           int64
+	FP            float64
+	Mem           X86MemoryOperand
+	Size          uint8
+	AvxBcast      uint
+	AvxZeroOpmask bool
 }
 
 type X86MemoryOperand struct {
@@ -80,15 +83,15 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	var pref []byte
 	ph := (*reflect.SliceHeader)(unsafe.Pointer(&pref))
 	ph.Data = uintptr(unsafe.Pointer(&cs_x86.prefix[0]))
-	ph.Len = 5
-	ph.Cap = 5
+	ph.Len = 4
+	ph.Cap = 4
 
 	// Same for the opcode array
 	var opc []byte
 	oh := (*reflect.SliceHeader)(unsafe.Pointer(&opc))
 	oh.Data = uintptr(unsafe.Pointer(&cs_x86.opcode[0]))
-	oh.Len = 3
-	oh.Cap = 3
+	oh.Len = 4
+	oh.Cap = 4
 
 	x86 := X86Instruction{
 		Prefix:   pref,
@@ -121,8 +124,12 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 			break
 		}
 
-		gop := new(X86Operand)
-		gop.Type = uint(cop._type)
+		gop := X86Operand{
+			Type:          uint(cop._type),
+			Size:          uint8(cop.size),
+			AvxBcast:      uint(cop.avx_bcast),
+			AvxZeroOpmask: bool(cop.avx_zero_opmask),
+		}
 
 		switch cop._type {
 		// fake a union by setting only the correct struct member
@@ -143,7 +150,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 			}
 		}
 
-		x86.Operands = append(x86.Operands, *gop)
+		x86.Operands = append(x86.Operands, gop)
 	}
 
 	insn.X86 = &x86
