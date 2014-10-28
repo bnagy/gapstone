@@ -109,9 +109,9 @@ func TestArm64(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: Arm64. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_ARM64]
-			if check.grpMax != ARM64_GRP_MAX ||
-				check.insMax != ARM64_INS_MAX ||
-				check.regMax != ARM64_REG_MAX {
+			if check.grpMax != ARM64_GRP_ENDING ||
+				check.insMax != ARM64_INS_ENDING ||
+				check.regMax != ARM64_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

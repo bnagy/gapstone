@@ -43,13 +43,20 @@ func (insn PPCInstruction) OpCount(optype uint) int {
 type PPCOperand struct {
 	Type uint // PPC_OP_* - determines which field is set below
 	Reg  uint
-	Imm  int
+	Imm  int32
 	Mem  PPCMemoryOperand
+	CRX  PPCCRXOperand
 }
 
 type PPCMemoryOperand struct {
 	Base uint
 	Disp int
+}
+
+type PPCCRXOperand struct {
+	Scale uint
+	Reg   uint
+	Cond  uint
 }
 
 func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
@@ -87,7 +94,7 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case PPC_OP_IMM:
-			gop.Imm = int(*(*C.int32_t)(unsafe.Pointer(&cop.anon0[0])))
+			gop.Imm = int32(*(*C.int32_t)(unsafe.Pointer(&cop.anon0[0])))
 		case PPC_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case PPC_OP_MEM:
@@ -95,6 +102,13 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 			gop.Mem = PPCMemoryOperand{
 				Base: uint(cmop.base),
 				Disp: int(cmop.disp),
+			}
+		case PPC_OP_CRX:
+			ccrxop := (*C.ppc_op_crx)(unsafe.Pointer(&cop.anon0[0]))
+			gop.CRX = PPCCRXOperand{
+				Scale: uint(ccrxop.scale),
+				Reg:   uint(ccrxop.reg),
+				Cond:  uint(ccrxop.cond),
 			}
 
 		}

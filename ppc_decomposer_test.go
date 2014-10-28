@@ -15,6 +15,34 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
+func getBCName(bc uint) string {
+	switch bc {
+	default:
+		return ""
+	case PPC_BC_INVALID:
+		return "invalid"
+	case PPC_BC_LT:
+		return "lt"
+	case PPC_BC_LE:
+		return "le"
+	case PPC_BC_EQ:
+		return "eq"
+	case PPC_BC_GE:
+		return "ge"
+	case PPC_BC_GT:
+		return "gt"
+	case PPC_BC_NE:
+		return "ne"
+	case PPC_BC_UN:
+		return "un"
+	case PPC_BC_NU:
+		return "nu"
+	case PPC_BC_SO:
+		return "so"
+	case PPC_BC_NS:
+		return "ns"
+	}
+}
 func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	if len(insn.PPC.Operands) > 0 {
@@ -25,7 +53,7 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case PPC_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case PPC_OP_IMM:
-			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint64(op.Imm)))
+			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint32(op.Imm)))
 		case PPC_OP_MEM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: MEM\n", i)
 			if op.Mem.Base != PPC_REG_INVALID {
@@ -35,6 +63,11 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			if op.Mem.Disp != 0 {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint64(op.Mem.Disp))
 			}
+		case PPC_OP_CRX:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: CRX\n", i)
+			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.scale: %d\n", i, uint(op.CRX.Scale))
+			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.reg: %s\n", i, engine.RegName(op.CRX.Reg))
+			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.cond: %s\n", i, getBCName(op.CRX.Cond))
 		}
 
 	}
@@ -75,9 +108,9 @@ func TestPPC(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: PPC. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_PPC]
-			if check.grpMax != PPC_GRP_MAX ||
-				check.insMax != PPC_INS_MAX ||
-				check.regMax != PPC_REG_MAX {
+			if check.grpMax != PPC_GRP_ENDING ||
+				check.insMax != PPC_INS_ENDING ||
+				check.regMax != PPC_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

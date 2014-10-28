@@ -32,15 +32,18 @@ const (
 )
 
 const (
-	// Engine Modes
+	// Engine modes
 	CS_MODE_LITTLE_ENDIAN = C.CS_MODE_LITTLE_ENDIAN // little endian mode (default mode)
 	CS_MODE_ARM           = C.CS_MODE_ARM           // 32-bit ARM
 	CS_MODE_16            = C.CS_MODE_16            // 16-bit mode
 	CS_MODE_32            = C.CS_MODE_32            // 32-bit mode
 	CS_MODE_64            = C.CS_MODE_64            // 64-bit mode
-	CS_MODE_THUMB         = C.CS_MODE_THUMB         // ARM's Thumb mode including Thumb-2
+	CS_MODE_THUMB         = C.CS_MODE_THUMB         // ARM's Thumb mode, including Thumb-2
+	CS_MODE_MCLASS        = C.CS_MODE_MCLASS        // ARM's Cortex-M series
 	CS_MODE_MICRO         = C.CS_MODE_MICRO         // MicroMips mode (MIPS architecture)
-	CS_MODE_N64           = C.CS_MODE_N64           // Nintendo-64 mode (MIPS architecture)
+	CS_MODE_MIPS3         = C.CS_MODE_MIPS3         // Mips III ISA
+	CS_MODE_MIPS32R6      = C.CS_MODE_MIPS32R6      // Mips32r6 ISA
+	CS_MODE_MIPSGP64      = C.CS_MODE_MIPSGP64      // General Purpose Registers are 64-bit wide (MIPS arch)
 	CS_MODE_V9            = C.CS_MODE_V9            // SparcV9 mode (Sparc architecture)
 	CS_MODE_BIG_ENDIAN    = 1 << 31                 // big endian mode
 )
@@ -69,17 +72,21 @@ const (
 const (
 	// All type of errors encountered by Capstone API.
 	// These are values returned by cs_errno()
-	CS_ERR_OK       = C.CS_ERR_OK       // No error: everything was fine
-	CS_ERR_MEM      = C.CS_ERR_MEM      // Out-Of-Memory error: cs_open(), cs_disasm_ex()
-	CS_ERR_ARCH     = C.CS_ERR_ARCH     // Unsupported architecture: cs_open()
-	CS_ERR_HANDLE   = C.CS_ERR_HANDLE   // Invalid handle: cs_op_count(), cs_op_index()
-	CS_ERR_CSH      = C.CS_ERR_CSH      // Invalid csh argument: cs_close(), cs_errno(), cs_option()
-	CS_ERR_MODE     = C.CS_ERR_MODE     // Invalid/unsupported mode: cs_open()
-	CS_ERR_OPTION   = C.CS_ERR_OPTION   // Invalid/unsupported option: cs_option()
-	CS_ERR_DETAIL   = C.CS_ERR_DETAIL   // Information is unavailable because detail option is OFF
-	CS_ERR_MEMSETUP = C.CS_ERR_MEMSETUP // Dynamic memory management uninitialized (see CS_OPT_MEM)
-	CS_ERR_VERSION  = C.CS_ERR_VERSION  // Unsupported version (bindings)
-	CS_ERR_DIET     = C.CS_ERR_DIET     // Information irrelevant in diet engine
+	CS_ERR_OK        = C.CS_ERR_OK        // No error: everything was fine
+	CS_ERR_MEM       = C.CS_ERR_MEM       // Out-Of-Memory error: cs_open(), cs_disasm_ex()
+	CS_ERR_ARCH      = C.CS_ERR_ARCH      // Unsupported architecture: cs_open()
+	CS_ERR_HANDLE    = C.CS_ERR_HANDLE    // Invalid handle: cs_op_count(), cs_op_index()
+	CS_ERR_CSH       = C.CS_ERR_CSH       // Invalid csh argument: cs_close(), cs_errno(), cs_option()
+	CS_ERR_MODE      = C.CS_ERR_MODE      // Invalid/unsupported mode: cs_open()
+	CS_ERR_OPTION    = C.CS_ERR_OPTION    // Invalid/unsupported option: cs_option()
+	CS_ERR_DETAIL    = C.CS_ERR_DETAIL    // Information is unavailable because detail option is OFF
+	CS_ERR_MEMSETUP  = C.CS_ERR_MEMSETUP  // Dynamic memory management uninitialized (see CS_OPT_MEM)
+	CS_ERR_VERSION   = C.CS_ERR_VERSION   // Unsupported version (bindings)
+	CS_ERR_DIET      = C.CS_ERR_DIET      // Information irrelevant in diet engine
+	CS_ERR_SKIPDATA  = C.CS_ERR_SKIPDATA  // Access irrelevant data for "data" instruction in SKIPDATA mode
+	CS_ERR_X86_ATT   = C.CS_ERR_X86_ATT   // X86 AT&T syntax is unsupported (opt-out at compile time)
+	CS_ERR_X86_INTEL = C.CS_ERR_X86_INTEL // X86 Intel syntax is unsupported (opt-out at compile time)
+
 )
 
 const CS_SUPPORT_DIET = C.CS_SUPPORT_DIET

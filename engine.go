@@ -190,6 +190,17 @@ func (e *Engine) InsnName(insn uint) string {
 	return C.GoString(C.cs_insn_name(e.handle, C.uint(insn)))
 }
 
+// The arch is implicit in the Engine. Accepts a constant like
+// ARM_GRP_JUMP, or insn.Groups[0]
+//
+// WARNING: Always returns "" if capstone built with CAPSTONE_DIET
+func (e *Engine) GroupName(grp uint) string {
+	if dietMode {
+		return ""
+	}
+	return C.GoString(C.cs_group_name(e.handle, C.uint(grp)))
+}
+
 // Setter for Engine options CS_OPT_*
 func (e *Engine) SetOption(ty, value uint) error {
 	res := C.cs_option(

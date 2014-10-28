@@ -76,9 +76,9 @@ func TestSparc(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: Sparc. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_SPARC]
-			if check.grpMax != SPARC_GRP_MAX ||
-				check.insMax != SPARC_INS_MAX ||
-				check.regMax != SPARC_REG_MAX {
+			if check.grpMax != SPARC_GRP_ENDING ||
+				check.insMax != SPARC_INS_ENDING ||
+				check.regMax != SPARC_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

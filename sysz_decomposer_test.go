@@ -78,9 +78,9 @@ func TestSysZ(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: SystemZ. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_SYSZ]
-			if check.grpMax != SYSZ_GRP_MAX ||
-				check.insMax != SYSZ_INS_MAX ||
-				check.regMax != SYSZ_REG_MAX {
+			if check.grpMax != SYSZ_GRP_ENDING ||
+				check.insMax != SYSZ_INS_ENDING ||
+				check.regMax != SYSZ_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

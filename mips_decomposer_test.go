@@ -64,9 +64,9 @@ func TestMips(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: Mips. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_MIPS]
-			if check.grpMax != MIPS_GRP_MAX ||
-				check.insMax != MIPS_INS_MAX ||
-				check.regMax != MIPS_REG_MAX {
+			if check.grpMax != MIPS_GRP_ENDING ||
+				check.insMax != MIPS_INS_ENDING ||
+				check.regMax != MIPS_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

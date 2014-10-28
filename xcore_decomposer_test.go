@@ -72,9 +72,9 @@ func TestXcore(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: Xcore. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_XCORE]
-			if check.grpMax != XCORE_GRP_MAX ||
-				check.insMax != XCORE_INS_MAX ||
-				check.regMax != XCORE_REG_MAX {
+			if check.grpMax != XCORE_GRP_ENDING ||
+				check.insMax != XCORE_INS_ENDING ||
+				check.regMax != XCORE_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

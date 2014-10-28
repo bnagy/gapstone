@@ -73,6 +73,9 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			fmt.Fprintf(buf, "\t\toperands[%v].vector_index = %v\n", i, op.VectorIndex)
 		}
 
+		if op.Subtracted {
+			fmt.Fprintf(buf, "\t\tSubtracted: True\n")
+		}
 	}
 
 	if insn.Arm.CC != ARM_CC_AL && insn.Arm.CC != ARM_CC_INVALID {
@@ -129,9 +132,9 @@ func TestArm(t *testing.T) {
 			maj, min := engine.Version()
 			t.Logf("Arch: Arm. Capstone Version: %v.%v", maj, min)
 			check := checks[CS_ARCH_ARM]
-			if check.grpMax != ARM_GRP_MAX ||
-				check.insMax != ARM_INS_MAX ||
-				check.regMax != ARM_REG_MAX {
+			if check.grpMax != ARM_GRP_ENDING ||
+				check.insMax != ARM_INS_ENDING ||
+				check.regMax != ARM_REG_ENDING {
 				t.Errorf("Failed in sanity check. Constants out of sync with core.")
 			} else {
 				t.Logf("Sanity Check: PASS")

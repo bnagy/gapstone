@@ -254,7 +254,7 @@ const (
 	X86_REG_R13W    = C.X86_REG_R13W
 	X86_REG_R14W    = C.X86_REG_R14W
 	X86_REG_R15W    = C.X86_REG_R15W
-	X86_REG_MAX     = C.X86_REG_MAX
+	X86_REG_ENDING  = C.X86_REG_ENDING
 )
 
 // Operand type for instruction's operands
@@ -340,6 +340,21 @@ const (
 	X86_AVX_RM_RD      = C.X86_AVX_RM_RD
 	X86_AVX_RM_RU      = C.X86_AVX_RM_RU
 	X86_AVX_RM_RZ      = C.X86_AVX_RM_RZ
+)
+
+// Instruction prefixes - to be used in cs_x86.prefix[]
+const (
+	X86_PREFIX_LOCK     = C.X86_PREFIX_LOCK
+	X86_PREFIX_REP      = C.X86_PREFIX_REP
+	X86_PREFIX_REPNE    = C.X86_PREFIX_REPNE
+	X86_PREFIX_CS       = C.X86_PREFIX_CS
+	X86_PREFIX_SS       = C.X86_PREFIX_SS
+	X86_PREFIX_DS       = C.X86_PREFIX_DS
+	X86_PREFIX_ES       = C.X86_PREFIX_ES
+	X86_PREFIX_FS       = C.X86_PREFIX_FS
+	X86_PREFIX_GS       = C.X86_PREFIX_GS
+	X86_PREFIX_OPSIZE   = C.X86_PREFIX_OPSIZE
+	X86_PREFIX_ADDRSIZE = C.X86_PREFIX_ADDRSIZE
 )
 
 // X86 instructions
@@ -670,7 +685,6 @@ const (
 	X86_INS_LLDT             = C.X86_INS_LLDT
 	X86_INS_LMSW             = C.X86_INS_LMSW
 	X86_INS_OR               = C.X86_INS_OR
-	X86_INS_LOCK             = C.X86_INS_LOCK
 	X86_INS_SUB              = C.X86_INS_SUB
 	X86_INS_XOR              = C.X86_INS_XOR
 	X86_INS_LODSB            = C.X86_INS_LODSB
@@ -943,8 +957,6 @@ const (
 	X86_INS_RDSEED           = C.X86_INS_RDSEED
 	X86_INS_RDTSC            = C.X86_INS_RDTSC
 	X86_INS_RDTSCP           = C.X86_INS_RDTSCP
-	X86_INS_REPNE            = C.X86_INS_REPNE
-	X86_INS_REP              = C.X86_INS_REP
 	X86_INS_ROL              = C.X86_INS_ROL
 	X86_INS_ROR              = C.X86_INS_ROR
 	X86_INS_RORX             = C.X86_INS_RORX
@@ -1642,7 +1654,7 @@ const (
 	X86_INS_XSHA256          = C.X86_INS_XSHA256
 	X86_INS_XSTORE           = C.X86_INS_XSTORE
 	X86_INS_XTEST            = C.X86_INS_XTEST
-	X86_INS_MAX              = C.X86_INS_MAX
+	X86_INS_ENDING           = C.X86_INS_ENDING
 )
 
 // Group of X86 instructions
@@ -1694,5 +1706,5 @@ const (
 	X86_GRP_IRET         = C.X86_GRP_IRET
 	X86_GRP_CALL         = C.X86_GRP_CALL
 	X86_GRP_RET          = C.X86_GRP_RET
-	X86_GRP_MAX          = C.X86_GRP_MAX
+	X86_GRP_ENDING       = C.X86_GRP_ENDING
 )

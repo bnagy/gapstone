@@ -279,7 +279,7 @@ const (
 	ARM_REG_S29        = C.ARM_REG_S29
 	ARM_REG_S30        = C.ARM_REG_S30
 	ARM_REG_S31        = C.ARM_REG_S31
-	ARM_REG_MAX        = C.ARM_REG_MAX
+	ARM_REG_ENDING     = C.ARM_REG_ENDING
 )
 
 // alias registers
@@ -730,7 +730,7 @@ const (
 	ARM_INS_SEVL      = C.ARM_INS_SEVL
 	ARM_INS_VPUSH     = C.ARM_INS_VPUSH
 	ARM_INS_VPOP      = C.ARM_INS_VPOP
-	ARM_INS_MAX       = C.ARM_INS_MAX
+	ARM_INS_ENDING    = C.ARM_INS_ENDING
 )
 
 // Group of ARM instructions
@@ -768,5 +768,5 @@ const (
 	ARM_GRP_DPVFP         = C.ARM_GRP_DPVFP
 	ARM_GRP_V6M           = C.ARM_GRP_V6M
 	ARM_GRP_JUMP          = C.ARM_GRP_JUMP
-	ARM_GRP_MAX           = C.ARM_GRP_MAX
+	ARM_GRP_ENDING        = C.ARM_GRP_ENDING
 )

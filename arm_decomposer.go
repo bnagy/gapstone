@@ -46,6 +46,7 @@ type ArmOperand struct {
 	FP          float64
 	Mem         ArmMemoryOperand
 	Setend      int
+	Subtracted  bool
 }
 
 type ArmMemoryOperand struct {
@@ -105,6 +106,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 			},
 			Type:        uint(cop._type),
 			VectorIndex: int(cop.vector_index),
+			Subtracted:  bool(cop.subtracted),
 		}
 		switch cop._type {
 		// fake a union by setting only the correct struct member

@@ -78,7 +78,7 @@ func TestDetailTest(t *testing.T) {
 				if len(insn.Groups) > 0 {
 					fmt.Fprintf(final, "\tThis instruction belongs to groups: ")
 					for _, grp := range insn.Groups {
-						fmt.Fprintf(final, "%v ", grp)
+						fmt.Fprintf(final, "%v ", engine.GroupName(grp))
 					}
 					fmt.Fprintf(final, "\n")
 				}
@@ -96,6 +96,7 @@ func TestDetailTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
