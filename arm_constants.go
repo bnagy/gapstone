@@ -93,11 +93,11 @@ const (
 const (
 	ARM_OP_INVALID = C.ARM_OP_INVALID
 	ARM_OP_REG     = C.ARM_OP_REG
+	ARM_OP_IMM     = C.ARM_OP_IMM
+	ARM_OP_MEM     = C.ARM_OP_MEM
+	ARM_OP_FP      = C.ARM_OP_FP
 	ARM_OP_CIMM    = C.ARM_OP_CIMM
 	ARM_OP_PIMM    = C.ARM_OP_PIMM
-	ARM_OP_IMM     = C.ARM_OP_IMM
-	ARM_OP_FP      = C.ARM_OP_FP
-	ARM_OP_MEM     = C.ARM_OP_MEM
 	ARM_OP_SETEND  = C.ARM_OP_SETEND
 	ARM_OP_SYSREG  = C.ARM_OP_SYSREG
 )
@@ -735,7 +735,16 @@ const (
 
 // Group of ARM instructions
 const (
-	ARM_GRP_INVALID       = C.ARM_GRP_INVALID
+	ARM_GRP_INVALID = C.ARM_GRP_INVALID
+)
+
+// Generic groups
+const (
+	ARM_GRP_JUMP = C.ARM_GRP_JUMP
+)
+
+// Architecture-specific groups
+const (
 	ARM_GRP_CRYPTO        = C.ARM_GRP_CRYPTO
 	ARM_GRP_DATABARRIER   = C.ARM_GRP_DATABARRIER
 	ARM_GRP_DIVIDE        = C.ARM_GRP_DIVIDE
@@ -767,6 +776,5 @@ const (
 	ARM_GRP_CRC           = C.ARM_GRP_CRC
 	ARM_GRP_DPVFP         = C.ARM_GRP_DPVFP
 	ARM_GRP_V6M           = C.ARM_GRP_V6M
-	ARM_GRP_JUMP          = C.ARM_GRP_JUMP
 	ARM_GRP_ENDING        = C.ARM_GRP_ENDING
 )

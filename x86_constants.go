@@ -262,8 +262,8 @@ const (
 	X86_OP_INVALID = C.X86_OP_INVALID
 	X86_OP_REG     = C.X86_OP_REG
 	X86_OP_IMM     = C.X86_OP_IMM
-	X86_OP_FP      = C.X86_OP_FP
 	X86_OP_MEM     = C.X86_OP_MEM
+	X86_OP_FP      = C.X86_OP_FP
 )
 
 // AVX broadcast type
@@ -1659,7 +1659,21 @@ const (
 
 // Group of X86 instructions
 const (
-	X86_GRP_INVALID      = C.X86_GRP_INVALID
+	X86_GRP_INVALID = C.X86_GRP_INVALID
+)
+
+// Generic groups
+const (
+	X86_GRP_JUMP = C.X86_GRP_JUMP
+	X86_GRP_CALL = C.X86_GRP_CALL
+	X86_GRP_RET  = C.X86_GRP_RET
+	X86_GRP_INT  = C.X86_GRP_INT
+	X86_GRP_IRET = C.X86_GRP_IRET
+)
+
+// Architecture-specific groups
+const (
+	X86_GRP_VM           = C.X86_GRP_VM
 	X86_GRP_3DNOW        = C.X86_GRP_3DNOW
 	X86_GRP_AES          = C.X86_GRP_AES
 	X86_GRP_ADX          = C.X86_GRP_ADX
@@ -1700,11 +1714,5 @@ const (
 	X86_GRP_VLX          = C.X86_GRP_VLX
 	X86_GRP_SMAP         = C.X86_GRP_SMAP
 	X86_GRP_NOVLX        = C.X86_GRP_NOVLX
-	X86_GRP_JUMP         = C.X86_GRP_JUMP
-	X86_GRP_VM           = C.X86_GRP_VM
-	X86_GRP_INT          = C.X86_GRP_INT
-	X86_GRP_IRET         = C.X86_GRP_IRET
-	X86_GRP_CALL         = C.X86_GRP_CALL
-	X86_GRP_RET          = C.X86_GRP_RET
 	X86_GRP_ENDING       = C.X86_GRP_ENDING
 )

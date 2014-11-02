@@ -89,6 +89,25 @@ const (
 
 )
 
+// Common instruction operand types - to be consistent across all architectures.
+const (
+	CS_OP_INVALID = C.CS_OP_INVALID // uninitialized/invalid operand.
+	CS_OP_REG     = C.CS_OP_REG     // Register operand.
+	CS_OP_IMM     = C.CS_OP_IMM     // Immediate operand.
+	CS_OP_MEM     = C.CS_OP_MEM     // Memory operand.
+	CS_OP_FP      = C.CS_OP_FP      // Floating-Point operand.
+)
+
+// Common instruction groups - to be consistent across all architectures.
+const (
+	CS_GRP_INVALID = C.CS_GRP_INVALID // uninitialized/invalid group.
+	CS_GRP_JUMP    = C.CS_GRP_JUMP    // all jump instructions (conditional+direct+indirect jumps)
+	CS_GRP_CALL    = C.CS_GRP_CALL    // all call instructions
+	CS_GRP_RET     = C.CS_GRP_RET     // all return instructions
+	CS_GRP_INT     = C.CS_GRP_INT     // all interrupt instructions (int+syscall)
+	CS_GRP_IRET    = C.CS_GRP_IRET    // all interrupt return instructions
+)
+
 const CS_SUPPORT_DIET = C.CS_SUPPORT_DIET
 
 const CS_SUPPORT_X86_REDUCE = C.CS_SUPPORT_X86_REDUCE

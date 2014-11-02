@@ -1173,7 +1173,16 @@ const (
 
 // Group of PPC instructions
 const (
-	PPC_GRP_INVALID  = C.PPC_GRP_INVALID
+	PPC_GRP_INVALID = C.PPC_GRP_INVALID
+)
+
+// Generic groups
+const (
+	PPC_GRP_JUMP = C.PPC_GRP_JUMP
+)
+
+// Architecture-specific groups
+const (
 	PPC_GRP_ALTIVEC  = C.PPC_GRP_ALTIVEC
 	PPC_GRP_MODE32   = C.PPC_GRP_MODE32
 	PPC_GRP_MODE64   = C.PPC_GRP_MODE64
@@ -1184,6 +1193,5 @@ const (
 	PPC_GRP_E500     = C.PPC_GRP_E500
 	PPC_GRP_PPC4XX   = C.PPC_GRP_PPC4XX
 	PPC_GRP_PPC6XX   = C.PPC_GRP_PPC6XX
-	PPC_GRP_JUMP     = C.PPC_GRP_JUMP
 	PPC_GRP_ENDING   = C.PPC_GRP_ENDING
 )

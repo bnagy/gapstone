@@ -36,37 +36,37 @@ var checks = sanityChecks{
 	CS_ARCH_ARM64: sanityCheck{
 		regMax: 260,
 		insMax: 452,
-		grpMax: 6,
+		grpMax: 132,
 	},
 	CS_ARCH_ARM: sanityCheck{
 		regMax: 111,
 		insMax: 435,
-		grpMax: 33,
+		grpMax: 159,
 	},
 	CS_ARCH_MIPS: sanityCheck{
 		regMax: 136,
 		insMax: 586,
-		grpMax: 35,
+		grpMax: 161,
 	},
 	CS_ARCH_PPC: sanityCheck{
 		regMax: 178,
 		insMax: 934,
-		grpMax: 12,
-	},
-	CS_ARCH_SYSZ: sanityCheck{
-		regMax: 35,
-		insMax: 682,
-		grpMax: 7,
+		grpMax: 138,
 	},
 	CS_ARCH_SPARC: sanityCheck{
 		regMax: 88,
 		insMax: 279,
-		grpMax: 9,
+		grpMax: 135,
+	},
+	CS_ARCH_SYSZ: sanityCheck{
+		regMax: 35,
+		insMax: 682,
+		grpMax: 133,
 	},
 	CS_ARCH_X86: sanityCheck{
 		regMax: 234,
 		insMax: 1295,
-		grpMax: 47,
+		grpMax: 169,
 	},
 	CS_ARCH_XCORE: sanityCheck{
 		regMax: 26,
@@ -101,6 +101,7 @@ var x86Code16 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x05\x23\x01\x0
 var x86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x05\x23\x01\x00\x00\x36\x8b\x84\x91\x23\x01\x00\x00\x41\x8d\x84\x39\x89\x67\x00\x00\x8d\x87\x89\x67\x00\x00\xb4\xc6"
 var mipsCode = "\x0C\x10\x00\x97\x00\x00\x00\x00\x24\x02\x00\x0c\x8f\xa2\x00\x00\x34\x21\x34\x56"
 var mipsCode2 = "\x56\x34\x21\x34\xc2\x17\x01\x00"
+var mips32R6 = "\x00\x07\x00\x07\x00\x11\x93\x7c\x01\x8c\x8b\x7c\x00\xc7\x48\xd0"
 var basicX86Code16 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
 var basicX86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
 var basicX86Code64 = "\x55\x48\x8b\x05\xb8\x13\x00\x00"
@@ -110,6 +111,7 @@ var basicThumbCode = "\x70\x47\xeb\x46\x83\xb0\xc9\x68"
 var basicThumbCode2 = "\x4f\xf0\x00\x01\xbd\xe8\x00\x88\xd1\xe8\x00\xf0"
 var basicMipsCode = "\x0C\x10\x00\x97\x00\x00\x00\x00\x24\x02\x00\x0c\x8f\xa2\x00\x00\x34\x21\x34\x56\x00\x80\x04\x08"
 var basicMipsCode2 = "\x56\x34\x21\x34\xc2\x17\x01\x00"
+var basicMips32R6 = "\x00\x07\x00\x07\x00\x11\x93\x7c\x01\x8c\x8b\x7c\x00\xc7\x48\xd0"
 var basicArm64Code = "\x09\x00\x38\xd5\xbf\x40\x00\xd5\x0c\x05\x13\xd5\x20\x50\x02\x0e\x20\xe4\x3d\x0f\x00\x18\xa0\x5f\xa2\x00\xae\x9e\x9f\x37\x03\xd5\xbf\x33\x03\xd5\xdf\x3f\x03\xd5\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9\x20\x04\x81\xda\x20\x08\x02\x8b\x10\x5b\xe8\x3c"
 var basicArm64Code2 = "\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9"
 var basicPPCCode = "\x80\x20\x00\x00\x80\x3f\x00\x00\x10\x43\x23\x0e\xd0\x44\x00\x80\x4c\x43\x22\x02\x2d\x03\x00\x80\x7c\x43\x20\x14\x7c\x43\x20\x93\x4f\x20\x00\x21\x4c\xc8\x00\x21\x40\x82\x00\x14"
@@ -194,6 +196,13 @@ var basicTests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		basicMipsCode2,
 		"MIPS-64-EL (Little-endian)",
+	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_32 + CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicMips32R6,
+		"MIPS-32R6 | Micro (Big-endian)",
 	},
 	{
 		CS_ARCH_ARM64,
@@ -320,6 +329,13 @@ var detailTests = platforms{
 		basicMipsCode2,
 		"MIPS-64-EL (Little-endian)",
 	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_32 + CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicMips32R6,
+		"MIPS-32R6 | Micro (Big-endian)",
+	},
 	platform{
 		CS_ARCH_ARM64,
 		CS_MODE_ARM,
@@ -422,6 +438,13 @@ var mips_tests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		mipsCode2,
 		"MIPS-64-EL (Little-endian)",
+	},
+	platform{
+		CS_ARCH_MIPS,
+		CS_MODE_32 + CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		mips32R6,
+		"MIPS-32R6 | Micro (Big-endian)",
 	},
 }
 

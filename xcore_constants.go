@@ -190,6 +190,10 @@ const (
 // Group of XCore instructions
 const (
 	XCORE_GRP_INVALID = C.XCORE_GRP_INVALID
-	XCORE_GRP_JUMP    = C.XCORE_GRP_JUMP
-	XCORE_GRP_ENDING  = C.XCORE_GRP_ENDING
+)
+
+// Generic groups
+const (
+	XCORE_GRP_JUMP   = C.XCORE_GRP_JUMP
+	XCORE_GRP_ENDING = C.XCORE_GRP_ENDING
 )

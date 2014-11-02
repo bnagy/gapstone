@@ -833,7 +833,16 @@ const (
 
 // Group of MIPS instructions
 const (
-	MIPS_GRP_INVALID        = C.MIPS_GRP_INVALID
+	MIPS_GRP_INVALID = C.MIPS_GRP_INVALID
+)
+
+// Generic groups
+const (
+	MIPS_GRP_JUMP = C.MIPS_GRP_JUMP
+)
+
+// Architecture-specific groups
+const (
 	MIPS_GRP_BITCOUNT       = C.MIPS_GRP_BITCOUNT
 	MIPS_GRP_DSP            = C.MIPS_GRP_DSP
 	MIPS_GRP_DSPR2          = C.MIPS_GRP_DSPR2
@@ -867,6 +876,5 @@ const (
 	MIPS_GRP_MIPS5_32R2     = C.MIPS_GRP_MIPS5_32R2
 	MIPS_GRP_GP32BIT        = C.MIPS_GRP_GP32BIT
 	MIPS_GRP_GP64BIT        = C.MIPS_GRP_GP64BIT
-	MIPS_GRP_JUMP           = C.MIPS_GRP_JUMP
 	MIPS_GRP_ENDING         = C.MIPS_GRP_ENDING
 )
