@@ -61,7 +61,7 @@ func TestSysZ(t *testing.T) {
 	t.Parallel()
 
 	final := new(bytes.Buffer)
-	spec_file := "sysz.SPEC"
+	spec_file := "sysZ.SPEC"
 	for i, platform := range sysZTests {
 
 		engine, err := New(platform.arch, platform.mode)
