@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'date'
+
 # I hate these little scripts :(
 
 unless ARGV.length == 1
@@ -15,6 +17,11 @@ try reading the *_test.go files.
 	Binding Author: Ben Nagy
 	License: BSD style - see LICENSE file for details
     (c) 2013 COSEINC. All Rights Reserved.
+
+    THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
+	Command: #{$0} #{ARGV[0]}
+	#{DateTime.now}
+
 */
 
 package gapstone

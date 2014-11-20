@@ -113,6 +113,26 @@ Disasm:
 0x1008:
 
 ****************
+Platform: Thumb-MClass
+Code: 0xef 0xf3 0x02 0x80 
+Disasm:
+0x1000:	mrs		r0, eapsr // insn-ID: 87, insn-mnem: mrs
+	This instruction belongs to groups: thumb mclass 
+0x1004:
+
+****************
+Platform: Arm-V8
+Code: 0xe0 0x3b 0xb2 0xee 0x42 0x00 0x01 0xe1 0x51 0xf0 0x7f 0xf5 
+Disasm:
+0x1000:	vcvtt.f64.f16		d3, s1 // insn-ID: 292, insn-mnem: vcvtt
+	This instruction belongs to groups: fparmv8 dpvfp 
+0x1004:	crc32b		r0, r1, r2 // insn-ID: 25, insn-mnem: crc32b
+	This instruction belongs to groups: arm v8 crc 
+0x1008:	dmb		oshld // insn-ID: 32, insn-mnem: dmb
+	This instruction belongs to groups: arm databarrier 
+0x100c:
+
+****************
 Platform: MIPS-32 (Big-endian)
 Code: 0x0c 0x10 0x00 0x97 0x00 0x00 0x00 0x00 0x24 0x02 0x00 0x0c 0x8f 0xa2 0x00 0x00 0x34 0x21 0x34 0x56 0x00 0x80 0x04 0x08 
 Disasm:
@@ -154,6 +174,16 @@ Disasm:
 0x100c:	rotrv		$t1, $a2, $a3 // insn-ID: 471, insn-mnem: rotrv
 	This instruction belongs to groups: micromips 
 0x1010:
+
+****************
+Platform: MIPS-32R6 (Big-endian)
+Code: 0xec 0x80 0x00 0x19 0x7c 0x43 0x22 0xa0 
+Disasm:
+0x1000:	addiupc		$a0, 0x64 // insn-ID: 3, insn-mnem: addiupc
+	This instruction belongs to groups: stdenc mips32r6 
+0x1004:	align		$a0, $v0, $v1, 2 // insn-ID: 22, insn-mnem: align
+	This instruction belongs to groups: stdenc mips32r6 
+0x1008:
 
 ****************
 Platform: ARM-64
@@ -205,7 +235,7 @@ Disasm:
 0x1024:	bgelrl-		cr2 // insn-ID: 38, insn-mnem: blrl
 	Implicit registers read: ctr lr rm 
 	Implicit registers modified: lr ctr 
-0x1028:	bne		.0x103c // insn-ID: 13, insn-mnem: b
+0x1028:	bne		0x103c // insn-ID: 13, insn-mnem: b
 	Implicit registers read: ctr rm 
 	Implicit registers modified: ctr 
 0x102c:
@@ -225,10 +255,10 @@ Disasm:
 0x1018:	sethi		0xa, %l0 // insn-ID: 232, insn-mnem: sethi
 0x101c:	add		%g1, %g2, %g3 // insn-ID: 6, insn-mnem: add
 0x1020:	nop		 // insn-ID: 217, insn-mnem: nop
-0x1024:	bne		0x3fffff // insn-ID: 16, insn-mnem: b
+0x1024:	bne		0x1001020 // insn-ID: 16, insn-mnem: b
 	Implicit registers read: icc 
 	This instruction belongs to groups: jump 
-0x1028:	ba		0x3fffff // insn-ID: 16, insn-mnem: b
+0x1028:	ba		0x1001024 // insn-ID: 16, insn-mnem: b
 	This instruction belongs to groups: jump 
 0x102c:	add		%o0, %o1, %l0 // insn-ID: 6, insn-mnem: add
 0x1030:	fbg		0x3fffff // insn-ID: 19, insn-mnem: fb

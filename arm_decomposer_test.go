@@ -108,6 +108,10 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		fmt.Fprintf(buf, "\tUser-mode: True\n")
 	}
 
+	if insn.Arm.MemBarrier != 0 {
+		fmt.Fprintf(buf, "\tMemory-barrier: %v\n", insn.Arm.MemBarrier)
+	}
+
 	fmt.Fprintf(buf, "\n")
 }
 
@@ -161,7 +165,7 @@ func TestArm(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		fmt.Println(fs)
+		// fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

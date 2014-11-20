@@ -40,12 +40,16 @@ const (
 	CS_MODE_64            = C.CS_MODE_64            // 64-bit mode
 	CS_MODE_THUMB         = C.CS_MODE_THUMB         // ARM's Thumb mode, including Thumb-2
 	CS_MODE_MCLASS        = C.CS_MODE_MCLASS        // ARM's Cortex-M series
+	CS_MODE_V8            = C.CS_MODE_V8            // ARMv8 A32 encodings for ARM
 	CS_MODE_MICRO         = C.CS_MODE_MICRO         // MicroMips mode (MIPS architecture)
 	CS_MODE_MIPS3         = C.CS_MODE_MIPS3         // Mips III ISA
 	CS_MODE_MIPS32R6      = C.CS_MODE_MIPS32R6      // Mips32r6 ISA
 	CS_MODE_MIPSGP64      = C.CS_MODE_MIPSGP64      // General Purpose Registers are 64-bit wide (MIPS arch)
 	CS_MODE_V9            = C.CS_MODE_V9            // SparcV9 mode (Sparc architecture)
 	CS_MODE_BIG_ENDIAN    = 1 << 31                 // big endian mode
+	CS_MODE_MIPS32        = C.CS_MODE_MIPS32        // Mips32 ISA (Mips)
+	CS_MODE_MIPS64        = C.CS_MODE_MIPS64        // Mips64 ISA (Mips)
+
 )
 
 const (

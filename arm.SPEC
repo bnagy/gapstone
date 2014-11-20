@@ -211,12 +211,12 @@ Disasm:
 		operands[1].vector_index = 1
 	Vector-size: 8
 
-0x1014:	msr	CPSR_fc, r6
+0x1014:	msr	cpsr_fc, r6
 	op_count: 2
 		operands[0].type: SYSREG = 144
 		operands[1].type: REG = r6
 
-0x1018:	msr	APSR_nzcvqg, r0
+0x1018:	msr	apsr_nzcvqg, r0
 	op_count: 2
 		operands[0].type: SYSREG = 259
 		operands[1].type: REG = r0
@@ -235,4 +235,36 @@ Disasm:
 	Vector-data: 10
 
 0x1024:
+
+****************
+Platform: Thumb-MClass
+Code:0xef 0xf3 0x02 0x80 
+Disasm:
+0x1000:	mrs	r0, eapsr
+	op_count: 2
+		operands[0].type: REG = r0
+		operands[1].type: SYSREG = 263
+
+0x1004:
+
+****************
+Platform: Arm-V8
+Code:0xe0 0x3b 0xb2 0xee 0x42 0x00 0x01 0xe1 0x51 0xf0 0x7f 0xf5 
+Disasm:
+0x1000:	vcvtt.f64.f16	d3, s1
+	op_count: 2
+		operands[0].type: REG = d3
+		operands[1].type: REG = s1
+	Vector-data: 17
+
+0x1004:	crc32b	r0, r1, r2
+	op_count: 3
+		operands[0].type: REG = r0
+		operands[1].type: REG = r1
+		operands[2].type: REG = r2
+
+0x1008:	dmb	oshld
+	Memory-barrier: 2
+
+0x100c:
 

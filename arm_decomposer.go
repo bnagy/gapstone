@@ -29,6 +29,7 @@ type ArmInstruction struct {
 	CC          uint
 	UpdateFlags bool
 	Writeback   bool
+	MemBarrier  int
 	Operands    []ArmOperand
 }
 
@@ -85,6 +86,7 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		CC:          uint(cs_arm.cc),
 		UpdateFlags: bool(cs_arm.update_flags),
 		Writeback:   bool(cs_arm.writeback),
+		MemBarrier:  int(cs_arm.mem_barrier),
 	}
 
 	// Cast the op_info to a []C.cs_arm_op

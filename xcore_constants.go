@@ -6,6 +6,11 @@ try reading the *_test.go files.
 	Binding Author: Ben Nagy
 	License: BSD style - see LICENSE file for details
     (c) 2013 COSEINC. All Rights Reserved.
+
+    THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
+	Command: ./genconst /Users/ben/src/capstone/bindings/python/capstone/
+	2014-11-21T09:34:57+12:00
+
 */
 
 package gapstone

@@ -6,6 +6,11 @@ try reading the *_test.go files.
 	Binding Author: Ben Nagy
 	License: BSD style - see LICENSE file for details
     (c) 2013 COSEINC. All Rights Reserved.
+
+    THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
+	Command: ./genconst /Users/ben/src/capstone/bindings/python/capstone/
+	2014-11-21T09:34:57+12:00
+
 */
 
 package gapstone
@@ -87,6 +92,28 @@ const (
 	ARM_SYSREG_BASEPRI_MAX  = C.ARM_SYSREG_BASEPRI_MAX
 	ARM_SYSREG_FAULTMASK    = C.ARM_SYSREG_FAULTMASK
 	ARM_SYSREG_CONTROL      = C.ARM_SYSREG_CONTROL
+)
+
+// The memory barrier constants map directly to the 4-bit encoding of
+// the option field for Memory Barrier operations.
+const (
+	ARM_MB_INVALID     = C.ARM_MB_INVALID
+	ARM_MB_RESERVED_0  = C.ARM_MB_RESERVED_0
+	ARM_MB_OSHLD       = C.ARM_MB_OSHLD
+	ARM_MB_OSHST       = C.ARM_MB_OSHST
+	ARM_MB_OSH         = C.ARM_MB_OSH
+	ARM_MB_RESERVED_4  = C.ARM_MB_RESERVED_4
+	ARM_MB_NSHLD       = C.ARM_MB_NSHLD
+	ARM_MB_NSHST       = C.ARM_MB_NSHST
+	ARM_MB_NSH         = C.ARM_MB_NSH
+	ARM_MB_RESERVED_8  = C.ARM_MB_RESERVED_8
+	ARM_MB_ISHLD       = C.ARM_MB_ISHLD
+	ARM_MB_ISHST       = C.ARM_MB_ISHST
+	ARM_MB_ISH         = C.ARM_MB_ISH
+	ARM_MB_RESERVED_12 = C.ARM_MB_RESERVED_12
+	ARM_MB_LD          = C.ARM_MB_LD
+	ARM_MB_ST          = C.ARM_MB_ST
+	ARM_MB_SY          = C.ARM_MB_SY
 )
 
 // Operand type for instruction's operands

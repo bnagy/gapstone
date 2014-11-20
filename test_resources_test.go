@@ -95,13 +95,16 @@ var armCode = "\xED\xFF\xFF\xEB\x04\xe0\x2d\xe5\x00\x00\x00\x00\xe0\x83\x22\xe5\
 var armCode2 = "\xd1\xe8\x00\xf0\xf0\x24\x04\x07\x1f\x3c\xf2\xc0\x00\x00\x4f\xf0\x00\x01\x46\x6c"
 var thumbCode = "\x70\x47\xeb\x46\x83\xb0\xc9\x68\x1f\xb1\x30\xbf\xaf\xf3\x20\x84"
 var thumbCode2 = "\x4f\xf0\x00\x01\xbd\xe8\x00\x88\xd1\xe8\x00\xf0\x18\xbf\xad\xbf\xf3\xff\x0b\x0c\x86\xf3\x00\x89\x80\xf3\x00\x8c\x4f\xfa\x99\xf6\xd0\xff\xa2\x01"
+var thumbMClass = "\xef\xf3\x02\x80"
+var armV8 = "\xe0\x3b\xb2\xee\x42\x00\x01\xe1\x51\xf0\x7f\xf5"
 var arm64Code = "\x09\x00\x38\xd5\xbf\x40\x00\xd5\x0c\x05\x13\xd5\x20\x50\x02\x0e\x20\xe4\x3d\x0f\x00\x18\xa0\x5f\xa2\x00\xae\x9e\x9f\x37\x03\xd5\xbf\x33\x03\xd5\xdf\x3f\x03\xd5\x21\x7c\x02\x9b\x21\x7c\x00\x53\x00\x40\x21\x4b\xe1\x0b\x40\xb9\x20\x04\x81\xda\x20\x08\x02\x8b\x10\x5b\xe8\x3c"
 var x86Code64 = "\x55\x48\x8b\x05\xb8\x13\x00\x00"
 var x86Code16 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x05\x23\x01\x00\x00\x36\x8b\x84\x91\x23\x01\x00\x00\x41\x8d\x84\x39\x89\x67\x00\x00\x8d\x87\x89\x67\x00\x00\xb4\xc6"
 var x86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x05\x23\x01\x00\x00\x36\x8b\x84\x91\x23\x01\x00\x00\x41\x8d\x84\x39\x89\x67\x00\x00\x8d\x87\x89\x67\x00\x00\xb4\xc6"
 var mipsCode = "\x0C\x10\x00\x97\x00\x00\x00\x00\x24\x02\x00\x0c\x8f\xa2\x00\x00\x34\x21\x34\x56"
 var mipsCode2 = "\x56\x34\x21\x34\xc2\x17\x01\x00"
-var mips32R6 = "\x00\x07\x00\x07\x00\x11\x93\x7c\x01\x8c\x8b\x7c\x00\xc7\x48\xd0"
+var mips32R6M = "\x00\x07\x00\x07\x00\x11\x93\x7c\x01\x8c\x8b\x7c\x00\xc7\x48\xd0"
+var mips32R6 = "\xec\x80\x00\x19\x7c\x43\x22\xa0"
 var basicX86Code16 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
 var basicX86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
 var basicX86Code64 = "\x55\x48\x8b\x05\xb8\x13\x00\x00"
@@ -183,26 +186,47 @@ var basicTests = platforms{
 		basicThumbCode,
 		"THUMB",
 	},
+	platform{
+		CS_ARCH_ARM,
+		CS_MODE_THUMB + CS_MODE_MCLASS,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		thumbMClass,
+		"Thumb-MClass",
+	},
+	platform{
+		CS_ARCH_ARM,
+		CS_MODE_ARM + CS_MODE_V8,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		armV8,
+		"Arm-V8",
+	},
 	{
 		CS_ARCH_MIPS,
-		CS_MODE_32 + CS_MODE_BIG_ENDIAN,
+		CS_MODE_MIPS32 + CS_MODE_BIG_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		mipsCode,
 		"MIPS-32 (Big-endian)",
 	},
 	{
 		CS_ARCH_MIPS,
-		CS_MODE_64 + CS_MODE_LITTLE_ENDIAN,
+		CS_MODE_MIPS64 + CS_MODE_LITTLE_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		basicMipsCode2,
 		"MIPS-64-EL (Little-endian)",
 	},
 	{
 		CS_ARCH_MIPS,
-		CS_MODE_32 + CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		basicMips32R6,
 		"MIPS-32R6 | Micro (Big-endian)",
+	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_MIPS32R6 + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		mips32R6,
+		"MIPS-32R6 (Big-endian)",
 	},
 	{
 		CS_ARCH_ARM64,
@@ -315,6 +339,20 @@ var detailTests = platforms{
 		basicThumbCode,
 		"THUMB",
 	},
+	platform{
+		CS_ARCH_ARM,
+		CS_MODE_THUMB + CS_MODE_MCLASS,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		thumbMClass,
+		"Thumb-MClass",
+	},
+	platform{
+		CS_ARCH_ARM,
+		CS_MODE_ARM + CS_MODE_V8,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		armV8,
+		"Arm-V8",
+	},
 	{
 		CS_ARCH_MIPS,
 		CS_MODE_32 + CS_MODE_BIG_ENDIAN,
@@ -331,16 +369,23 @@ var detailTests = platforms{
 	},
 	{
 		CS_ARCH_MIPS,
-		CS_MODE_32 + CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		basicMips32R6,
 		"MIPS-32R6 | Micro (Big-endian)",
+	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_MIPS32R6 + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		mips32R6,
+		"MIPS-32R6 (Big-endian)",
 	},
 	platform{
 		CS_ARCH_ARM64,
 		CS_MODE_ARM,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		basicArm64Code,
+		arm64Code,
 		"ARM-64",
 	},
 	platform{
@@ -412,6 +457,20 @@ var armTests = platforms{
 		thumbCode2,
 		"Thumb-2 & register named with numbers",
 	},
+	platform{
+		CS_ARCH_ARM,
+		CS_MODE_THUMB + CS_MODE_MCLASS,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		thumbMClass,
+		"Thumb-MClass",
+	},
+	platform{
+		CS_ARCH_ARM,
+		CS_MODE_ARM + CS_MODE_V8,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		armV8,
+		"Arm-V8",
+	},
 }
 
 var arm64Tests = platforms{
@@ -439,12 +498,19 @@ var mips_tests = platforms{
 		mipsCode2,
 		"MIPS-64-EL (Little-endian)",
 	},
-	platform{
+	{
 		CS_ARCH_MIPS,
-		CS_MODE_32 + CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		basicMips32R6,
+		"MIPS-32R6 | Micro (Big-endian)",
+	},
+	{
+		CS_ARCH_MIPS,
+		CS_MODE_MIPS32R6 + CS_MODE_BIG_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		mips32R6,
-		"MIPS-32R6 | Micro (Big-endian)",
+		"MIPS-32R6 (Big-endian)",
 	},
 }
 
