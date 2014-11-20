@@ -179,7 +179,7 @@ func TestX86(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		fmt.Println(fs)
+		_ = ioutil.WriteFile(spec_file+".got", []byte(fs), 0644)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
