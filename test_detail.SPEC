@@ -205,7 +205,7 @@ Disasm:
 0x1024:	bgelrl-		cr2 // insn-ID: 38, insn-mnem: blrl
 	Implicit registers read: ctr lr rm 
 	Implicit registers modified: lr ctr 
-0x1028:	bne		.0x103c // insn-ID: 13, insn-mnem: b
+0x1028:	bne		0x103c // insn-ID: 13, insn-mnem: b
 	Implicit registers read: ctr rm 
 	Implicit registers modified: ctr 
 0x102c:
@@ -225,10 +225,10 @@ Disasm:
 0x1018:	sethi		0xa, %l0 // insn-ID: 232, insn-mnem: sethi
 0x101c:	add		%g1, %g2, %g3 // insn-ID: 6, insn-mnem: add
 0x1020:	nop		 // insn-ID: 217, insn-mnem: nop
-0x1024:	bne		0x3fffff // insn-ID: 16, insn-mnem: b
+0x1024:	bne		0x1001020 // insn-ID: 16, insn-mnem: b
 	Implicit registers read: icc 
 	This instruction belongs to groups: jump 
-0x1028:	ba		0x3fffff // insn-ID: 16, insn-mnem: b
+0x1028:	ba		0x1001024 // insn-ID: 16, insn-mnem: b
 	This instruction belongs to groups: jump 
 0x102c:	add		%o0, %o1, %l0 // insn-ID: 6, insn-mnem: add
 0x1030:	fbg		0x3fffff // insn-ID: 19, insn-mnem: fb

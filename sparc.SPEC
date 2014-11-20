@@ -47,14 +47,14 @@ Disasm:
 
 0x1020:	nop	
 
-0x1024:	bne	0x3fffff
+0x1024:	bne	0x1001020
 	op_count: 1
-		operands[0].type: IMM = 0x3fffff
+		operands[0].type: IMM = 0x1001020
 	Code condition: 265
 
-0x1028:	ba	0x3fffff
+0x1028:	ba	0x1001024
 	op_count: 1
-		operands[0].type: IMM = 0x3fffff
+		operands[0].type: IMM = 0x1001024
 
 0x102c:	add	%o0, %o1, %l0
 	op_count: 3

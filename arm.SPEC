@@ -211,12 +211,12 @@ Disasm:
 		operands[1].vector_index = 1
 	Vector-size: 8
 
-0x1014:	msr	CPSR_fc, r6
+0x1014:	msr	cpsr_fc, r6
 	op_count: 2
 		operands[0].type: SYSREG = 144
 		operands[1].type: REG = r6
 
-0x1018:	msr	APSR_nzcvqg, r0
+0x1018:	msr	apsr_nzcvqg, r0
 	op_count: 2
 		operands[0].type: SYSREG = 259
 		operands[1].type: REG = r0
