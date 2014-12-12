@@ -234,7 +234,6 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 	)
 
 	if disassembled > 0 {
-		defer C.cs_free((*C.cs_insn)(unsafe.Pointer(insn)), C.size_t(disassembled))
 		// Create a slice, and reflect its header
 		var insns []C.cs_insn
 		h := (*reflect.SliceHeader)(unsafe.Pointer(&insns))
