@@ -19,7 +19,7 @@ import "C"
 import "unsafe"
 import "reflect"
 
-//import "fmt"
+// import "fmt"
 
 // Accessed via insn.X86.XXX
 type X86Instruction struct {
@@ -79,19 +79,17 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	// Cast the cs_detail union
 	cs_x86 := (*C.cs_x86)(unsafe.Pointer(&raw.detail.anon0[0]))
 
-	// cast the prefix array to a []byte
-	var pref []byte
-	ph := (*reflect.SliceHeader)(unsafe.Pointer(&pref))
-	ph.Data = uintptr(unsafe.Pointer(&cs_x86.prefix[0]))
-	ph.Len = 4
-	ph.Cap = 4
+	// copy the prefix array to a new []byte
+	pref := make([]byte, 4)
+	for i := 0; i < 4; i++ {
+		pref[i] = byte(cs_x86.prefix[i])
+	}
 
 	// Same for the opcode array
-	var opc []byte
-	oh := (*reflect.SliceHeader)(unsafe.Pointer(&opc))
-	oh.Data = uintptr(unsafe.Pointer(&cs_x86.opcode[0]))
-	oh.Len = 4
-	oh.Cap = 4
+	opc := make([]byte, 4)
+	for i := 0; i < 4; i++ {
+		opc[i] = byte(cs_x86.opcode[i])
+	}
 
 	x86 := X86Instruction{
 		Prefix:   pref,
