@@ -47,14 +47,14 @@ Disasm:
 
 0x1020:	nop	
 
-0x1024:	bne	0x1001020
+0x1024:	bne	0x1020
 	op_count: 1
-		operands[0].type: IMM = 0x1001020
+		operands[0].type: IMM = 0x1020
 	Code condition: 265
 
-0x1028:	ba	0x1001024
+0x1028:	ba	0x1024
 	op_count: 1
-		operands[0].type: IMM = 0x1001024
+		operands[0].type: IMM = 0x1024
 
 0x102c:	add	%o0, %o1, %l0
 	op_count: 3
@@ -62,9 +62,9 @@ Disasm:
 		operands[1].type: REG = o1
 		operands[2].type: REG = l0
 
-0x1030:	fbg	0x3fffff
+0x1030:	fbg	0x102c
 	op_count: 1
-		operands[0].type: IMM = 0x3fffff
+		operands[0].type: IMM = 0x102c
 	Code condition: 278
 
 0x1034:	st	%o2, [%g1]
@@ -80,10 +80,10 @@ Disasm:
 			operands[0].mem.index: REG = l6
 		operands[1].type: REG = o2
 
-0x103c:	brnz,a,pn	%o2, 3
+0x103c:	brnz,a,pn	%o2, 0x1048
 	op_count: 2
 		operands[0].type: REG = o2
-		operands[1].type: IMM = 0x3
+		operands[1].type: IMM = 0x1048
 	Hint code: 5
 
 0x1040:

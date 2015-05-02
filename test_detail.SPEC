@@ -52,7 +52,7 @@ Platform: ARM
 Code: 0xed 0xff 0xff 0xeb 0x04 0xe0 0x2d 0xe5 0x00 0x00 0x00 0x00 0xe0 0x83 0x22 0xe5 0xf1 0x02 0x03 0x0e 0x00 0x00 0xa0 0xe3 0x02 0x30 0xc1 0xe7 0x00 0x00 0x53 0xe3 
 Disasm:
 0x1000:	bl		#0xfbc // insn-ID: 13, insn-mnem: bl
-	Implicit registers read: sp 
+	Implicit registers read: pc 
 	Implicit registers modified: lr 
 	This instruction belongs to groups: jump arm 
 0x1004:	str		lr, [sp, #-4]! // insn-ID: 212, insn-mnem: str
@@ -255,18 +255,18 @@ Disasm:
 0x1018:	sethi		0xa, %l0 // insn-ID: 232, insn-mnem: sethi
 0x101c:	add		%g1, %g2, %g3 // insn-ID: 6, insn-mnem: add
 0x1020:	nop		 // insn-ID: 217, insn-mnem: nop
-0x1024:	bne		0x1001020 // insn-ID: 16, insn-mnem: b
+0x1024:	bne		0x1020 // insn-ID: 16, insn-mnem: b
 	Implicit registers read: icc 
 	This instruction belongs to groups: jump 
-0x1028:	ba		0x1001024 // insn-ID: 16, insn-mnem: b
+0x1028:	ba		0x1024 // insn-ID: 16, insn-mnem: b
 	This instruction belongs to groups: jump 
 0x102c:	add		%o0, %o1, %l0 // insn-ID: 6, insn-mnem: add
-0x1030:	fbg		0x3fffff // insn-ID: 19, insn-mnem: fb
+0x1030:	fbg		0x102c // insn-ID: 19, insn-mnem: fb
 	Implicit registers read: fcc0 
 	This instruction belongs to groups: jump 
 0x1034:	st		%o2, [%g1] // insn-ID: 246, insn-mnem: st
 0x1038:	ldsb		[%i0+%l6], %o2 // insn-ID: 198, insn-mnem: ldsb
-0x103c:	brnz,a,pn		%o2, 3 // insn-ID: 24, insn-mnem: brnz
+0x103c:	brnz,a,pn		%o2, 0x1048 // insn-ID: 24, insn-mnem: brnz
 	This instruction belongs to groups: 64bit jump 
 0x1040:
 
