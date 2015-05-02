@@ -115,11 +115,10 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 		insn.OpStr = C.GoString(&raw.op_str[0])
 	}
 
-	var bslice []byte
-	h := (*reflect.SliceHeader)(unsafe.Pointer(&bslice))
-	h.Data = uintptr(unsafe.Pointer(&raw.bytes[0]))
-	h.Len = int(raw.size)
-	h.Cap = int(raw.size)
+	bslice := make([]byte, raw.size)
+	for i := 0; i < int(raw.size); i++ {
+		bslice[i] = byte(raw.bytes[i])
+	}
 	insn.Bytes = bslice
 
 	if raw.detail != nil && !dietMode {
