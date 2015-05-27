@@ -33,10 +33,12 @@ type X86Instruction struct {
 	SibIndex uint
 	SibScale int8
 	SibBase  uint
+	XopCC    uint
 	SseCC    uint
 	AvxCC    uint
 	AvxSAE   bool
 	AvxRM    uint
+	Eflags   uint64
 	Operands []X86Operand
 }
 
@@ -58,6 +60,7 @@ type X86Operand struct {
 	FP            float64
 	Mem           X86MemoryOperand
 	Size          uint8
+	Access        uint8
 	AvxBcast      uint
 	AvxZeroOpmask bool
 }
@@ -102,10 +105,12 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		SibIndex: uint(cs_x86.sib_index),
 		SibScale: int8(cs_x86.sib_scale),
 		SibBase:  uint(cs_x86.sib_base),
+		XopCC:    uint(cs_x86.xop_cc),
 		SseCC:    uint(cs_x86.sse_cc),
 		AvxCC:    uint(cs_x86.avx_cc),
 		AvxSAE:   bool(cs_x86.avx_sae),
 		AvxRM:    uint(cs_x86.avx_rm),
+		Eflags:   uint64(cs_x86.eflags),
 	}
 
 	// Cast the op_info to a []C.cs_x86_op
@@ -125,6 +130,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		gop := X86Operand{
 			Type:          uint(cop._type),
 			Size:          uint8(cop.size),
+			Access:        uint8(cop.access),
 			AvxBcast:      uint(cop.avx_bcast),
 			AvxZeroOpmask: bool(cop.avx_zero_opmask),
 		}
@@ -154,11 +160,11 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	insn.X86 = &x86
 }
 
-func decomposeX86(raws []C.cs_insn) []Instruction {
+func decomposeX86(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		e.fillGenericHeader(raw, decomp)
 		fillX86Header(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

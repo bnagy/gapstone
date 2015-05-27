@@ -65,8 +65,8 @@ func TestTest(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		// Debugging - uncomment below and run the test | diff - test.SPEC
-		fmt.Println(fs)
+		// Debugging - uncomment below and run `diff <(go test -run TestTest) test.SPEC`
+		// fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

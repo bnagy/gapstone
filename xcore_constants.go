@@ -9,7 +9,7 @@ try reading the *_test.go files.
 
     THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
 	Command: ./genconst /Users/ben/src/capstone/bindings/python/capstone/
-	2015-05-02T12:51:59+12:00
+	2015-05-25T15:16:33+07:00
 
 */
 

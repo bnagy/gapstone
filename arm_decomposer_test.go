@@ -44,6 +44,9 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			if op.Mem.Disp != 0 {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint32(op.Mem.Disp))
 			}
+			if op.Mem.LShift != 0 {
+				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.lshift: 0x%x\n", i, uint32(op.Mem.LShift))
+			}
 		case ARM_OP_PIMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: P-IMM = %v\n", i, op.Imm)
 		case ARM_OP_CIMM:
@@ -57,6 +60,25 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case ARM_OP_SYSREG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: SYSREG = %v\n", i, op.Reg)
 
+		}
+
+		if op.NeonLane != -1 {
+			fmt.Fprintf(buf, "\t\toperands[%v].neon_lane = %v\n", i, op.NeonLane)
+		}
+
+		switch op.Access {
+
+		case CS_AC_READ:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ\n", i)
+		case CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: WRITE\n", i)
+		case CS_AC_READ | CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ | WRITE\n", i)
+		case 0:
+			break
+		default:
+			// FIXME make this cleaner
+			panic(fmt.Sprintf("Unknown op.Access type %v", op.Access))
 		}
 
 		if op.Shift.Type != ARM_SFT_INVALID && op.Shift.Value != 0 {
@@ -112,6 +134,24 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		fmt.Fprintf(buf, "\tMemory-barrier: %v\n", insn.Arm.MemBarrier)
 	}
 
+	read := insn.AllRegistersRead
+	if len(read) > 0 {
+		fmt.Fprintf(buf, "\tRegisters read:")
+		for _, reg := range read {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
+	written := insn.AllRegistersWrite
+	if len(written) > 0 {
+		fmt.Fprintf(buf, "\tRegisters modified:")
+		for _, reg := range written {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
 	fmt.Fprintf(buf, "\n")
 }
 
@@ -165,7 +205,7 @@ func TestArm(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		// fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec!")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)

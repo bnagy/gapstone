@@ -106,11 +106,11 @@ func fillSysZHeader(raw C.cs_insn, insn *Instruction) {
 	insn.SysZ = &sysz
 }
 
-func decomposeSysZ(raws []C.cs_insn) []Instruction {
+func decomposeSysZ(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		e.fillGenericHeader(raw, decomp)
 		fillSysZHeader(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

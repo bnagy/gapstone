@@ -2,8 +2,8 @@
 Platform: X86 16bit (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		cx, word ptr [si + 0x32] // insn-ID: 315, insn-mnem: lea
-0x1003:	or		byte ptr [bx + di], al // insn-ID: 325, insn-mnem: or
+0x1000:	lea		cx, [si + 0x32] // insn-ID: 326, insn-mnem: lea
+0x1003:	or		byte ptr [bx + di], al // insn-ID: 336, insn-mnem: or
 	Implicit registers modified: flags 
 0x1005:	fadd		dword ptr [bx + di + 0x34c6] // insn-ID: 15, insn-mnem: fadd
 	Implicit registers modified: fpsw 
@@ -16,7 +16,7 @@ Disasm:
 Platform: X86 32bit (ATT syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	leal		8(%edx, %esi), %ecx // insn-ID: 315, insn-mnem: lea
+0x1000:	leal		8(%edx, %esi), %ecx // insn-ID: 326, insn-mnem: lea
 	This instruction belongs to groups: not64bitmode 
 0x1004:	addl		%ebx, %eax // insn-ID: 8, insn-mnem: add
 	Implicit registers modified: eflags 
@@ -28,7 +28,7 @@ Disasm:
 Platform: X86 32 (Intel syntax)
 Code: 0x8d 0x4c 0x32 0x08 0x01 0xd8 0x81 0xc6 0x34 0x12 0x00 0x00 
 Disasm:
-0x1000:	lea		ecx, dword ptr [edx + esi + 8] // insn-ID: 315, insn-mnem: lea
+0x1000:	lea		ecx, [edx + esi + 8] // insn-ID: 326, insn-mnem: lea
 	This instruction belongs to groups: not64bitmode 
 0x1004:	add		eax, ebx // insn-ID: 8, insn-mnem: add
 	Implicit registers modified: eflags 
@@ -40,11 +40,11 @@ Disasm:
 Platform: X86 64 (Intel syntax)
 Code: 0x55 0x48 0x8b 0x05 0xb8 0x13 0x00 0x00 
 Disasm:
-0x1000:	push		rbp // insn-ID: 580, insn-mnem: push
+0x1000:	push		rbp // insn-ID: 592, insn-mnem: push
 	Implicit registers read: rsp 
 	Implicit registers modified: rsp 
 	This instruction belongs to groups: mode64 
-0x1001:	mov		rax, qword ptr [rip + 0x13b8] // insn-ID: 442, insn-mnem: mov
+0x1001:	mov		rax, qword ptr [rip + 0x13b8] // insn-ID: 453, insn-mnem: mov
 0x1008:
 
 ****************
@@ -54,18 +54,18 @@ Disasm:
 0x1000:	bl		#0xfbc // insn-ID: 13, insn-mnem: bl
 	Implicit registers read: pc 
 	Implicit registers modified: lr 
-	This instruction belongs to groups: jump arm 
-0x1004:	str		lr, [sp, #-4]! // insn-ID: 212, insn-mnem: str
+	This instruction belongs to groups: call arm 
+0x1004:	str		lr, [sp, #-4]! // insn-ID: 214, insn-mnem: str
 	This instruction belongs to groups: arm 
 0x1008:	andeq		r0, r0, r0 // insn-ID: 8, insn-mnem: and
 	This instruction belongs to groups: arm 
-0x100c:	str		r8, [r2, #-0x3e0]! // insn-ID: 212, insn-mnem: str
+0x100c:	str		r8, [r2, #-0x3e0]! // insn-ID: 214, insn-mnem: str
 	This instruction belongs to groups: arm 
-0x1010:	mcreq		p2, #0, r0, c3, c1, #7 // insn-ID: 74, insn-mnem: mcr
+0x1010:	mcreq		p2, #0, r0, c3, c1, #7 // insn-ID: 76, insn-mnem: mcr
+	This instruction belongs to groups: privilege arm 
+0x1014:	mov		r0, #0 // insn-ID: 82, insn-mnem: mov
 	This instruction belongs to groups: arm 
-0x1014:	mov		r0, #0 // insn-ID: 80, insn-mnem: mov
-	This instruction belongs to groups: arm 
-0x1018:	strb		r3, [r1, r2] // insn-ID: 203, insn-mnem: strb
+0x1018:	strb		r3, [r1, r2] // insn-ID: 205, insn-mnem: strb
 	This instruction belongs to groups: arm 
 0x101c:	cmp		r3, #0 // insn-ID: 23, insn-mnem: cmp
 	Implicit registers modified: cpsr 
@@ -76,11 +76,13 @@ Disasm:
 Platform: THUMB-2
 Code: 0x4f 0xf0 0x00 0x01 0xbd 0xe8 0x00 0x88 0xd1 0xe8 0x00 0xf0 
 Disasm:
-0x1000:	mov.w		r1, #0 // insn-ID: 80, insn-mnem: mov
+0x1000:	mov.w		r1, #0 // insn-ID: 82, insn-mnem: mov
 	This instruction belongs to groups: thumb2 
-0x1004:	pop.w		{fp, pc} // insn-ID: 425, insn-mnem: pop
+0x1004:	pop.w		{fp, pc} // insn-ID: 423, insn-mnem: pop
+	Implicit registers read: sp 
+	Implicit registers modified: sp 
 	This instruction belongs to groups: thumb2 
-0x1008:	tbb		[r1, r0] // insn-ID: 420, insn-mnem: tbb
+0x1008:	tbb		[r1, r0] // insn-ID: 419, insn-mnem: tbb
 	This instruction belongs to groups: thumb2 jump 
 0x100c:
 
@@ -88,13 +90,13 @@ Disasm:
 Platform: ARM: Cortex-A15 + NEON
 Code: 0x10 0xf1 0x10 0xe7 0x11 0xf2 0x31 0xe7 0xdc 0xa1 0x2e 0xf3 0xe8 0x4e 0x62 0xf3 
 Disasm:
-0x1000:	sdiv		r0, r0, r1 // insn-ID: 122, insn-mnem: sdiv
+0x1000:	sdiv		r0, r0, r1 // insn-ID: 124, insn-mnem: sdiv
 	This instruction belongs to groups: arm 
-0x1004:	udiv		r1, r1, r2 // insn-ID: 231, insn-mnem: udiv
+0x1004:	udiv		r1, r1, r2 // insn-ID: 233, insn-mnem: udiv
 	This instruction belongs to groups: arm 
-0x1008:	vbit		q5, q15, q6 // insn-ID: 274, insn-mnem: vbit
+0x1008:	vbit		q5, q15, q6 // insn-ID: 276, insn-mnem: vbit
 	This instruction belongs to groups: neon 
-0x100c:	vcgt.f32		q10, q9, q12 // insn-ID: 278, insn-mnem: vcgt
+0x100c:	vcgt.f32		q10, q9, q12 // insn-ID: 280, insn-mnem: vcgt
 	This instruction belongs to groups: neon 
 0x1010:
 
@@ -104,11 +106,11 @@ Code: 0x70 0x47 0xeb 0x46 0x83 0xb0 0xc9 0x68
 Disasm:
 0x1000:	bx		lr // insn-ID: 15, insn-mnem: bx
 	This instruction belongs to groups: thumb jump 
-0x1002:	mov		fp, sp // insn-ID: 80, insn-mnem: mov
+0x1002:	mov		fp, sp // insn-ID: 82, insn-mnem: mov
 	This instruction belongs to groups: thumb thumb1only 
-0x1004:	sub		sp, #0xc // insn-ID: 213, insn-mnem: sub
+0x1004:	sub		sp, #0xc // insn-ID: 215, insn-mnem: sub
 	This instruction belongs to groups: thumb thumb1only 
-0x1006:	ldr		r1, [r1, #0xc] // insn-ID: 73, insn-mnem: ldr
+0x1006:	ldr		r1, [r1, #0xc] // insn-ID: 75, insn-mnem: ldr
 	This instruction belongs to groups: thumb thumb1only 
 0x1008:
 
@@ -116,7 +118,7 @@ Disasm:
 Platform: Thumb-MClass
 Code: 0xef 0xf3 0x02 0x80 
 Disasm:
-0x1000:	mrs		r0, eapsr // insn-ID: 87, insn-mnem: mrs
+0x1000:	mrs		r0, eapsr // insn-ID: 89, insn-mnem: mrs
 	This instruction belongs to groups: thumb mclass 
 0x1004:
 
@@ -124,7 +126,7 @@ Disasm:
 Platform: Arm-V8
 Code: 0xe0 0x3b 0xb2 0xee 0x42 0x00 0x01 0xe1 0x51 0xf0 0x7f 0xf5 
 Disasm:
-0x1000:	vcvtt.f64.f16		d3, s1 // insn-ID: 292, insn-mnem: vcvtt
+0x1000:	vcvtt.f64.f16		d3, s1 // insn-ID: 294, insn-mnem: vcvtt
 	This instruction belongs to groups: fparmv8 dpvfp 
 0x1004:	crc32b		r0, r1, r2 // insn-ID: 25, insn-mnem: crc32b
 	This instruction belongs to groups: arm v8 crc 
@@ -136,18 +138,18 @@ Disasm:
 Platform: MIPS-32 (Big-endian)
 Code: 0x0c 0x10 0x00 0x97 0x00 0x00 0x00 0x00 0x24 0x02 0x00 0x0c 0x8f 0xa2 0x00 0x00 0x34 0x21 0x34 0x56 0x00 0x80 0x04 0x08 
 Disasm:
-0x1000:	jal		0x40025c // insn-ID: 322, insn-mnem: jal
+0x1000:	jal		0x40025c // insn-ID: 337, insn-mnem: jal
 	Implicit registers modified: ra 
 	This instruction belongs to groups: stdenc 
-0x1004:	nop		 // insn-ID: 582, insn-mnem: nop
+0x1004:	nop		 // insn-ID: 622, insn-mnem: nop
+	This instruction belongs to groups: stdenc notinmicromips 
+0x1008:	addiu		$v0, $zero, 0xc // insn-ID: 26, insn-mnem: addiu
+	This instruction belongs to groups: stdenc notinmicromips 
+0x100c:	lw		$v0, ($sp) // insn-ID: 373, insn-mnem: lw
+	This instruction belongs to groups: stdenc notinmicromips 
+0x1010:	ori		$at, $at, 0x3456 // insn-ID: 473, insn-mnem: ori
 	This instruction belongs to groups: stdenc 
-0x1008:	addiu		$v0, $zero, 0xc // insn-ID: 21, insn-mnem: addiu
-	This instruction belongs to groups: stdenc 
-0x100c:	lw		$v0, ($sp) // insn-ID: 353, insn-mnem: lw
-	This instruction belongs to groups: stdenc 
-0x1010:	ori		$at, $at, 0x3456 // insn-ID: 445, insn-mnem: ori
-	This instruction belongs to groups: stdenc 
-0x1014:	jr.hb		$a0 // insn-ID: 585, insn-mnem: jr.hb
+0x1014:	jr.hb		$a0 // insn-ID: 345, insn-mnem: jr
 	This instruction belongs to groups: stdenc mips32 notmips32r6 notmips64r6 jump 
 0x1018:
 
@@ -155,23 +157,23 @@ Disasm:
 Platform: MIPS-64-EL (Little-endian)
 Code: 0x56 0x34 0x21 0x34 0xc2 0x17 0x01 0x00 
 Disasm:
-0x1000:	ori		$at, $at, 0x3456 // insn-ID: 445, insn-mnem: ori
+0x1000:	ori		$at, $at, 0x3456 // insn-ID: 473, insn-mnem: ori
 	This instruction belongs to groups: stdenc 
-0x1004:	srl		$v0, $at, 0x1f // insn-ID: 525, insn-mnem: srl
-	This instruction belongs to groups: stdenc 
+0x1004:	srl		$v0, $at, 0x1f // insn-ID: 557, insn-mnem: srl
+	This instruction belongs to groups: stdenc notinmicromips 
 0x1008:
 
 ****************
 Platform: MIPS-32R6 | Micro (Big-endian)
 Code: 0x00 0x07 0x00 0x07 0x00 0x11 0x93 0x7c 0x01 0x8c 0x8b 0x7c 0x00 0xc7 0x48 0xd0 
 Disasm:
-0x1000:	break		7, 0 // insn-ID: 114, insn-mnem: break
+0x1000:	break		7, 0 // insn-ID: 128, insn-mnem: break
 	This instruction belongs to groups: micromips 
-0x1004:	wait		0x11 // insn-ID: 577, insn-mnem: wait
+0x1004:	wait		0x11 // insn-ID: 616, insn-mnem: wait
 	This instruction belongs to groups: micromips 
-0x1008:	syscall		0x18c // insn-ID: 555, insn-mnem: syscall
+0x1008:	syscall		0x18c // insn-ID: 594, insn-mnem: syscall
 	This instruction belongs to groups: micromips 
-0x100c:	rotrv		$t1, $a2, $a3 // insn-ID: 471, insn-mnem: rotrv
+0x100c:	rotrv		$t1, $a2, $a3 // insn-ID: 499, insn-mnem: rotrv
 	This instruction belongs to groups: micromips 
 0x1010:
 
@@ -179,9 +181,9 @@ Disasm:
 Platform: MIPS-32R6 (Big-endian)
 Code: 0xec 0x80 0x00 0x19 0x7c 0x43 0x22 0xa0 
 Disasm:
-0x1000:	addiupc		$a0, 0x64 // insn-ID: 3, insn-mnem: addiupc
-	This instruction belongs to groups: stdenc mips32r6 
-0x1004:	align		$a0, $v0, $v1, 2 // insn-ID: 22, insn-mnem: align
+0x1000:	swc3		$0, 0x19($a0) // insn-ID: 585, insn-mnem: swc3
+	This instruction belongs to groups: stdenc notinmicromips 
+0x1004:	align		$a0, $v0, $v1, 2 // insn-ID: 27, insn-mnem: align
 	This instruction belongs to groups: stdenc mips32r6 
 0x1008:
 
@@ -190,9 +192,12 @@ Platform: ARM-64
 Code: 0x09 0x00 0x38 0xd5 0xbf 0x40 0x00 0xd5 0x0c 0x05 0x13 0xd5 0x20 0x50 0x02 0x0e 0x20 0xe4 0x3d 0x0f 0x00 0x18 0xa0 0x5f 0xa2 0x00 0xae 0x9e 0x9f 0x37 0x03 0xd5 0xbf 0x33 0x03 0xd5 0xdf 0x3f 0x03 0xd5 0x21 0x7c 0x02 0x9b 0x21 0x7c 0x00 0x53 0x00 0x40 0x21 0x4b 0xe1 0x0b 0x40 0xb9 0x20 0x04 0x81 0xda 0x20 0x08 0x02 0x8b 0x10 0x5b 0xe8 0x3c 
 Disasm:
 0x1000:	mrs		x9, midr_el1 // insn-ID: 192, insn-mnem: mrs
+	This instruction belongs to groups: privilege 
 0x1004:	msr		spsel, #0 // insn-ID: 193, insn-mnem: msr
 	Implicit registers modified: nzcv 
+	This instruction belongs to groups: privilege 
 0x1008:	msr		dbgdtrtx_el0, x12 // insn-ID: 193, insn-mnem: msr
+	This instruction belongs to groups: privilege 
 0x100c:	tbx		v0.8b, {v1.16b, v2.16b, v3.16b}, v2.8b // insn-ID: 347, insn-mnem: tbx
 	This instruction belongs to groups: neon 
 0x1010:	scvtf		v0.2s, v1.2s, #3 // insn-ID: 234, insn-mnem: scvtf
@@ -218,27 +223,42 @@ Disasm:
 Platform: PPC-64
 Code: 0x80 0x20 0x00 0x00 0x80 0x3f 0x00 0x00 0x10 0x43 0x23 0x0e 0xd0 0x44 0x00 0x80 0x4c 0x43 0x22 0x02 0x2d 0x03 0x00 0x80 0x7c 0x43 0x20 0x14 0x7c 0x43 0x20 0x93 0x4f 0x20 0x00 0x21 0x4c 0xc8 0x00 0x21 0x40 0x82 0x00 0x14 
 Disasm:
-0x1000:	lwz		r1, (0) // insn-ID: 347, insn-mnem: lwz
-0x1004:	lwz		r1, (r31) // insn-ID: 347, insn-mnem: lwz
-0x1008:	vpkpx		v2, v3, v4 // insn-ID: 570, insn-mnem: vpkpx
+0x1000:	lwz		r1, (0) // insn-ID: 354, insn-mnem: lwz
+0x1004:	lwz		r1, (r31) // insn-ID: 354, insn-mnem: lwz
+0x1008:	vpkpx		v2, v3, v4 // insn-ID: 722, insn-mnem: vpkpx
 	This instruction belongs to groups: altivec 
-0x100c:	stfs		f2, 0x80(r4) // insn-ID: 443, insn-mnem: stfs
-0x1010:	crand		2, 3, 4 // insn-ID: 52, insn-mnem: crand
-0x1014:	cmpwi		cr2, r3, 0x80 // insn-ID: 47, insn-mnem: cmpwi
+0x100c:	stfs		f2, 0x80(r4) // insn-ID: 573, insn-mnem: stfs
+0x1010:	crand		2, 3, 4 // insn-ID: 55, insn-mnem: crand
+0x1014:	cmpwi		cr2, r3, 0x80 // insn-ID: 50, insn-mnem: cmpwi
 0x1018:	addc		r2, r3, r4 // insn-ID: 2, insn-mnem: addc
 	Implicit registers modified: ca 
-0x101c:	mulhd.		r2, r3, r4 // insn-ID: 384, insn-mnem: mulhd
+0x101c:	mulhd.		r2, r3, r4 // insn-ID: 394, insn-mnem: mulhd
 	Implicit registers modified: cr0 
-0x1020:	bdnzlrl+		 // insn-ID: 28, insn-mnem: bdnzlrl
+0x1020:	bdnzlrl+		 // insn-ID: 30, insn-mnem: bdnzlrl
 	Implicit registers read: ctr lr rm 
 	Implicit registers modified: ctr 
-0x1024:	bgelrl-		cr2 // insn-ID: 38, insn-mnem: blrl
+0x1024:	bgelrl-		cr2 // insn-ID: 40, insn-mnem: blrl
 	Implicit registers read: ctr lr rm 
 	Implicit registers modified: lr ctr 
-0x1028:	bne		0x103c // insn-ID: 13, insn-mnem: b
+0x1028:	bne		0x103c // insn-ID: 14, insn-mnem: b
 	Implicit registers read: ctr rm 
 	Implicit registers modified: ctr 
 0x102c:
+
+****************
+Platform: PPC-64 + QPX
+Code: 0x10 0x60 0x2a 0x10 0x10 0x64 0x28 0x88 0x7c 0x4a 0x5d 0x0f 
+Disasm:
+0x1000:	qvfabs		q3, q5 // insn-ID: 413, insn-mnem: qvfabs
+	Implicit registers read: rm 
+	This instruction belongs to groups: qpx 
+0x1004:	qvfand		q3, q4, q5 // insn-ID: 1098, insn-mnem: qvfand
+	Implicit registers read: rm 
+	This instruction belongs to groups: qpx 
+0x1008:	qvstfsxa		q2, r10, r11 // insn-ID: 526, insn-mnem: qvstfsxa
+	Implicit registers read: rm 
+	This instruction belongs to groups: qpx 
+0x100c:
 
 ****************
 Platform: Sparc

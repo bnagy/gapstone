@@ -9,7 +9,7 @@ try reading the *_test.go files.
 
     THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
 	Command: ./genconst /Users/ben/src/capstone/bindings/python/capstone/
-	2015-05-02T12:51:59+12:00
+	2015-05-25T15:16:33+07:00
 
 */
 
@@ -1078,7 +1078,10 @@ const (
 
 // Generic groups
 const (
-	ARM64_GRP_JUMP = C.ARM64_GRP_JUMP
+	ARM64_GRP_JUMP      = C.ARM64_GRP_JUMP
+	ARM64_GRP_CALL      = C.ARM64_GRP_CALL
+	ARM64_GRP_RET       = C.ARM64_GRP_RET
+	ARM64_GRP_PRIVILEGE = C.ARM64_GRP_PRIVILEGE
 )
 
 // Architecture-specific groups

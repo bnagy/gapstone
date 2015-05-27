@@ -106,11 +106,11 @@ func fillSparcHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Sparc = &sparc
 }
 
-func decomposeSparc(raws []C.cs_insn) []Instruction {
+func decomposeSparc(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		e.fillGenericHeader(raw, decomp)
 		fillSparcHeader(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

@@ -75,10 +75,12 @@ Disasm:
 Platform: MIPS-32R6 (Big-endian)
 Code:0xec 0x80 0x00 0x19 0x7c 0x43 0x22 0xa0 
 Disasm:
-0x1000:	addiupc	$a0, 0x64
+0x1000:	swc3	$0, 0x19($a0)
 	op_count: 2
-		operands[0].type: REG = a0
-		operands[1].type: IMM = 0x64
+		operands[0].type: REG = zero
+		operands[1].type: MEM
+			operands[1].mem.base: REG = a0
+			operands[1].mem.disp: 0x19
 
 0x1004:	align	$a0, $v0, $v1, 2
 	op_count: 4

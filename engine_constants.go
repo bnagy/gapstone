@@ -44,11 +44,11 @@ const (
 	CS_MODE_MICRO         = C.CS_MODE_MICRO         // MicroMips mode (MIPS architecture)
 	CS_MODE_MIPS3         = C.CS_MODE_MIPS3         // Mips III ISA
 	CS_MODE_MIPS32R6      = C.CS_MODE_MIPS32R6      // Mips32r6 ISA
-	CS_MODE_MIPSGP64      = C.CS_MODE_MIPSGP64      // General Purpose Registers are 64-bit wide (MIPS arch)
 	CS_MODE_V9            = C.CS_MODE_V9            // SparcV9 mode (Sparc architecture)
+	CS_MODE_QPX           = C.CS_MODE_QPX           // Quad Processing eXtensions mode (PPC)
 	CS_MODE_BIG_ENDIAN    = 1 << 31                 // big endian mode
-	CS_MODE_MIPS32        = C.CS_MODE_MIPS32        // Mips32 ISA (Mips)
-	CS_MODE_MIPS64        = C.CS_MODE_MIPS64        // Mips64 ISA (Mips)
+	CS_MODE_MIPS32        = C.CS_MODE_32            // Mips32 ISA (Mips)
+	CS_MODE_MIPS64        = C.CS_MODE_64            // Mips64 ISA (Mips)
 
 )
 
@@ -60,7 +60,7 @@ const (
 	CS_OPT_MEM            = C.CS_OPT_MEM            // User-defined memory malloc/calloc/free
 	CS_OPT_SKIPDATA       = C.CS_OPT_SKIPDATA       // Skip data when disassembling. Then engine is in SKIPDATA mode.
 	CS_OPT_SKIPDATA_SETUP = C.CS_OPT_SKIPDATA_SETUP // Setup user-defined function for SKIPDATA option
-
+	CS_OPT_MNEMONIC       = C.CS_OPT_MNEMONIC       // Customize instruction mnemonic
 )
 
 const (
@@ -104,14 +104,27 @@ const (
 
 // Common instruction groups - to be consistent across all architectures.
 const (
-	CS_GRP_INVALID = C.CS_GRP_INVALID // uninitialized/invalid group.
-	CS_GRP_JUMP    = C.CS_GRP_JUMP    // all jump instructions (conditional+direct+indirect jumps)
-	CS_GRP_CALL    = C.CS_GRP_CALL    // all call instructions
-	CS_GRP_RET     = C.CS_GRP_RET     // all return instructions
-	CS_GRP_INT     = C.CS_GRP_INT     // all interrupt instructions (int+syscall)
-	CS_GRP_IRET    = C.CS_GRP_IRET    // all interrupt return instructions
+	CS_GRP_INVALID   = C.CS_GRP_INVALID   // uninitialized/invalid group.
+	CS_GRP_JUMP      = C.CS_GRP_JUMP      // all jump instructions (conditional+direct+indirect jumps)
+	CS_GRP_CALL      = C.CS_GRP_CALL      // all call instructions
+	CS_GRP_RET       = C.CS_GRP_RET       // all return instructions
+	CS_GRP_INT       = C.CS_GRP_INT       // all interrupt instructions (int+syscall)
+	CS_GRP_IRET      = C.CS_GRP_IRET      // all interrupt return instructions
+	CS_GRP_PRIVILEGE = C.CS_GRP_PRIVILEGE // all privileged instructions
+
+)
+
+// Common instruction operand access types - to be consistent across all
+// architectures. It is possible to combine access types, for example:
+// CS_AC_READ | CS_AC_WRITE
+const (
+	CS_AC_INVALID = C.CS_AC_INVALID // Uninitialized/invalid access type.
+	CS_AC_READ    = C.CS_AC_READ    // Operand read from memory or register.
+	CS_AC_WRITE   = C.CS_AC_WRITE   // Operand write to memory or register.
 )
 
 const CS_SUPPORT_DIET = C.CS_SUPPORT_DIET
 
 const CS_SUPPORT_X86_REDUCE = C.CS_SUPPORT_X86_REDUCE
+
+const CS_MNEMONIC_SIZE = C.CS_MNEMONIC_SIZE

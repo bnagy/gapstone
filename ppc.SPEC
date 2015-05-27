@@ -13,7 +13,7 @@ Disasm:
 			operands[0].crx.scale: 4
 			operands[0].crx.reg: cr5
 			operands[0].crx.cond: eq
-		operands[1].type: IMM = 0xffffff14
+		operands[1].type: IMM = 0xffffffffffffff14
 	Branch hint: 1
 
 0x1008:	lwz	r1, (0)
@@ -81,4 +81,27 @@ Disasm:
 	Branch code: 68
 
 0x1034:
+
+****************
+Platform: PPC-64 + QPX
+Code:0x10 0x60 0x2a 0x10 0x10 0x64 0x28 0x88 0x7c 0x4a 0x5d 0x0f 
+Disasm:
+0x1000:	qvfabs	q3, q5
+	op_count: 2
+		operands[0].type: REG = q3
+		operands[1].type: REG = q5
+
+0x1004:	qvfand	q3, q4, q5
+	op_count: 3
+		operands[0].type: REG = q3
+		operands[1].type: REG = q4
+		operands[2].type: REG = q5
+
+0x1008:	qvstfsxa	q2, r10, r11
+	op_count: 3
+		operands[0].type: REG = q2
+		operands[1].type: REG = r10
+		operands[2].type: REG = r11
+
+0x100c:
 

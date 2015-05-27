@@ -140,11 +140,11 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 	insn.Arm64 = &arm64
 }
 
-func decomposeArm64(raws []C.cs_insn) []Instruction {
+func decomposeArm64(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		e.fillGenericHeader(raw, decomp)
 		fillArm64Header(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

@@ -83,9 +83,11 @@ type InstructionHeader struct {
 	// Not available without the decomposer. BE CAREFUL! By default,
 	// CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing these
 	// members is undefined.
-	RegistersRead    []uint // List of implicit registers read by this instruction
-	RegistersWritten []uint // List of implicit registers written by this instruction
-	Groups           []uint // List of *_GRP_* groups this instruction belongs to.
+	RegistersRead     []uint // List of implicit registers read by this instruction
+	RegistersWritten  []uint // List of implicit registers written by this instruction
+	AllRegistersRead  []uint // All registers (implicit and via operands) read
+	AllRegistersWrite []uint // All registers (implicit and via operands) written
+	Groups            []uint // List of *_GRP_* groups this instruction belongs to.
 }
 
 // arch specific information will be filled in for exactly one of the
@@ -103,8 +105,92 @@ type Instruction struct {
 	Xcore *XcoreInstruction
 }
 
+// func addUniq(old []uint, item uint) []uint {
+// 	for _, e := range old {
+// 		if item == e {
+// 			return old
+// 		}
+// 	}
+// 	return append(old, item)
+// }
+
+// func (insn *Instruction) RegExplicitRead() (regs []uint) {
+// 	regs = []uint{}
+// 	switch insn.arch {
+// 	case CS_ARCH_ARM:
+// 		for _, op := range insn.Arm.Operands {
+
+// 			if op.Access&CS_AC_READ > 0 && (op.Type == ARM_OP_REG || op.Type == ARM_OP_SYSREG) {
+// 				regs = addUniq(regs, op.Reg)
+// 			}
+// 			if op.Type == ARM_OP_MEM {
+// 				if op.Mem.Base != ARM_REG_INVALID {
+// 					regs = addUniq(regs, op.Mem.Base)
+// 				}
+// 				if op.Mem.Index != ARM_REG_INVALID {
+// 					regs = addUniq(regs, op.Mem.Index)
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return
+// }
+
+// func (insn *Instruction) RegAnyRead() (regs []uint) {
+// 	regs = append(regs, insn.RegistersRead...)
+// 	switch insn.arch {
+// 	case CS_ARCH_ARM:
+// 	outer:
+// 		for _, er := range insn.RegExplicitRead() {
+// 			for _, r := range regs {
+// 				if r == er {
+// 					continue outer
+// 				}
+// 			}
+// 			regs = append(regs, er)
+// 		}
+// 	}
+// 	return
+// }
+
+// func (insn *Instruction) RegExplicitWrite() (regs []uint) {
+// 	regs = []uint{}
+// 	switch insn.arch {
+// 	case CS_ARCH_ARM:
+// 		for _, op := range insn.Arm.Operands {
+// 			if op.Access&CS_AC_WRITE > 0 && (op.Type == ARM_OP_REG || op.Type == ARM_OP_SYSREG) {
+// 				// skip dups
+// 				for _, r := range regs {
+// 					if r == op.Reg {
+// 						continue
+// 					}
+// 				}
+// 				regs = append(regs, op.Reg)
+// 			}
+// 		}
+// 	}
+// 	return
+// }
+
+// func (insn *Instruction) RegAnyWrite() (regs []uint) {
+// 	regs = append(regs, insn.RegistersWritten...)
+// 	switch insn.arch {
+// 	case CS_ARCH_ARM:
+// 	outer:
+// 		for _, er := range insn.RegExplicitWrite() {
+// 			for _, r := range regs {
+// 				if r == er {
+// 					continue outer
+// 				}
+// 			}
+// 			regs = append(regs, er)
+// 		}
+// 	}
+// 	return
+// }
+
 // Called by the arch specific decomposers
-func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
+func (e *Engine) fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 
 	insn.Id = uint(raw.id)
 	insn.Address = uint(raw.address)
@@ -122,17 +208,48 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Bytes = bslice
 
 	if raw.detail != nil && !dietMode {
+
 		for i := 0; i < int(raw.detail.regs_read_count); i++ {
 			insn.RegistersRead = append(insn.RegistersRead, uint(raw.detail.regs_read[i]))
 		}
-
 		for i := 0; i < int(raw.detail.regs_write_count); i++ {
 			insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.detail.regs_write[i]))
 		}
-
 		for i := 0; i < int(raw.detail.groups_count); i++ {
 			insn.Groups = append(insn.Groups, uint(raw.detail.groups[i]))
 		}
+
+		// cs_err cs_regs_access(csh handle, const cs_insn *insn,
+		// cs_regs regs_read, uint8_t *regs_read_count,
+		// cs_regs regs_write, uint8_t *regs_write_count);
+		var read, write C.cs_regs
+		readCount := C.uint8_t(0)
+		writeCount := C.uint8_t(0)
+		res := C.cs_regs_access(
+			e.handle,
+			(*C.cs_insn)(unsafe.Pointer(&raw)),
+			(*C.uint16_t)(unsafe.Pointer(&read)),
+			(*C.uint8_t)(unsafe.Pointer(&readCount)),
+			(*C.uint16_t)(unsafe.Pointer(&write)),
+			(*C.uint8_t)(unsafe.Pointer(&writeCount)),
+		)
+		if err := Errno(res); err != ErrOK {
+			if err == ErrArch {
+				// FIXME not all archs support cs_regs_access yet, tolerate
+				// this error for now.
+				return
+			}
+			panic(fmt.Sprintf("[BUG] engine error %s\n", err.Error()))
+		}
+
+		for i := 0; i < int((readCount)); i++ {
+			insn.AllRegistersRead = append(insn.AllRegistersRead, uint(read[i]))
+		}
+
+		for i := 0; i < int((writeCount)); i++ {
+			insn.AllRegistersWrite = append(insn.AllRegistersWrite, uint(write[i]))
+		}
+
 	}
 
 }
@@ -244,21 +361,21 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 
 		switch e.arch {
 		case CS_ARCH_ARM:
-			return decomposeArm(insns), nil
+			return decomposeArm(e, insns), nil
 		case CS_ARCH_ARM64:
-			return decomposeArm64(insns), nil
+			return decomposeArm64(e, insns), nil
 		case CS_ARCH_MIPS:
-			return decomposeMips(insns), nil
+			return decomposeMips(e, insns), nil
 		case CS_ARCH_X86:
-			return decomposeX86(insns), nil
+			return decomposeX86(e, insns), nil
 		case CS_ARCH_PPC:
-			return decomposePPC(insns), nil
+			return decomposePPC(e, insns), nil
 		case CS_ARCH_SYSZ:
-			return decomposeSysZ(insns), nil
+			return decomposeSysZ(e, insns), nil
 		case CS_ARCH_SPARC:
-			return decomposeSparc(insns), nil
+			return decomposeSparc(e, insns), nil
 		case CS_ARCH_XCORE:
-			return decomposeXcore(insns), nil
+			return decomposeXcore(e, insns), nil
 		default:
 			return []Instruction{}, ErrArch
 		}

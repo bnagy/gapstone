@@ -119,11 +119,11 @@ func fillPPCHeader(raw C.cs_insn, insn *Instruction) {
 	insn.PPC = &ppc
 }
 
-func decomposePPC(raws []C.cs_insn) []Instruction {
+func decomposePPC(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		e.fillGenericHeader(raw, decomp)
 		fillPPCHeader(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}
