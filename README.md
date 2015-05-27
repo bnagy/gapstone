@@ -3,7 +3,15 @@ gapstone
 
 Gapstone is a Go binding for the Capstone disassembly library.
 
-CURRENT UPSTREAM VERSION: 3.0.3-rc1
+CURRENT UPSTREAM VERSION - next branch at:
+```
+commit 4caced62e65c40ead40c4127e2221ccc78b318e9
+Author: Nguyen Anh Quynh <aquynh@gmail.com>
+Date:   Wed May 27 16:14:49 2015 +0700
+
+    arm: add missing group string for CALL & INT. bug reported by Ben Nagy
+```
+
 ===
 
 SUMMARY
