@@ -11,7 +11,6 @@ Date:   Wed May 27 16:14:49 2015 +0700
 
     arm: add missing group string for CALL & INT. bug reported by Ben Nagy
 ```
-
 ===
 
 SUMMARY
