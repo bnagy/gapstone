@@ -21,7 +21,7 @@ func TestDetailTest(t *testing.T) {
 
 	final := new(bytes.Buffer)
 
-	spec_file := "test_detail.SPEC"
+	specFile := "test_detail.SPEC"
 	var maj, min int
 	if ver, err := New(0, 0); err == nil {
 		maj, min = ver.Version()
@@ -91,15 +91,15 @@ func TestDetailTest(t *testing.T) {
 
 	}
 
-	spec, err := ioutil.ReadFile(spec_file)
+	spec, err := ioutil.ReadFile(specFile)
 	if err != nil {
-		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
+		t.Errorf("Cannot read spec file %v: %v", specFile, err)
 	}
 	if fs := final.String(); string(spec) != fs {
 		// fmt.Println(fs)
 		t.Errorf("Output failed to match spec! (did you re-run genspec?)")
 	} else {
-		t.Logf("Clean diff with %v.\n", spec_file)
+		t.Logf("Clean diff with %v.\n", specFile)
 	}
 
 }

@@ -18,7 +18,7 @@ import "io/ioutil"
 func TestTest(t *testing.T) {
 
 	final := new(bytes.Buffer)
-	spec_file := "test.SPEC"
+	specFile := "test.SPEC"
 	var maj, min int
 	if ver, err := New(0, 0); err == nil {
 		maj, min = ver.Version()
@@ -60,16 +60,16 @@ func TestTest(t *testing.T) {
 
 	}
 
-	spec, err := ioutil.ReadFile(spec_file)
+	spec, err := ioutil.ReadFile(specFile)
 	if err != nil {
-		t.Errorf("Cannot read spec file %v: %v", spec_file, err)
+		t.Errorf("Cannot read spec file %v: %v", specFile, err)
 	}
 	if fs := final.String(); string(spec) != fs {
 		// Debugging - uncomment below and run `diff <(go test -run TestTest) test.SPEC`
 		// fmt.Println(fs)
 		t.Errorf("Output failed to match spec! (did you re-run genspec?)")
 	} else {
-		t.Logf("Clean diff with %v.\n", spec_file)
+		t.Logf("Clean diff with %v.\n", specFile)
 	}
 
 }
