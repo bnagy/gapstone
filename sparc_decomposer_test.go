@@ -15,7 +15,7 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func sparcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func sparcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 
 	if len(insn.Sparc.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Sparc.Operands))
@@ -23,6 +23,8 @@ func sparcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	for i, op := range insn.Sparc.Operands {
 		switch op.Type {
+		default:
+			return fmt.Errorf("unknown op.Type %v", op.Type)
 		case SPARC_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case SPARC_OP_IMM:
@@ -52,6 +54,7 @@ func sparcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestSparc(t *testing.T) {
@@ -94,7 +97,10 @@ func TestSparc(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				sparcInsnDetail(insn, &engine, final)
+				err := sparcInsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("sparcInsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")

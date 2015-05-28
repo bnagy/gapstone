@@ -15,13 +15,15 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 	if oplen := len(insn.Arm.Operands); oplen > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", oplen)
 	}
 
 	for i, op := range insn.Arm.Operands {
 		switch op.Type {
+		default:
+			return fmt.Errorf("unknown op.Type %v", op.Type)
 		case ARM_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case ARM_OP_IMM:
@@ -77,8 +79,7 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case 0:
 			break
 		default:
-			// FIXME make this cleaner
-			panic(fmt.Sprintf("Unknown op.Access type %v", op.Access))
+			return fmt.Errorf("unknown op.Access %v", op.Access)
 		}
 
 		if op.Shift.Type != ARM_SFT_INVALID && op.Shift.Value != 0 {
@@ -153,6 +154,7 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestArm(t *testing.T) {
@@ -194,7 +196,10 @@ func TestArm(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				armInsnDetail(insn, &engine, final)
+				err := armInsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("armInsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 		}

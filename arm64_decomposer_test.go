@@ -15,7 +15,7 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 
 	if oplen := len(insn.Arm64.Operands); oplen > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", oplen)
@@ -23,6 +23,8 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	for i, op := range insn.Arm64.Operands {
 		switch op.Type {
+		default:
+			return fmt.Errorf("unknown op.Type %v", op.Type)
 		case ARM64_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case ARM64_OP_IMM:
@@ -86,6 +88,7 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		fmt.Fprintf(buf, "\tCode-condition: %v\n", insn.Arm64.CC)
 	}
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestArm64(t *testing.T) {
@@ -128,7 +131,10 @@ func TestArm64(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				arm64InsnDetail(insn, &engine, final)
+				err := arm64InsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("arm64InsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")

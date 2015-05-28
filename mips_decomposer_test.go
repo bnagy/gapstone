@@ -15,7 +15,7 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func mipsInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func mipsInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 
 	if len(insn.Mips.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.Mips.Operands))
@@ -23,6 +23,8 @@ func mipsInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	for i, op := range insn.Mips.Operands {
 		switch op.Type {
+		default:
+			return fmt.Errorf("unknown op.Type %v", op.Type)
 		case MIPS_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case MIPS_OP_IMM:
@@ -41,6 +43,7 @@ func mipsInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestMips(t *testing.T) {
@@ -83,7 +86,10 @@ func TestMips(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				mipsInsnDetail(insn, &engine, final)
+				err := mipsInsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("mipsInsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")

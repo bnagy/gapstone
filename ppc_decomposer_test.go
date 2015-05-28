@@ -15,13 +15,15 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 
 	if len(insn.PPC.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.PPC.Operands))
 	}
 	for i, op := range insn.PPC.Operands {
 		switch op.Type {
+		default:
+			return fmt.Errorf("unknown op.Type %v", op.Type)
 		case PPC_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case PPC_OP_IMM:
@@ -57,6 +59,7 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestPPC(t *testing.T) {
@@ -99,7 +102,10 @@ func TestPPC(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				ppcInsnDetail(insn, &engine, final)
+				err := ppcInsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("ppcInsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")

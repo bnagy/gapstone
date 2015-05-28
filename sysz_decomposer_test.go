@@ -15,7 +15,7 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func sysZInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func sysZInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 
 	if len(insn.SysZ.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.SysZ.Operands))
@@ -23,6 +23,8 @@ func sysZInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	for i, op := range insn.SysZ.Operands {
 		switch op.Type {
+		default:
+			return fmt.Errorf("unknown op.Type %v", op.Type)
 		case SYSZ_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case SYSZ_OP_ACREG:
@@ -54,6 +56,7 @@ func sysZInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestSysZ(t *testing.T) {
@@ -96,7 +99,10 @@ func TestSysZ(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				sysZInsnDetail(insn, &engine, final)
+				err := sysZInsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("sysZInsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")
