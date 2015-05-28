@@ -67,7 +67,7 @@ func TestTest(t *testing.T) {
 	if fs := final.String(); string(spec) != fs {
 		// Debugging - uncomment below and run `diff <(go test -run TestTest) test.SPEC`
 		// fmt.Println(fs)
-		t.Errorf("Output failed to match spec!")
+		t.Errorf("Output failed to match spec! (did you re-run genspec?)")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
 	}

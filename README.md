@@ -6,11 +6,11 @@ Gapstone is a Go binding for the Capstone disassembly library.
 ##CURRENT UPSTREAM VERSION
 next branch at:
 ```
-commit 4caced62e65c40ead40c4127e2221ccc78b318e9
+commit aceb2bb8a14e3fcc4554f77a775c2d578177e556
 Author: Nguyen Anh Quynh <aquynh@gmail.com>
-Date:   Wed May 27 16:14:49 2015 +0700
+Date:   Wed May 27 23:55:30 2015 +0700
 
-    arm: add missing group string for CALL & INT. bug reported by Ben Nagy
+    x86: fix value of access field for some instructions. bug reported by Ben Nagy
 ```
 
 SUMMARY

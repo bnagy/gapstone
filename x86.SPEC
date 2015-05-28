@@ -18,6 +18,7 @@ Disasm:
 			operands[1].mem.base: REG = si
 			operands[1].mem.disp: 0x32
 		operands[1].size: 2
+		operands[1].access: READ
 	Registers read: si
 	Registers modified: cx
 
@@ -329,6 +330,7 @@ Disasm:
 			operands[0].mem.index: REG = esi
 			operands[0].mem.disp: 0x8
 		operands[0].size: 4
+		operands[0].access: READ
 		operands[1].type: REG = ecx
 		operands[1].size: 4
 		operands[1].access: WRITE
@@ -459,6 +461,7 @@ Disasm:
 			operands[0].mem.index: REG = edi
 			operands[0].mem.disp: 0x6789
 		operands[0].size: 4
+		operands[0].access: READ
 		operands[1].type: REG = eax
 		operands[1].size: 4
 		operands[1].access: WRITE
@@ -479,6 +482,7 @@ Disasm:
 			operands[0].mem.base: REG = edi
 			operands[0].mem.disp: 0x6789
 		operands[0].size: 4
+		operands[0].access: READ
 		operands[1].type: REG = eax
 		operands[1].size: 4
 		operands[1].access: WRITE
@@ -531,6 +535,7 @@ Disasm:
 			operands[1].mem.index: REG = esi
 			operands[1].mem.disp: 0x8
 		operands[1].size: 4
+		operands[1].access: READ
 	Registers read: edx esi
 	Registers modified: ecx
 
@@ -661,6 +666,7 @@ Disasm:
 			operands[1].mem.index: REG = edi
 			operands[1].mem.disp: 0x6789
 		operands[1].size: 4
+		operands[1].access: READ
 	Registers read: ecx edi
 	Registers modified: eax
 
@@ -681,6 +687,7 @@ Disasm:
 			operands[1].mem.base: REG = edi
 			operands[1].mem.disp: 0x6789
 		operands[1].size: 4
+		operands[1].access: READ
 	Registers read: edi
 	Registers modified: eax
 

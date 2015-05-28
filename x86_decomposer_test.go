@@ -114,7 +114,7 @@ func eflagName(flag uint64) string {
 	}
 }
 
-func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
+func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 	fmt.Fprintf(buf, "\tPrefix:")
 	dumpHex(insn.X86.Prefix, buf)
 
@@ -235,8 +235,7 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case 0:
 			break
 		default:
-			// FIXME make this cleaner
-			//panic(fmt.Sprintf("Unknown op.Access type %v", op.Access))
+			return fmt.Errorf("Unknown op.Access type %v", op.Access)
 		}
 	}
 
@@ -269,6 +268,7 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	}
 
 	fmt.Fprintf(buf, "\n")
+	return nil
 }
 
 func TestX86(t *testing.T) {
@@ -311,7 +311,10 @@ func TestX86(t *testing.T) {
 			fmt.Fprintf(final, "Disasm:\n")
 			for _, insn := range insns {
 				fmt.Fprintf(final, "0x%x:\t%s\t%s\n\n", insn.Address, insn.Mnemonic, insn.OpStr)
-				x86InsnDetail(insn, &engine, final)
+				err := x86InsnDetail(insn, &engine, final)
+				if err != nil {
+					t.Fatalf("x86InsnDetail: %s", err)
+				}
 			}
 			fmt.Fprintf(final, "0x%x:\n", insns[len(insns)-1].Address+insns[len(insns)-1].Size)
 			fmt.Fprintf(final, "\n")
@@ -327,7 +330,7 @@ func TestX86(t *testing.T) {
 	}
 	if fs := final.String(); string(spec) != fs {
 		// fmt.Println(fs)
-		t.Errorf("Output failed to match spec!")
+		t.Errorf("Output failed to match spec! (did you re-run genspec?)")
 	} else {
 		t.Logf("Clean diff with %v.\n", spec_file)
 	}
