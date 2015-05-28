@@ -15,34 +15,6 @@ import "bytes"
 import "fmt"
 import "io/ioutil"
 
-func getBCName(bc uint) string {
-	switch bc {
-	default:
-		return ""
-	case PPC_BC_INVALID:
-		return "invalid"
-	case PPC_BC_LT:
-		return "lt"
-	case PPC_BC_LE:
-		return "le"
-	case PPC_BC_EQ:
-		return "eq"
-	case PPC_BC_GE:
-		return "ge"
-	case PPC_BC_GT:
-		return "gt"
-	case PPC_BC_NE:
-		return "ne"
-	case PPC_BC_UN:
-		return "un"
-	case PPC_BC_NU:
-		return "nu"
-	case PPC_BC_SO:
-		return "so"
-	case PPC_BC_NS:
-		return "ns"
-	}
-}
 func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
 	if len(insn.PPC.Operands) > 0 {
@@ -67,7 +39,7 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			fmt.Fprintf(buf, "\t\toperands[%v].type: CRX\n", i)
 			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.scale: %d\n", i, uint(op.CRX.Scale))
 			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.reg: %s\n", i, engine.RegName(op.CRX.Reg))
-			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.cond: %s\n", i, getBCName(op.CRX.Cond))
+			fmt.Fprintf(buf, "\t\t\toperands[%v].crx.cond: %s\n", i, insn.PPC.BCName(op.CRX.Cond))
 		}
 
 	}

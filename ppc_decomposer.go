@@ -29,6 +29,35 @@ type PPCInstruction struct {
 	Operands  []PPCOperand
 }
 
+func (insn *PPCInstruction) BCName(bc uint) string {
+	switch bc {
+	default:
+		return ""
+	case PPC_BC_INVALID:
+		return "invalid"
+	case PPC_BC_LT:
+		return "lt"
+	case PPC_BC_LE:
+		return "le"
+	case PPC_BC_EQ:
+		return "eq"
+	case PPC_BC_GE:
+		return "ge"
+	case PPC_BC_GT:
+		return "gt"
+	case PPC_BC_NE:
+		return "ne"
+	case PPC_BC_UN:
+		return "un"
+	case PPC_BC_NU:
+		return "nu"
+	case PPC_BC_SO:
+		return "so"
+	case PPC_BC_NS:
+		return "ns"
+	}
+}
+
 // Number of Operands of a given PPC_OP_* type
 func (insn PPCInstruction) OpCount(optype uint) int {
 	count := 0
