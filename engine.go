@@ -83,11 +83,11 @@ type InstructionHeader struct {
 	// Not available without the decomposer. BE CAREFUL! By default,
 	// CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing these
 	// members is undefined.
-	RegistersRead     []uint // List of implicit registers read by this instruction
-	RegistersWritten  []uint // List of implicit registers written by this instruction
-	AllRegistersRead  []uint // All registers (implicit and via operands) read
-	AllRegistersWrite []uint // All registers (implicit and via operands) written
-	Groups            []uint // List of *_GRP_* groups this instruction belongs to.
+	ImplicitRegRead  []uint // List of implicit registers read by this instruction
+	ImplicitRegWrite []uint // List of implicit registers written by this instruction
+	AllRegRead       []uint // All registers (implicit and via operands) read
+	AllRegWrite      []uint // All registers (implicit and via operands) written
+	Groups           []uint // List of *_GRP_* groups this instruction belongs to.
 }
 
 // arch specific information will be filled in for exactly one of the
@@ -126,10 +126,10 @@ func (e *Engine) fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 	if raw.detail != nil && !dietMode {
 
 		for i := 0; i < int(raw.detail.regs_read_count); i++ {
-			insn.RegistersRead = append(insn.RegistersRead, uint(raw.detail.regs_read[i]))
+			insn.ImplicitRegRead = append(insn.ImplicitRegRead, uint(raw.detail.regs_read[i]))
 		}
 		for i := 0; i < int(raw.detail.regs_write_count); i++ {
-			insn.RegistersWritten = append(insn.RegistersWritten, uint(raw.detail.regs_write[i]))
+			insn.ImplicitRegWrite = append(insn.ImplicitRegWrite, uint(raw.detail.regs_write[i]))
 		}
 		for i := 0; i < int(raw.detail.groups_count); i++ {
 			insn.Groups = append(insn.Groups, uint(raw.detail.groups[i]))
@@ -138,7 +138,7 @@ func (e *Engine) fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 		// cs_err cs_regs_access(csh handle, const cs_insn *insn,
 		// cs_regs regs_read, uint8_t *regs_read_count,
 		// cs_regs regs_write, uint8_t *regs_write_count);
-		var read, write C.cs_regs
+		var read, write C.cs_regs // allocate for uint16[64]
 		readCount := C.uint8_t(0)
 		writeCount := C.uint8_t(0)
 		res := C.cs_regs_access(
@@ -159,11 +159,11 @@ func (e *Engine) fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 		}
 
 		for i := 0; i < int((readCount)); i++ {
-			insn.AllRegistersRead = append(insn.AllRegistersRead, uint(read[i]))
+			insn.AllRegRead = append(insn.AllRegRead, uint(read[i]))
 		}
 
 		for i := 0; i < int((writeCount)); i++ {
-			insn.AllRegistersWrite = append(insn.AllRegistersWrite, uint(write[i]))
+			insn.AllRegWrite = append(insn.AllRegWrite, uint(write[i]))
 		}
 
 	}

@@ -135,7 +135,7 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 		fmt.Fprintf(buf, "\tMemory-barrier: %v\n", insn.Arm.MemBarrier)
 	}
 
-	read := insn.AllRegistersRead
+	read := insn.AllRegRead
 	if len(read) > 0 {
 		fmt.Fprintf(buf, "\tRegisters read:")
 		for _, reg := range read {
@@ -144,7 +144,7 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 		fmt.Fprintf(buf, "\n")
 	}
 
-	written := insn.AllRegistersWrite
+	written := insn.AllRegWrite
 	if len(written) > 0 {
 		fmt.Fprintf(buf, "\tRegisters modified:")
 		for _, reg := range written {

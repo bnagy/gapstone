@@ -140,7 +140,7 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 		}
 	}
 
-	read := insn.AllRegistersRead
+	read := insn.AllRegRead
 	if len(read) > 0 {
 		fmt.Fprintf(buf, "\tRegisters read:")
 		for _, reg := range read {
@@ -149,7 +149,7 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 		fmt.Fprintf(buf, "\n")
 	}
 
-	written := insn.AllRegistersWrite
+	written := insn.AllRegWrite
 	if len(written) > 0 {
 		fmt.Fprintf(buf, "\tRegisters modified:")
 		for _, reg := range written {

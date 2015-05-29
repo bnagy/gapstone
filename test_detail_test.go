@@ -61,16 +61,16 @@ func TestDetailTest(t *testing.T) {
 					insn.Id,
 					engine.InsnName(insn.Id),
 				)
-				if len(insn.RegistersRead) > 0 {
+				if len(insn.ImplicitRegRead) > 0 {
 					fmt.Fprint(final, "\tImplicit registers read: ")
-					for _, reg := range insn.RegistersRead {
+					for _, reg := range insn.ImplicitRegRead {
 						fmt.Fprintf(final, "%s ", engine.RegName(reg))
 					}
 					fmt.Fprintf(final, "\n")
 				}
-				if len(insn.RegistersWritten) > 0 {
+				if len(insn.ImplicitRegWrite) > 0 {
 					fmt.Fprint(final, "\tImplicit registers modified: ")
-					for _, reg := range insn.RegistersWritten {
+					for _, reg := range insn.ImplicitRegWrite {
 						fmt.Fprintf(final, "%s ", engine.RegName(reg))
 					}
 					fmt.Fprintf(final, "\n")
