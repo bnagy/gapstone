@@ -138,15 +138,15 @@ func (e *Engine) fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 		// cs_err cs_regs_access(csh handle, const cs_insn *insn,
 		// cs_regs regs_read, uint8_t *regs_read_count,
 		// cs_regs regs_write, uint8_t *regs_write_count);
-		var read, write C.cs_regs // allocate for uint16[64]
+		var read, write C.cs_regs
 		readCount := C.uint8_t(0)
 		writeCount := C.uint8_t(0)
 		res := C.cs_regs_access(
 			e.handle,
 			(*C.cs_insn)(unsafe.Pointer(&raw)),
-			(*C.uint16_t)(unsafe.Pointer(&read)),
+			&read[0],
 			(*C.uint8_t)(unsafe.Pointer(&readCount)),
-			(*C.uint16_t)(unsafe.Pointer(&write)),
+			&write[0],
 			(*C.uint8_t)(unsafe.Pointer(&writeCount)),
 		)
 		if err := Errno(res); err != ErrOK {
