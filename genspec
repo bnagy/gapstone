@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'open3'
+
+# I hate these little scripts :(
+
+unless ARGV.length == 1 && File.directory?(ARGV[0])
+	$stderr.puts "Usage: #{$0} path/to/capstone/tests"
+	exit
+end
+stub = ARGV[0].chomp('/')
+
+commands = [
+	"#{stub}/test > $GOPATH/src/github.com/bnagy/gapstone/test.SPEC",
+	"#{stub}/test_detail > $GOPATH/src/github.com/bnagy/gapstone/test_detail.SPEC",
+	"#{stub}/test_arm > $GOPATH/src/github.com/bnagy/gapstone/arm.SPEC",
+	"#{stub}/test_arm64 > $GOPATH/src/github.com/bnagy/gapstone/arm64.SPEC",
+	"#{stub}/test_x86 > $GOPATH/src/github.com/bnagy/gapstone/x86.SPEC",
+	"#{stub}/test_mips > $GOPATH/src/github.com/bnagy/gapstone/mips.SPEC",
+	"#{stub}/test_ppc > $GOPATH/src/github.com/bnagy/gapstone/ppc.SPEC",
+	"#{stub}/test_systemz > $GOPATH/src/github.com/bnagy/gapstone/sysZ.SPEC",
+	"#{stub}/test_sparc > $GOPATH/src/github.com/bnagy/gapstone/sparc.SPEC",
+	"#{stub}/test_xcore > $GOPATH/src/github.com/bnagy/gapstone/xcore.SPEC"
+]
+
+commands.each {|c|
+	_, err, status = Open3.capture3 c
+	if not status.success?
+		$stderr.puts "#{$0}: error running command: #{err}"
+		exit
+	end
+	puts "Wrote: #{c.split.last}"
+}
