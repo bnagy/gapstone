@@ -1,0 +1,13 @@
+language: go
+go:
+  - 1.4.2
+  - tip
+sudo: required
+before_install:
+  - ./travis_install_capstone_next.sh
+  - ./genconst $HOME/src/capstone-3.0.3/bindings/python/capstone
+  - ./genspec $HOME/src/capstone-3.0.3/tests
+notifications:
+  email:
+    recipients:
+      - travis@ben.iagu.net
