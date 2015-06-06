@@ -3,14 +3,15 @@ gapstone
 
 Gapstone is a Go binding for the Capstone disassembly library.
 
-##CURRENT UPSTREAM VERSION
+## CURRENT UPSTREAM VERSION [![Build Status](https://travis-ci.org/bnagy/gapstone.svg?branch=next)](https://travis-ci.org/bnagy/gapstone)
+
 next branch at:
 ```
-commit aceb2bb8a14e3fcc4554f77a775c2d578177e556
+commit 22bc86f4fe60b76cf814b253d74a8e89629e700e
 Author: Nguyen Anh Quynh <aquynh@gmail.com>
-Date:   Wed May 27 23:55:30 2015 +0700
+Date:   Sat Jun 6 12:30:14 2015 +0800
 
-    x86: fix value of access field for some instructions. bug reported by Ben Nagy
+    xcore: increase op_count in set_mem_access() only on register operand. bug reported by Ben Nagy
 ```
 
 SUMMARY
