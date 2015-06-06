@@ -378,39 +378,42 @@ Disasm:
 	Code condition: 11
 	Registers modified: itstate
 
-0x1010:	vdupne.8	d16, d11[1]
+0x1010:	vdupge.8	d16, d11[1]
 	op_count: 2
 		operands[0].type: REG = d16
 		operands[0].access: WRITE
 		operands[1].type: REG = d11
 		operands[1].access: READ
 		operands[1].vector_index = 1
-	Code condition: 2
+	Code condition: 11
 	Vector-size: 8
 	Registers read: d11
 	Registers modified: d16
 
-0x1014:	msr	cpsr_fc, r6
+0x1014:	msrlt	cpsr_fc, r6
 	op_count: 2
 		operands[0].type: SYSREG = 144
 		operands[1].type: REG = r6
 		operands[1].access: READ
+	Code condition: 12
 	Registers read: r6
 
-0x1018:	msr	apsr_nzcvqg, r0
+0x1018:	msrlt	apsr_nzcvqg, r0
 	op_count: 2
 		operands[0].type: SYSREG = 259
 		operands[1].type: REG = r0
 		operands[1].access: READ
+	Code condition: 12
 	Registers read: r0
 
-0x101c:	sxtb.w	r6, r9, ror #8
+0x101c:	sxtbge.w	r6, r9, ror #8
 	op_count: 2
 		operands[0].type: REG = r6
 		operands[0].access: WRITE
 		operands[1].type: REG = r9
 		operands[1].access: READ
 			Shift: 4 = 8
+	Code condition: 11
 	Registers read: r9
 	Registers modified: r6
 
