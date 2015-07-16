@@ -15,10 +15,8 @@ Disasm:
 			operands[1].mem.disp: 0x4
 
 0x1004:	setd	res[r3], r4
-	op_count: 2
-		operands[0].type: MEM
-			operands[0].mem.base: REG = r3
-		operands[1].type: REG = r4
+	op_count: 1
+		operands[0].type: REG = r4
 
 0x1006:	init	t[r2]:lr, r1
 	op_count: 2
@@ -34,19 +32,12 @@ Disasm:
 		operands[2].type: REG = r3
 
 0x100e:	lda16	r9, r3[-r11]
-	op_count: 2
+	op_count: 1
 		operands[0].type: REG = r9
-		operands[1].type: MEM
-			operands[1].mem.base: REG = r3
-			operands[1].mem.index: REG = r11
-			operands[1].mem.direct: -1
 
 0x1012:	ldw	dp, dp[0x81c5]
-	op_count: 2
+	op_count: 1
 		operands[0].type: REG = dp
-		operands[1].type: MEM
-			operands[1].mem.base: REG = dp
-			operands[1].mem.disp: 0x81c5
 
 0x1016:	lmul	r11, r0, r2, r5, r8, r10
 	op_count: 6
@@ -64,12 +55,8 @@ Disasm:
 		operands[2].type: REG = r3
 
 0x101c:	ldaw	r8, r2[-9]
-	op_count: 2
+	op_count: 1
 		operands[0].type: REG = r8
-		operands[1].type: MEM
-			operands[1].mem.base: REG = r2
-			operands[1].mem.disp: 0x9
-			operands[1].mem.direct: -1
 
 0x1020:
 

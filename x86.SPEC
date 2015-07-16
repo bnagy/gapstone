@@ -210,7 +210,7 @@ Disasm:
 		operands[1].type: REG = al
 		operands[1].size: 1
 
-0x1027:	mov	ah, -0x3a
+0x1027:	mov	ah, 0xc6
 	Prefix:0x00 0x00 0x00 0x00 
 	Opcode:0xb4 0x00 0x00 0x00 
 	rex: 0x0
@@ -218,11 +218,11 @@ Disasm:
 	modrm: 0x0
 	disp: 0x0
 	imm_count: 1
-		imms[1]: 0xffffffffffffffc6
+		imms[1]: 0xc6
 	op_count: 2
 		operands[0].type: REG = ah
 		operands[0].size: 1
-		operands[1].type: IMM = 0xffffffffffffffc6
+		operands[1].type: IMM = 0xc6
 		operands[1].size: 1
 
 0x1029:
@@ -367,7 +367,7 @@ Disasm:
 		operands[1].type: REG = eax
 		operands[1].size: 4
 
-0x1027:	movb	$-0x3a, %ah
+0x1027:	movb	$0xc6, %ah
 	Prefix:0x00 0x00 0x00 0x00 
 	Opcode:0xb4 0x00 0x00 0x00 
 	rex: 0x0
@@ -376,9 +376,9 @@ Disasm:
 	disp: 0x0
 	sib: 0x0
 	imm_count: 1
-		imms[1]: 0xffffffffffffffc6
+		imms[1]: 0xc6
 	op_count: 2
-		operands[0].type: IMM = 0xffffffffffffffc6
+		operands[0].type: IMM = 0xc6
 		operands[0].size: 1
 		operands[1].type: REG = ah
 		operands[1].size: 1
@@ -525,7 +525,7 @@ Disasm:
 			operands[1].mem.disp: 0x6789
 		operands[1].size: 4
 
-0x1027:	mov	ah, -0x3a
+0x1027:	mov	ah, 0xc6
 	Prefix:0x00 0x00 0x00 0x00 
 	Opcode:0xb4 0x00 0x00 0x00 
 	rex: 0x0
@@ -534,11 +534,11 @@ Disasm:
 	disp: 0x0
 	sib: 0x0
 	imm_count: 1
-		imms[1]: 0xffffffffffffffc6
+		imms[1]: 0xc6
 	op_count: 2
 		operands[0].type: REG = ah
 		operands[0].size: 1
-		operands[1].type: IMM = 0xffffffffffffffc6
+		operands[1].type: IMM = 0xc6
 		operands[1].size: 1
 
 0x1029:

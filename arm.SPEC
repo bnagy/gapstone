@@ -205,32 +205,29 @@ Disasm:
 0x100e:	iteet	ge
 	Code condition: 11
 
-0x1010:	vdupge.8	d16, d11[1]
+0x1010:	vdupne.8	d16, d11[1]
 	op_count: 2
 		operands[0].type: REG = d16
 		operands[1].type: REG = d11
 		operands[1].vector_index = 1
-	Code condition: 11
+	Code condition: 2
 	Vector-size: 8
 
-0x1014:	msrlt	cpsr_fc, r6
+0x1014:	msr	cpsr_fc, r6
 	op_count: 2
 		operands[0].type: SYSREG = 144
 		operands[1].type: REG = r6
-	Code condition: 12
 
-0x1018:	msrlt	apsr_nzcvqg, r0
+0x1018:	msr	apsr_nzcvqg, r0
 	op_count: 2
 		operands[0].type: SYSREG = 259
 		operands[1].type: REG = r0
-	Code condition: 12
 
-0x101c:	sxtbge.w	r6, r9, ror #8
+0x101c:	sxtb.w	r6, r9, ror #8
 	op_count: 2
 		operands[0].type: REG = r6
 		operands[1].type: REG = r9
 			Shift: 4 = 8
-	Code condition: 11
 
 0x1020:	vaddw.u16	q8, q8, d18
 	op_count: 3
