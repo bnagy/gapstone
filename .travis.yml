@@ -5,8 +5,8 @@ go:
 sudo: required
 before_install:
   - ./travis_install_capstone_stable.sh
-  - ./genconst $HOME/src/capstone-3.0.3/bindings/python/capstone
-  - ./genspec $HOME/src/capstone-3.0.3/tests
+  - ./genconst $HOME/src/capstone/bindings/python/capstone
+  - ./genspec $HOME/src/capstone/tests
 notifications:
   email:
     recipients:
