@@ -4,11 +4,11 @@ go:
 sudo: false
 before_install:
   - ./travis_install_capstone_next.sh
-  - ./genconst $HOME/src/capstone/bindings/python/capstone
-  - ./genspec $HOME/src/capstone/tests
   - export LIBRARY_PATH=$HOME/capstone/lib
   - export C_INCLUDE_PATH=$HOME/capstone/include
   - export LD_LIBRARY_PATH=$HOME/capstone/lib
+  - ./genconst $HOME/src/capstone/bindings/python/capstone
+  - ./genspec $HOME/src/capstone/tests
 notifications:
   email:
     recipients:
