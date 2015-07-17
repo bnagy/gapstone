@@ -8,6 +8,7 @@ before_install:
   - ./genspec $HOME/src/capstone/tests
   - export LIBRARY_PATH=$HOME/capstone/lib
   - export C_INCLUDE_PATH=$HOME/capstone/include
+  - export LD_LIBRARY_PATH=$HOME/capstone/lib
 notifications:
   email:
     recipients:
