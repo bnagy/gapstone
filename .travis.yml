@@ -1,6 +1,7 @@
 language: go
 go:
   - 1.4.2
+  - tip
 sudo: false
 before_install:
   - ./travis_install_capstone_stable.sh
