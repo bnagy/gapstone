@@ -7,16 +7,13 @@ Gapstone is a Go binding for the Capstone disassembly library.
 
 next branch at:
 ```
-commit 5476c6f52a4c093b875fad38e6aaa98ea5aafdb2
-Merge: 75701e8 9325590
+commit c509fd10b1823adbb88bec11cda0eb045d55276f
+Merge: 1ab6455 f914879
 Author: Nguyen Anh Quynh <aquynh@gmail.com>
-Date:   Sun Apr 10 07:23:13 2016 +0700
+Date:   Tue Apr 12 19:58:29 2016 +0700
 
-    Merge pull request #622 from ibabushkin/next
-
-    Fixed register types
+    m68k: fix conflicts when merging with #625
 ```
-*BUG BUG BUG* genconst will not work until an upstream PR gets merged to fix the m68k headers *BUG BUG BUG*
 
 
 SUMMARY
