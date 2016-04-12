@@ -15,10 +15,12 @@ package gapstone
 // #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
-import "C"
-import "unsafe"
-import "reflect"
-
+import (
+	"C"
+	"reflect"
+	"unsafe"
+)
+// import "fmt"
 // Accessed via insn.Arm.XXX
 type ArmInstruction struct {
 	UserMode    bool

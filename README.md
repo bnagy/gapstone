@@ -68,9 +68,10 @@ Here's "Hello World":
 ```go
 package main
 
-import "github.com/bnagy/gapstone"
-import "log"
-
+import (
+    "github.com/bnagy/gapstone"
+    "log"
+)
 func main() {
 
     engine, err := gapstone.New(
