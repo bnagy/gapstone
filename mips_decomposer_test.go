@@ -70,7 +70,7 @@ func TestMips(t *testing.T) {
 			if check.grpMax != MIPS_GRP_ENDING ||
 				check.insMax != MIPS_INS_ENDING ||
 				check.regMax != MIPS_REG_ENDING {
-				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+				t.Errorf("Constants out of sync with core! (did you re-run genconst?)")
 			} else {
 				t.Logf("Sanity Check: PASS")
 			}

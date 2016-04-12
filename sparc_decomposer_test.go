@@ -82,7 +82,7 @@ func TestSparc(t *testing.T) {
 			if check.grpMax != SPARC_GRP_ENDING ||
 				check.insMax != SPARC_INS_ENDING ||
 				check.regMax != SPARC_REG_ENDING {
-				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+				t.Errorf("Constants out of sync with core! (did you re-run genconst?)")
 			} else {
 				t.Logf("Sanity Check: PASS")
 			}

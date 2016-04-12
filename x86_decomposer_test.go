@@ -196,7 +196,7 @@ func TestX86(t *testing.T) {
 			if check.grpMax != X86_GRP_ENDING ||
 				check.insMax != X86_INS_ENDING ||
 				check.regMax != X86_REG_ENDING {
-				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+				t.Errorf("Constants out of sync with core! (did you re-run genconst?)")
 			} else {
 				t.Logf("Sanity Check: PASS")
 			}

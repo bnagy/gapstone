@@ -27,6 +27,7 @@ const (
 	CS_ARCH_SPARC = C.CS_ARCH_SPARC // Sparc architecture
 	CS_ARCH_SYSZ  = C.CS_ARCH_SYSZ  // SystemZ architecture
 	CS_ARCH_XCORE = C.CS_ARCH_XCORE // Xcore architecture
+	CS_ARCH_M68K  = C.CS_ARCH_M68K  // 68K architecture
 	CS_ARCH_MAX   = C.CS_ARCH_MAX
 	CS_ARCH_ALL   = C.CS_ARCH_ALL
 )
@@ -46,6 +47,12 @@ const (
 	CS_MODE_MIPS32R6      = C.CS_MODE_MIPS32R6      // Mips32r6 ISA
 	CS_MODE_V9            = C.CS_MODE_V9            // SparcV9 mode (Sparc architecture)
 	CS_MODE_QPX           = C.CS_MODE_QPX           // Quad Processing eXtensions mode (PPC)
+	CS_MODE_M68K_000      = C.CS_MODE_M68K_000      // M68K 68000 mode
+	CS_MODE_M68K_010      = C.CS_MODE_M68K_010      // M68K 68010 mode
+	CS_MODE_M68K_020      = C.CS_MODE_M68K_020      // M68K 68020 mode
+	CS_MODE_M68K_030      = C.CS_MODE_M68K_030      // M68K 68030 mode
+	CS_MODE_M68K_040      = C.CS_MODE_M68K_040      // M68K 68040 mode
+	CS_MODE_M68K_060      = C.CS_MODE_M68K_060      // M68K 68060 mode
 	CS_MODE_BIG_ENDIAN    = 1 << 31                 // big endian mode
 	CS_MODE_MIPS32        = C.CS_MODE_32            // Mips32 ISA (Mips)
 	CS_MODE_MIPS64        = C.CS_MODE_64            // Mips64 ISA (Mips)
@@ -61,6 +68,7 @@ const (
 	CS_OPT_SKIPDATA       = C.CS_OPT_SKIPDATA       // Skip data when disassembling. Then engine is in SKIPDATA mode.
 	CS_OPT_SKIPDATA_SETUP = C.CS_OPT_SKIPDATA_SETUP // Setup user-defined function for SKIPDATA option
 	CS_OPT_MNEMONIC       = C.CS_OPT_MNEMONIC       // Customize instruction mnemonic
+	CS_OPT_UNSIGNED       = C.CS_OPT_UNSIGNED       // print immediate operands in unsigned form
 )
 
 const (
@@ -71,6 +79,8 @@ const (
 	CS_OPT_SYNTAX_INTEL     = C.CS_OPT_SYNTAX_INTEL     // X86 Intel asm syntax - default on X86 (CS_OPT_SYNTAX).
 	CS_OPT_SYNTAX_ATT       = C.CS_OPT_SYNTAX_ATT       // X86 ATT asm syntax (CS_OPT_SYNTAX).
 	CS_OPT_SYNTAX_NOREGNAME = C.CS_OPT_SYNTAX_NOREGNAME // PPC asm syntax: Prints register name with only number (CS_OPT_SYNTAX)
+	CS_OPT_SYNTAX_MASM      = C.CS_OPT_SYNTAX_MASM      // X86 Intel Masm syntax (CS_OPT_SYNTAX).
+
 )
 
 const (
@@ -90,7 +100,7 @@ const (
 	CS_ERR_SKIPDATA  = C.CS_ERR_SKIPDATA  // Access irrelevant data for "data" instruction in SKIPDATA mode
 	CS_ERR_X86_ATT   = C.CS_ERR_X86_ATT   // X86 AT&T syntax is unsupported (opt-out at compile time)
 	CS_ERR_X86_INTEL = C.CS_ERR_X86_INTEL // X86 Intel syntax is unsupported (opt-out at compile time)
-
+	CS_ERR_X86_MASM  = C.CS_ERR_X86_MASM  // X86 MASM syntax is unsupported (opt-out at compile time)
 )
 
 // Common instruction operand types - to be consistent across all architectures.

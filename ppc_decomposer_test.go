@@ -86,7 +86,7 @@ func TestPPC(t *testing.T) {
 			if check.grpMax != PPC_GRP_ENDING ||
 				check.insMax != PPC_INS_ENDING ||
 				check.regMax != PPC_REG_ENDING {
-				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+				t.Errorf("Constants out of sync with core! (did you re-run genconst?)")
 			} else {
 				t.Logf("Sanity Check: PASS")
 			}

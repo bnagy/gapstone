@@ -22,6 +22,7 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error 
 	}
 
 	for i, op := range insn.Arm64.Operands {
+
 		switch op.Type {
 		default:
 			return fmt.Errorf("unknown op.Type %v", op.Type)
@@ -60,6 +61,20 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error 
 			fmt.Fprintf(buf, "\t\toperands[%v].type: BARRIER = 0x%x\n", i, op.Barrier)
 		}
 
+		switch op.Access {
+
+		case CS_AC_READ:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ\n", i)
+		case CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: WRITE\n", i)
+		case CS_AC_READ | CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ | WRITE\n", i)
+		case 0:
+			break
+		default:
+			return fmt.Errorf("unknown op.Access %v", op.Access)
+		}
+
 		if op.Shift.Type != ARM64_SFT_INVALID && op.Shift.Value != 0 {
 			// shift with constant value
 			fmt.Fprintf(buf, "\t\t\tShift: type = %v, value = %v\n", op.Shift.Type, op.Shift.Value)
@@ -76,6 +91,7 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error 
 		if op.VectorIndex != -1 {
 			fmt.Fprintf(buf, "\t\t\tVector Index: %v\n", op.VectorIndex)
 		}
+
 	}
 
 	if insn.Arm64.UpdateFlags {
@@ -87,7 +103,26 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error 
 	if insn.Arm64.CC != ARM64_CC_AL && insn.Arm64.CC != ARM64_CC_INVALID {
 		fmt.Fprintf(buf, "\tCode-condition: %v\n", insn.Arm64.CC)
 	}
+
+	read := insn.AllRegRead
+	if len(read) > 0 {
+		fmt.Fprintf(buf, "\tRegisters read:")
+		for _, reg := range read {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
+	written := insn.AllRegWrite
+	if len(written) > 0 {
+		fmt.Fprintf(buf, "\tRegisters modified:")
+		for _, reg := range written {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
 	fmt.Fprintf(buf, "\n")
+
 	return nil
 }
 
@@ -115,7 +150,7 @@ func TestArm64(t *testing.T) {
 			if check.grpMax != ARM64_GRP_ENDING ||
 				check.insMax != ARM64_INS_ENDING ||
 				check.regMax != ARM64_REG_ENDING {
-				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+				t.Errorf("Constants out of sync with core! (did you re-run genconst?)")
 			} else {
 				t.Logf("Sanity Check: PASS")
 			}

@@ -84,7 +84,7 @@ func TestSysZ(t *testing.T) {
 			if check.grpMax != SYSZ_GRP_ENDING ||
 				check.insMax != SYSZ_INS_ENDING ||
 				check.regMax != SYSZ_REG_ENDING {
-				t.Errorf("Failed in sanity check. Constants out of sync with core.")
+				t.Errorf("Constants out of sync with core! (did you re-run genconst?)")
 			} else {
 				t.Logf("Sanity Check: PASS")
 			}

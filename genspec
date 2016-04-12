@@ -20,7 +20,8 @@ commands = [
 	"#{stub}/test_ppc > $GOPATH/src/github.com/bnagy/gapstone/ppc.SPEC",
 	"#{stub}/test_systemz > $GOPATH/src/github.com/bnagy/gapstone/sysZ.SPEC",
 	"#{stub}/test_sparc > $GOPATH/src/github.com/bnagy/gapstone/sparc.SPEC",
-	"#{stub}/test_xcore > $GOPATH/src/github.com/bnagy/gapstone/xcore.SPEC"
+	"#{stub}/test_xcore > $GOPATH/src/github.com/bnagy/gapstone/xcore.SPEC",
+	"#{stub}/test_m68k > $GOPATH/src/github.com/bnagy/gapstone/m68k.SPEC"
 ]
 
 commands.each {|c|

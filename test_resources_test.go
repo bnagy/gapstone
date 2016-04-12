@@ -73,6 +73,11 @@ var checks = sanityChecks{
 		insMax: 121,
 		grpMax: 2,
 	},
+	CS_ARCH_M68K: sanityCheck{
+		regMax: 47,
+		insMax: 375,
+		grpMax: 1,
+	},
 }
 
 type option struct {
@@ -102,12 +107,13 @@ var arm64Code = "\x09\x00\x38\xd5\xbf\x40\x00\xd5\x0c\x05\x13\xd5\x20\x50\x02\x0
 var x86Code64 = "\x55\x48\x8b\x05\xb8\x13\x00\x00\x8f\xe8\x60\xcd\xe2\x07"
 var x86Code16 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x05\x23\x01\x00\x00\x36\x8b\x84\x91\x23\x01\x00\x00\x41\x8d\x84\x39\x89\x67\x00\x00\x8d\x87\x89\x67\x00\x00\xb4\xc6"
 var x86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x05\x23\x01\x00\x00\x36\x8b\x84\x91\x23\x01\x00\x00\x41\x8d\x84\x39\x89\x67\x00\x00\x8d\x87\x89\x67\x00\x00\xb4\xc6"
+var detailX86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
 var mipsCode = "\x0C\x10\x00\x97\x00\x00\x00\x00\x24\x02\x00\x0c\x8f\xa2\x00\x00\x34\x21\x34\x56"
 var mipsCode2 = "\x56\x34\x21\x34\xc2\x17\x01\x00"
 var mips32R6M = "\x00\x07\x00\x07\x00\x11\x93\x7c\x01\x8c\x8b\x7c\x00\xc7\x48\xd0"
 var mips32R6 = "\xec\x80\x00\x19\x7c\x43\x22\xa0"
 var basicX86Code16 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
-var basicX86Code32 = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
+var basicX86Code32 = "\xba\xcd\xab\x00\x00\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00"
 var basicX86Code64 = "\x55\x48\x8b\x05\xb8\x13\x00\x00"
 var basicArmCode = "\xED\xFF\xFF\xEB\x04\xe0\x2d\xe5\x00\x00\x00\x00\xe0\x83\x22\xe5\xf1\x02\x03\x0e\x00\x00\xa0\xe3\x02\x30\xc1\xe7\x00\x00\x53\xe3"
 var basicArmCode2 = "\x10\xf1\x10\xe7\x11\xf2\x31\xe7\xdc\xa1\x2e\xf3\xe8\x4e\x62\xf3"
@@ -130,6 +136,7 @@ var sysZCode = "\xed\x00\x00\x00\x00\x1a\x5a\x0f\x1f\xff\xc2\x09\x80\x00\x00\x00
 var sparcCode = "\x80\xa0\x40\x02\x85\xc2\x60\x08\x85\xe8\x20\x01\x81\xe8\x00\x00\x90\x10\x20\x01\xd5\xf6\x10\x16\x21\x00\x00\x0a\x86\x00\x40\x02\x01\x00\x00\x00\x12\xbf\xff\xff\x10\xbf\xff\xff\xa0\x02\x00\x09\x0d\xbf\xff\xff\xd4\x20\x60\x00\xd4\x4e\x00\x16\x2a\xc2\x80\x03"
 var sparcV9Code = "\x81\xa8\x0a\x24\x89\xa0\x10\x20\x89\xa0\x1a\x60\x89\xa0\x00\xe0"
 var xcoreCode = "\xfe\x0f\xfe\x17\x13\x17\xc6\xfe\xec\x17\x97\xf8\xec\x4f\x1f\xfd\xec\x37\x07\xf2\x45\x5b\xf9\xfa\x02\x06\x1b\x10\x09\xfd\xec\xa7"
+var m68kCode = "\xd4\x40\x87\x5a\x4e\x71\x02\xb4\xc0\xde\xc0\xde\x5c\x00\x1d\x80\x71\x12\x01\x23\xf2\x3c\x44\x22\x40\x49\x0e\x56\x54\xc5\xf2\x3c\x44\x00\x44\x7a\x00\x00\xf2\x00\x0a\x28"
 
 var basicTests = platforms{
 	{
@@ -152,6 +159,13 @@ var basicTests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		basicX86Code32,
 		"X86 32 (Intel syntax)",
+	},
+	{
+		CS_ARCH_X86,
+		CS_MODE_32,
+		[]option{{CS_OPT_SYNTAX, CS_OPT_SYNTAX_MASM}, {CS_OPT_DETAIL, CS_OPT_ON}},
+		basicX86Code32,
+		"X86 32 (MASM syntax)",
 	},
 	{
 		CS_ARCH_X86,
@@ -238,27 +252,6 @@ var basicTests = platforms{
 		"ARM-64",
 	},
 	platform{
-		CS_ARCH_PPC,
-		CS_MODE_BIG_ENDIAN,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		basicPPCCode2,
-		"PPC-64",
-	},
-	platform{
-		CS_ARCH_PPC,
-		CS_MODE_BIG_ENDIAN,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}, {CS_OPT_SYNTAX, CS_OPT_SYNTAX_NOREGNAME}},
-		basicPPCCode2,
-		"PPC-64, print register with number only",
-	},
-	platform{
-		CS_ARCH_PPC,
-		CS_MODE_BIG_ENDIAN + CS_MODE_QPX,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		ppcCode2,
-		"PPC-64 + QPX",
-	},
-	platform{
 		CS_ARCH_SPARC,
 		CS_MODE_BIG_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
@@ -286,6 +279,13 @@ var basicTests = platforms{
 		basicXcoreCode,
 		"XCore",
 	},
+	platform{
+		CS_ARCH_M68K,
+		CS_MODE_BIG_ENDIAN | CS_MODE_M68K_040,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		m68kCode,
+		"M68K",
+	},
 }
 
 // Honestly, these are _almost_ identical, but it's just easier to maintain
@@ -303,14 +303,14 @@ var detailTests = platforms{
 		CS_ARCH_X86,
 		CS_MODE_32,
 		[]option{{CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT}, {CS_OPT_DETAIL, CS_OPT_ON}},
-		basicX86Code32,
+		detailX86Code32,
 		"X86 32bit (ATT syntax)",
 	},
 	{
 		CS_ARCH_X86,
 		CS_MODE_32,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		basicX86Code32,
+		detailX86Code32,
 		"X86 32 (Intel syntax)",
 	},
 	{
@@ -398,20 +398,6 @@ var detailTests = platforms{
 		"ARM-64",
 	},
 	platform{
-		CS_ARCH_PPC,
-		CS_MODE_BIG_ENDIAN,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		basicPPCCode,
-		"PPC-64",
-	},
-	platform{
-		CS_ARCH_PPC,
-		CS_MODE_BIG_ENDIAN + CS_MODE_QPX,
-		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
-		ppcCode2,
-		"PPC-64 + QPX",
-	},
-	platform{
 		CS_ARCH_SPARC,
 		CS_MODE_BIG_ENDIAN,
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
@@ -438,6 +424,13 @@ var detailTests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		basicXcoreCode,
 		"XCore",
+	},
+	platform{
+		CS_ARCH_M68K,
+		CS_MODE_BIG_ENDIAN | CS_MODE_M68K_040,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		m68kCode,
+		"M68K",
 	},
 }
 
@@ -612,6 +605,16 @@ var xcoreTests = platforms{
 		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
 		xcoreCode,
 		"XCore",
+	},
+}
+
+var m68kTests = platforms{
+	platform{
+		CS_ARCH_M68K,
+		CS_MODE_BIG_ENDIAN | CS_MODE_M68K_040,
+		[]option{{CS_OPT_DETAIL, CS_OPT_ON}},
+		m68kCode,
+		"M68K",
 	},
 }
 

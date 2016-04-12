@@ -46,7 +46,7 @@ var (
 	ErrSkipdata = Errno(11) // Access irrelevant data for "data" instruction in SKIPDATA mode
 	ErrX86ATT   = Errno(12) // X86 AT&T syntax is unsupported (opt-out at compile time)
 	ErrX86Intel = Errno(13) // X86 Intel syntax is unsupported (opt-out at compile time)
-
+	ErrX86Masm  = Errno(14) // X86 MASM syntax is unsupported (opt-out at compile time)
 )
 
 // Since this is a build-time option for the C lib, it seems logical to have
@@ -103,6 +103,7 @@ type Instruction struct {
 	SysZ  *SysZInstruction
 	Sparc *SparcInstruction
 	Xcore *XcoreInstruction
+	M68k  *M68kInstruction
 }
 
 // Called by the arch specific decomposers
@@ -292,6 +293,8 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 			return decomposeSparc(e, insns), nil
 		case CS_ARCH_XCORE:
 			return decomposeXcore(e, insns), nil
+		case CS_ARCH_M68K:
+			return decomposeM68k(e, insns), nil
 		default:
 			return []Instruction{}, ErrArch
 		}

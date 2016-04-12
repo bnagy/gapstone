@@ -49,6 +49,7 @@ type Arm64Operand struct {
 	Sys         uint
 	Prefetch    int
 	Barrier     int
+	Access      uint8
 }
 
 type Arm64MemoryOperand struct {
@@ -107,6 +108,7 @@ func fillArm64Header(raw C.cs_insn, insn *Instruction) {
 			VectorIndex: int(cop.vector_index),
 			Vas:         int(cop.vas),
 			Vess:        int(cop.vess),
+			Access:      uint8(cop.access),
 		}
 
 		switch cop._type {

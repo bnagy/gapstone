@@ -7,7 +7,7 @@ Disasm:
 		operands[0].type: IMM = 0xc04
 	Branch hint: 1
 
-0x1004:	bdztla	4*cr5+eq, 0xffffff14
+0x1004:	bdztla	4*cr5+eq, 0xffffffffffffff14
 	op_count: 2
 		operands[0].type: CRX
 			operands[0].crx.scale: 4
