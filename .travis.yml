@@ -1,6 +1,7 @@
 language: go
 go:
-  - 1.4.2
+  - 1.4.3
+  - 1.5.3
   - tip
 sudo: false
 before_install:
@@ -8,7 +9,7 @@ before_install:
   - export LIBRARY_PATH=$HOME/capstone/lib
   - export C_INCLUDE_PATH=$HOME/capstone/include
   - export LD_LIBRARY_PATH=$HOME/capstone/lib
-  - ./genconst $HOME/src/capstone/bindings/python/capstone
+#  - ./genconst $HOME/src/capstone/bindings/python/capstone
   - ./genspec $HOME/src/capstone/tests
 notifications:
   email:
