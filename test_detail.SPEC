@@ -54,7 +54,7 @@ Disasm:
 0x1000:	bl		#0xfbc // insn-ID: 13, insn-mnem: bl
 	Implicit registers read: pc 
 	Implicit registers modified: lr 
-	This instruction belongs to groups: jump arm 
+	This instruction belongs to groups: arm jump 
 0x1004:	str		lr, [sp, #-4]! // insn-ID: 212, insn-mnem: str
 	This instruction belongs to groups: arm 
 0x1008:	andeq		r0, r0, r0 // insn-ID: 8, insn-mnem: and
