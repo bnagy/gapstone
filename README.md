@@ -7,12 +7,17 @@ Gapstone is a Go binding for the Capstone disassembly library.
 
 next branch at:
 ```
-commit 22bc86f4fe60b76cf814b253d74a8e89629e700e
+commit 5476c6f52a4c093b875fad38e6aaa98ea5aafdb2
+Merge: 75701e8 9325590
 Author: Nguyen Anh Quynh <aquynh@gmail.com>
-Date:   Sat Jun 6 12:30:14 2015 +0800
+Date:   Sun Apr 10 07:23:13 2016 +0700
 
-    xcore: increase op_count in set_mem_access() only on register operand. bug reported by Ben Nagy
+    Merge pull request #622 from ibabushkin/next
+
+    Fixed register types
 ```
+*BUG BUG BUG* genconst will not work until an upstream PR gets merged to fix the m68k headers *BUG BUG BUG*
+
 
 SUMMARY
 ===
@@ -25,7 +30,7 @@ disasm engine for binary analysis and reversing in the security community.
 Created by Nguyen Anh Quynh, then developed and maintained by a small community,
 Capstone offers some unparalleled features:
 
-- Support multiple hardware architectures: ARM, ARM64 (ARMv8), Mips, PPC, Sparc,
+- Support multiple hardware architectures: ARM, ARM64 (ARMv8), Mips, M68K, PPC, Sparc,
   SystemZ, XCore and X86.
 
 - Having clean/simple/lightweight/intuitive architecture-neutral API.
