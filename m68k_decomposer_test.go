@@ -43,6 +43,7 @@ func m68kInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 	if len(insn.M68k.Operands) > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", len(insn.M68k.Operands))
 	}
+	fmt.Fprintf(buf, "\tgroups_count: %v\n", len(insn.Groups))
 
 	for i, op := range insn.M68k.Operands {
 		switch op.Type {
@@ -161,7 +162,7 @@ func TestM68k(t *testing.T) {
 		t.Errorf("Cannot read spec file %v: %v", specFile, err)
 	}
 	if fs := final.String(); string(spec) != fs {
-		// fmt.Println(fs)
+		fmt.Println(fs)
 		t.Errorf("Output failed to match spec! (did you re-run genspec?)")
 	} else {
 		t.Logf("Clean diff with %v.\n", specFile)
