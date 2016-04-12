@@ -15,11 +15,11 @@ package gapstone
 // #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
-import "C"
-import "unsafe"
-import "reflect"
-
-//import "fmt"
+import (
+	"C"
+	"reflect"
+	"unsafe"
+)
 
 // Accessed via insn.PPC.XXX
 type PPCInstruction struct {
