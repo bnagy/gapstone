@@ -76,7 +76,7 @@ var checks = sanityChecks{
 	CS_ARCH_M68K: sanityCheck{
 		regMax: 47,
 		insMax: 375,
-		grpMax: 1,
+		grpMax: 6,
 	},
 }
 

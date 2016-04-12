@@ -9,7 +9,7 @@ try reading the *_test.go files.
 
     THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
 	Command: ./genconst /Users/ben/src/capstone/bindings/python/capstone/
-	2016-04-12T13:14:35+09:30
+	2016-04-13T08:18:17+09:30
 
 */
 
@@ -516,5 +516,8 @@ const (
 // Group of M68K instructions
 const (
 	M68K_GRP_INVALID = C.M68K_GRP_INVALID
+	M68K_GRP_JUMP    = C.M68K_GRP_JUMP
+	M68K_GRP_RET     = C.M68K_GRP_RET
+	M68K_GRP_IRET    = C.M68K_GRP_IRET
 	M68K_GRP_ENDING  = C.M68K_GRP_ENDING
 )
