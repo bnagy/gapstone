@@ -16,10 +16,11 @@ package gapstone
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
 import "C"
-import "unsafe"
-import "reflect"
 
-//import "log"
+import (
+	"reflect"
+	"unsafe"
+)
 
 // Accessed via insn.Arm64.XXX
 type Arm64Instruction struct {

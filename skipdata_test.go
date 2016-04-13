@@ -10,9 +10,7 @@ try reading the *_test.go files.
 
 package gapstone
 
-import (
-	"testing"
-)
+import "testing"
 
 var x86Skip = "\x8d\x4c\x32\x08\x01\xd8\x81\xc6\x34\x12\x00\x00\x00\x91\x92"
 var thack *testing.T
