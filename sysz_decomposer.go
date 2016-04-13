@@ -16,10 +16,11 @@ package gapstone
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
 import "C"
-import "unsafe"
-import "reflect"
 
-// import "fmt"
+import (
+	"reflect"
+	"unsafe"
+)
 
 // Accessed via insn.SysZ.XXX
 type SysZInstruction struct {

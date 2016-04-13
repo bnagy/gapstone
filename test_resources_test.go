@@ -10,8 +10,10 @@ try reading the *_test.go files.
 
 package gapstone
 
-import "bytes"
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+)
 
 // Maintain the expected version and sanity checks manually, so we can verify
 // against the installed C lib. Not foolproof, but should save 90% of accidents
