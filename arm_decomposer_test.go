@@ -10,11 +10,12 @@ try reading the *_test.go files.
 
 package gapstone
 
-import "testing"
-import "bytes"
-import "fmt"
-import "io/ioutil"
-
+import (
+	"testing"
+	"bytes"
+	"fmt"
+	"io/ioutil"
+)
 func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 	if oplen := len(insn.Arm.Operands); oplen > 0 {
 		fmt.Fprintf(buf, "\top_count: %v\n", oplen)

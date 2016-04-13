@@ -16,10 +16,12 @@ package gapstone
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
 // extern size_t trampoline(uint8_t *buffer, size_t buflen, size_t offset, void *user_data);
-import "C"
-import "unsafe"
-import "reflect"
-import "fmt"
+import (
+	"C"
+	"unsafe"
+	"reflect"
+	"fmt"
+)
 
 type Errno int
 
