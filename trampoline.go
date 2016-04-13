@@ -15,10 +15,11 @@ package gapstone
 // #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
-import "C"
-import "unsafe"
-import "reflect"
-
+import (
+	"C"
+	"unsafe"
+	"reflect"
+)
 // Because of a chicken and egg problem, this needs to be in a different file than
 // where it is used (engine.go), see https://github.com/golang/go/issues/9294.
 //export trampoline
