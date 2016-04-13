@@ -15,10 +15,11 @@ package gapstone
 // #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
-import "C"
-import "unsafe"
-import "reflect"
-
+import (
+	"C"
+	"unsafe"
+	"reflect"
+)
 // Accessed via insn.Xcore.XXX
 type XcoreInstruction struct {
 	OpCnt    uint8
