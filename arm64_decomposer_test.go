@@ -1,4 +1,4 @@
-/*
+	/*
 Gapstone is a Go binding for the Capstone disassembly library. For examples,
 try reading the *_test.go files.
 
@@ -10,10 +10,12 @@ try reading the *_test.go files.
 
 package gapstone
 
-import "testing"
-import "bytes"
-import "fmt"
-import "io/ioutil"
+import (
+	"testing"
+	"bytes"
+	"fmt"
+	"io/ioutil"
+)
 
 func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
