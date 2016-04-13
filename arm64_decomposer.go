@@ -15,10 +15,11 @@ package gapstone
 // #cgo freebsd LDFLAGS: -L/usr/local/lib
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
-import "C"
-import "unsafe"
-import "reflect"
-
+import(
+	"C"
+	"unsafe"
+	"reflect"
+)
 //import "log"
 
 // Accessed via insn.Arm64.XXX
