@@ -1,9 +1,8 @@
 language: go
 go:
-  - 1.4.3
-  - 1.5.3
+  - 1.6
   - tip
-sudo: false
+sudo: true
 before_install:
   - ./travis_install_capstone_stable.sh
   - export LIBRARY_PATH=$HOME/capstone/lib
