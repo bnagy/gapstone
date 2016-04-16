@@ -10,10 +10,12 @@ try reading the *_test.go files.
 
 package gapstone
 
-import "testing"
-import "bytes"
-import "fmt"
-import "io/ioutil"
+import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"testing"
+)
 
 func sparcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 
