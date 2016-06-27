@@ -146,6 +146,10 @@ func fillM68kHeader(raw C.cs_insn, insn *Instruction) {
 				Offset:    uint8(cmop.offset),
 				IndexSize: uint8(cmop.index_size),
 			}
+		case M68K_OP_FP_SINGLE:
+			gop.Simm = float32(*(*C.float)(unsafe.Pointer(&cop.anon0[0])))
+		case M68K_OP_FP_DOUBLE:
+			gop.Dimm = float64(*(*C.double)(unsafe.Pointer(&cop.anon0[0])))
 		}
 
 		m68k.Operands = append(m68k.Operands, gop)

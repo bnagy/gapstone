@@ -98,6 +98,12 @@ func m68kInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.scale: %v\n", i, op.Mem.Scale)
 			}
 			fmt.Fprintf(buf, "\t\taddress mode: %s\n", addressingModes[op.AddressMode])
+		case M68K_OP_FP_SINGLE:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: FP_SINGLE\n", i)
+			fmt.Fprintf(buf, "\t\t\toperands[%v].simm: %f\n", i, op.Simm)
+		case M68K_OP_FP_DOUBLE:
+			fmt.Fprintf(buf, "\t\toperands[%v].type: FP_DOUBLE\n", i)
+			fmt.Fprintf(buf, "\t\t\toperands[%v].type: %f\n", i, op.Dimm)
 		}
 
 	}

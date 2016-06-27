@@ -7,12 +7,11 @@ Gapstone is a Go binding for the Capstone disassembly library.
 
 next branch at:
 ```
-commit c509fd10b1823adbb88bec11cda0eb045d55276f
-Merge: 1ab6455 f914879
+commit d9d1052bd82f1c1ca78d6b18cc604abd44274b25
 Author: Nguyen Anh Quynh <aquynh@gmail.com>
-Date:   Tue Apr 12 19:58:29 2016 +0700
+Date:   Sun Jun 26 01:22:09 2016 +0800
 
-    m68k: fix conflicts when merging with #625
+    x86: fix similar bugs with issue #711 for MOV with *AX registers
 ```
 
 

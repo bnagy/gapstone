@@ -43,7 +43,8 @@ Disasm:
 0x1014:	fadd.s	#3.141500, fp0
 	op_count: 2
 	groups_count: 0
-		operands[0].type: IMM = 3.141500
+		operands[0].type: FP_SINGLE
+			operands[0].simm: 3.141500
 		operands[1].type: REG = fp0
 
 0x101c:	scc.b	d5
@@ -54,7 +55,8 @@ Disasm:
 0x101e:	fmove.s	#1000.000000, fp0
 	op_count: 2
 	groups_count: 0
-		operands[0].type: IMM = 1000.000000
+		operands[0].type: FP_SINGLE
+			operands[0].simm: 1000.000000
 		operands[1].type: REG = fp0
 
 0x1026:	fsub	fp2, fp4
