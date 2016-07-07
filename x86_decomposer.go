@@ -239,8 +239,6 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		// fake a union by setting only the correct struct member
 		case X86_OP_IMM:
 			gop.Imm = int64(*(*C.int64_t)(unsafe.Pointer(&cop.anon0[0])))
-		case X86_OP_FP:
-			gop.FP = float64(*(*C.double)(unsafe.Pointer(&cop.anon0[0])))
 		case X86_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case X86_OP_MEM:

@@ -326,7 +326,6 @@ const (
 	X86_OP_REG     = C.X86_OP_REG
 	X86_OP_IMM     = C.X86_OP_IMM
 	X86_OP_MEM     = C.X86_OP_MEM
-	X86_OP_FP      = C.X86_OP_FP
 )
 
 // XOP Code Condition type

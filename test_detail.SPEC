@@ -172,7 +172,7 @@ Disasm:
 0x1004:	wait		0x11 // insn-ID: 616, insn-mnem: wait
 	This instruction belongs to groups: micromips 
 0x1008:	syscall		0x18c // insn-ID: 594, insn-mnem: syscall
-	This instruction belongs to groups: micromips 
+	This instruction belongs to groups: micromips int 
 0x100c:	rotrv		$t1, $a2, $a3 // insn-ID: 499, insn-mnem: rotrv
 	This instruction belongs to groups: micromips 
 0x1010:

@@ -92,8 +92,6 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) error {
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case X86_OP_IMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint64(op.Imm)))
-		case X86_OP_FP:
-			fmt.Fprintf(buf, "\t\toperands[%v].type: FP = %f\n", i, op.FP)
 		case X86_OP_MEM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: MEM\n", i)
 			if op.Mem.Segment != X86_REG_INVALID {
