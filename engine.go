@@ -10,9 +10,8 @@ try reading the *_test.go files.
 
 package gapstone
 
-// #cgo LDFLAGS: -lcapstone
-// #cgo freebsd CFLAGS: -I/usr/local/include
-// #cgo freebsd LDFLAGS: -L/usr/local/lib
+// #cgo CPPFLAGS: -DCAPSTONE_USE_SYS_DYN_MEM -I${SRCDIR}/include -I${SRCDIR}/include/capstone -DCAPSTONE_HAS_ARM -DCAPSTONE_HAS_ARM64 -DCAPSTONE_HAS_MIPS -DCAPSTONE_HAS_POWERPC -DCAPSTONE_HAS_X86 -DCAPSTONE_HAS_SPARC -DCAPSTONE_HAS_SYSZ -DCAPSTONE_HAS_XCORE
+// #cgo windows CPPFLAGS: -D__CRT__NO_INLINE
 // #include <stdlib.h>
 // #include <capstone/capstone.h>
 // extern size_t trampoline(uint8_t *buffer, size_t buflen, size_t offset, void *user_data);

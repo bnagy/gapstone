@@ -47,10 +47,7 @@ Further information is available at http://www.capstone-engine.org
 To install:
 ----
 
-First install the capstone library from either https://github.com/aquynh/capstone
-or http://www.capstone-engine.org
-
-Then, assuming you have set up your Go environment according to the docs, just:
+Assuming you have set up your Go environment according to the docs, just:
 ```bash
 go get -u github.com/bnagy/gapstone
 ```

@@ -11,16 +11,16 @@ end
 stub = ARGV[0].chomp('/')
 
 commands = [
-	"#{stub}/test > $GOPATH/src/github.com/bnagy/gapstone/test.SPEC",
-	"#{stub}/test_detail > $GOPATH/src/github.com/bnagy/gapstone/test_detail.SPEC",
-	"#{stub}/test_arm > $GOPATH/src/github.com/bnagy/gapstone/arm.SPEC",
-	"#{stub}/test_arm64 > $GOPATH/src/github.com/bnagy/gapstone/arm64.SPEC",
-	"#{stub}/test_x86 > $GOPATH/src/github.com/bnagy/gapstone/x86.SPEC",
-	"#{stub}/test_mips > $GOPATH/src/github.com/bnagy/gapstone/mips.SPEC",
-	"#{stub}/test_ppc > $GOPATH/src/github.com/bnagy/gapstone/ppc.SPEC",
-	"#{stub}/test_systemz > $GOPATH/src/github.com/bnagy/gapstone/sysZ.SPEC",
-	"#{stub}/test_sparc > $GOPATH/src/github.com/bnagy/gapstone/sparc.SPEC",
-	"#{stub}/test_xcore > $GOPATH/src/github.com/bnagy/gapstone/xcore.SPEC"
+	"#{stub}/test.static > $GOPATH/src/github.com/bnagy/gapstone/test.SPEC",
+	"#{stub}/test_detail.static > $GOPATH/src/github.com/bnagy/gapstone/test_detail.SPEC",
+	"#{stub}/test_arm.static > $GOPATH/src/github.com/bnagy/gapstone/arm.SPEC",
+	"#{stub}/test_arm64.static > $GOPATH/src/github.com/bnagy/gapstone/arm64.SPEC",
+	"#{stub}/test_x86.static > $GOPATH/src/github.com/bnagy/gapstone/x86.SPEC",
+	"#{stub}/test_mips.static > $GOPATH/src/github.com/bnagy/gapstone/mips.SPEC",
+	"#{stub}/test_ppc.static > $GOPATH/src/github.com/bnagy/gapstone/ppc.SPEC",
+	"#{stub}/test_systemz.static > $GOPATH/src/github.com/bnagy/gapstone/sysZ.SPEC",
+	"#{stub}/test_sparc.static > $GOPATH/src/github.com/bnagy/gapstone/sparc.SPEC",
+	"#{stub}/test_xcore.static > $GOPATH/src/github.com/bnagy/gapstone/xcore.SPEC"
 ]
 
 commands.each {|c|
