@@ -46,7 +46,7 @@ func (insn SparcInstruction) OpCount(optype uint) int {
 type SparcOperand struct {
 	Type uint // SPARC_OP_* - determines which field is set below
 	Reg  uint
-	Imm  int32
+	Imm  int64
 	Mem  SparcMemoryOperand
 }
 
@@ -91,7 +91,7 @@ func fillSparcHeader(raw C.cs_insn, insn *Instruction) {
 		switch cop._type {
 		// fake a union by setting only the correct struct member
 		case SPARC_OP_IMM:
-			gop.Imm = int32(*(*C.int32_t)(unsafe.Pointer(&cop.anon0[0])))
+			gop.Imm = int64(*(*C.int32_t)(unsafe.Pointer(&cop.anon0[0])))
 		case SPARC_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case SPARC_OP_MEM:
