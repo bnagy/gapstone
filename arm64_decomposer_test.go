@@ -60,6 +60,15 @@ func arm64InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			fmt.Fprintf(buf, "\t\toperands[%v].type: BARRIER = 0x%x\n", i, op.Barrier)
 		}
 
+		switch op.Access {
+		case CS_AC_READ:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ\n", i)
+		case CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: WRITE\n", i)
+		case CS_AC_READ | CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ | WRITE\n", i)
+		}
+
 		if op.Shift.Type != ARM64_SFT_INVALID && op.Shift.Value != 0 {
 			// shift with constant value
 			fmt.Fprintf(buf, "\t\t\tShift: type = %v, value = %v\n", op.Shift.Type, op.Shift.Value)

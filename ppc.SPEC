@@ -7,22 +7,22 @@ Disasm:
 		operands[0].type: IMM = 0xc04
 	Branch hint: 1
 
-0x1004:	bdztla	4*cr5+eq, 0xffffff14
+0x1004:	bdztla	4*cr5+eq, 0xffffffffffffff14
 	op_count: 2
 		operands[0].type: CRX
 			operands[0].crx.scale: 4
 			operands[0].crx.reg: cr5
 			operands[0].crx.cond: eq
-		operands[1].type: IMM = 0xffffff14
+		operands[1].type: IMM = 0xffffffffffffff14
 	Branch hint: 1
 
-0x1008:	lwz	r1, (0)
+0x1008:	lwz	r1, 0(0)
 	op_count: 2
 		operands[0].type: REG = r1
 		operands[1].type: MEM
 			operands[1].mem.base: REG = r0
 
-0x100c:	lwz	r1, (r31)
+0x100c:	lwz	r1, 0(r31)
 	op_count: 2
 		operands[0].type: REG = r1
 		operands[1].type: MEM
@@ -81,4 +81,27 @@ Disasm:
 	Branch code: 68
 
 0x1034:
+
+****************
+Platform: PPC-64 + QPX
+Code:0x10 0x60 0x2a 0x10 0x10 0x64 0x28 0x88 0x7c 0x4a 0x5d 0x0f 
+Disasm:
+0x1000:	qvfabs	q3, q5
+	op_count: 2
+		operands[0].type: REG = q3
+		operands[1].type: REG = q5
+
+0x1004:	qvfand	q3, q4, q5
+	op_count: 3
+		operands[0].type: REG = q3
+		operands[1].type: REG = q4
+		operands[2].type: REG = q5
+
+0x1008:	qvstfsxa	q2, r10, r11
+	op_count: 3
+		operands[0].type: REG = q2
+		operands[1].type: REG = r10
+		operands[2].type: REG = r11
+
+0x100c:
 

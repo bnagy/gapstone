@@ -11,7 +11,7 @@ func benchmarkBasicX86(scale int, b *testing.B) {
 	engine, err := New(CS_ARCH_X86, CS_MODE_32)
 
 	if err != nil {
-		b.Fatal("Failed to initialize engine: %v", err)
+		b.Fatalf("Failed to initialize engine: %v", err)
 	}
 	defer engine.Close()
 
@@ -33,7 +33,7 @@ func benchmarkBasicX86(scale int, b *testing.B) {
 		)
 
 		if err != nil {
-			b.Fatal("Disassembly error: %v", err)
+			b.Fatalf("Disassembly error: %v", err)
 		}
 		var count uint = 0
 		for _, insn := range insns {
@@ -50,7 +50,7 @@ func benchmarkIterX86(scale int, b *testing.B) {
 	engine, err := New(CS_ARCH_X86, CS_MODE_32)
 
 	if err != nil {
-		b.Fatal("Failed to initialize engine: %v", err)
+		b.Fatalf("Failed to initialize engine: %v", err)
 	}
 	defer engine.Close()
 

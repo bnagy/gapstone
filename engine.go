@@ -263,10 +263,20 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 		case CS_ARCH_XCORE:
 			return decomposeXcore(insns), nil
 		default:
-			return []Instruction{}, ErrArch
+			return decomposeGeneric(insns), nil
 		}
 	}
 	return []Instruction{}, e.Errno()
+}
+
+func decomposeGeneric(raws []C.cs_insn) []Instruction {
+	decomposed := []Instruction{}
+	for _, raw := range raws {
+		decomp := new(Instruction)
+		fillGenericHeader(raw, decomp)
+		decomposed = append(decomposed, *decomp)
+	}
+	return decomposed
 }
 
 // user callback function prototype
