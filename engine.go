@@ -67,7 +67,7 @@ var dietMode = bool(C.cs_support(CS_SUPPORT_DIET))
 type Engine struct {
 	handle   C.csh
 	arch     int
-	mode     uint
+	mode     int
 	skipdata *C.cs_opt_skipdata
 }
 
@@ -96,13 +96,13 @@ type InstructionHeader struct {
 // fill in only the Arm structure member.
 type Instruction struct {
 	InstructionHeader
-	Arm   *ArmInstruction
-	Arm64 *Arm64Instruction
-	Mips  *MipsInstruction
 	X86   *X86Instruction
+	Arm64 *Arm64Instruction
+	Arm   *ArmInstruction
+	Mips  *MipsInstruction
 	PPC   *PPCInstruction
-	SysZ  *SysZInstruction
 	Sparc *SparcInstruction
+	SysZ  *SysZInstruction
 	Xcore *XcoreInstruction
 }
 
@@ -153,7 +153,7 @@ func (e *Engine) Close() error {
 func (e *Engine) Arch() int { return e.arch }
 
 // Accessor for the Engine mode CS_MODE_*
-func (e *Engine) Mode() uint { return e.mode }
+func (e *Engine) Mode() int { return e.mode }
 
 // Check if a particular arch is supported by this engine.
 // To verify if this engine supports everything, use CS_ARCH_ALL
@@ -331,7 +331,7 @@ func (e *Engine) SkipDataStop() {
 }
 
 // Create a new Engine with the specified arch and mode
-func New(arch int, mode uint) (Engine, error) {
+func New(arch int, mode int) (Engine, error) {
 	var handle C.csh
 	res := C.cs_open(C.cs_arch(arch), C.cs_mode(mode), &handle)
 	if Errno(res) == ErrOK {
