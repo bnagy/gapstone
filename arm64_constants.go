@@ -8,8 +8,8 @@ try reading the *_test.go files.
     (c) 2013 COSEINC. All Rights Reserved.
 
     THIS FILE WAS AUTO-GENERATED -- DO NOT EDIT!
-	Command: ./genconst /Users/ben/src/capstone/bindings/python/capstone/
-	2016-04-13T12:04:37+09:30
+	Command: ./genconst /Users/scottknight/work/capstone/bindings/python/capstone/
+	2019-02-02T13:26:27-05:00
 
 */
 
@@ -1068,6 +1068,8 @@ const (
 	ARM64_INS_DC        = C.ARM64_INS_DC
 	ARM64_INS_AT        = C.ARM64_INS_AT
 	ARM64_INS_TLBI      = C.ARM64_INS_TLBI
+	ARM64_INS_NEGS      = C.ARM64_INS_NEGS
+	ARM64_INS_NGCS      = C.ARM64_INS_NGCS
 	ARM64_INS_ENDING    = C.ARM64_INS_ENDING
 )
 
@@ -1078,7 +1080,12 @@ const (
 
 // Generic groups
 const (
-	ARM64_GRP_JUMP = C.ARM64_GRP_JUMP
+	ARM64_GRP_JUMP            = C.ARM64_GRP_JUMP
+	ARM64_GRP_CALL            = C.ARM64_GRP_CALL
+	ARM64_GRP_RET             = C.ARM64_GRP_RET
+	ARM64_GRP_INT             = C.ARM64_GRP_INT
+	ARM64_GRP_PRIVILEGE       = C.ARM64_GRP_PRIVILEGE
+	ARM64_GRP_BRANCH_RELATIVE = C.ARM64_GRP_BRANCH_RELATIVE
 )
 
 // Architecture-specific groups
