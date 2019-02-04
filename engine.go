@@ -86,9 +86,11 @@ type InstructionHeader struct {
 	// Not available without the decomposer. BE CAREFUL! By default,
 	// CS_OPT_DETAIL is set to CS_OPT_OFF so the result of accessing these
 	// members is undefined.
-	RegistersRead    []uint // List of implicit registers read by this instruction
-	RegistersWritten []uint // List of implicit registers written by this instruction
-	Groups           []uint // List of *_GRP_* groups this instruction belongs to.
+	AllRegistersRead    []uint // List of implicit and explicit registers read by this instruction
+	AllRegistersWritten []uint // List of implicit and explicit registers written by this instruction
+	RegistersRead       []uint // List of implicit registers read by this instruction
+	RegistersWritten    []uint // List of implicit registers written by this instruction
+	Groups              []uint // List of *_GRP_* groups this instruction belongs to.
 }
 
 // arch specific information will be filled in for exactly one of the
@@ -107,7 +109,7 @@ type Instruction struct {
 }
 
 // Called by the arch specific decomposers
-func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
+func fillGenericHeader(e *Engine, raw C.cs_insn, insn *Instruction) {
 
 	insn.Id = uint(raw.id)
 	insn.Address = uint(raw.address)
@@ -135,6 +137,28 @@ func fillGenericHeader(raw C.cs_insn, insn *Instruction) {
 
 		for i := 0; i < int(raw.detail.groups_count); i++ {
 			insn.Groups = append(insn.Groups, uint(raw.detail.groups[i]))
+		}
+
+		var regsRead C.cs_regs
+		var regsReadCount C.uint8_t
+		var regsWrite C.cs_regs
+		var regsWriteCount C.uint8_t
+		res := C.cs_regs_access(
+			e.handle,
+			&raw,
+			&regsRead[0],
+			&regsReadCount,
+			&regsWrite[0],
+			&regsWriteCount)
+
+		if Errno(res) == ErrOK {
+			for i := 0; i < int(regsReadCount); i++ {
+				insn.AllRegistersRead = append(insn.AllRegistersRead, uint(regsRead[i]))
+			}
+
+			for i := 0; i < int(regsWriteCount); i++ {
+				insn.AllRegistersWritten = append(insn.AllRegistersWritten, uint(regsWrite[i]))
+			}
 		}
 	}
 
@@ -247,33 +271,33 @@ func (e *Engine) Disasm(input []byte, address, count uint64) ([]Instruction, err
 
 		switch e.arch {
 		case CS_ARCH_ARM:
-			return decomposeArm(insns), nil
+			return decomposeArm(e, insns), nil
 		case CS_ARCH_ARM64:
-			return decomposeArm64(insns), nil
+			return decomposeArm64(e, insns), nil
 		case CS_ARCH_MIPS:
-			return decomposeMips(insns), nil
+			return decomposeMips(e, insns), nil
 		case CS_ARCH_X86:
-			return decomposeX86(insns), nil
+			return decomposeX86(e, insns), nil
 		case CS_ARCH_PPC:
-			return decomposePPC(insns), nil
+			return decomposePPC(e, insns), nil
 		case CS_ARCH_SYSZ:
-			return decomposeSysZ(insns), nil
+			return decomposeSysZ(e, insns), nil
 		case CS_ARCH_SPARC:
-			return decomposeSparc(insns), nil
+			return decomposeSparc(e, insns), nil
 		case CS_ARCH_XCORE:
-			return decomposeXcore(insns), nil
+			return decomposeXcore(e, insns), nil
 		default:
-			return decomposeGeneric(insns), nil
+			return decomposeGeneric(e, insns), nil
 		}
 	}
 	return []Instruction{}, e.Errno()
 }
 
-func decomposeGeneric(raws []C.cs_insn) []Instruction {
+func decomposeGeneric(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		fillGenericHeader(e, raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}
 	return decomposed

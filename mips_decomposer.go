@@ -98,11 +98,11 @@ func fillMipsHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Mips = &mips
 }
 
-func decomposeMips(raws []C.cs_insn) []Instruction {
+func decomposeMips(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		fillGenericHeader(e, raw, decomp)
 		fillMipsHeader(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

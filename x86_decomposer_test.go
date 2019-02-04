@@ -298,6 +298,22 @@ func x86InsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		}
 	}
 
+	if len(insn.AllRegistersRead) > 0 {
+		fmt.Fprintf(buf, "\tRegisters read:")
+		for _, reg := range insn.AllRegistersRead {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
+	if len(insn.AllRegistersWritten) > 0 {
+		fmt.Fprintf(buf, "\tRegisters modified:")
+		for _, reg := range insn.AllRegistersWritten {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
 	if insn.X86.EFlags != 0 {
 		fmt.Fprintf(buf, "\tEFLAGS:")
 		for i := uint(0); i <= 63; i++ {

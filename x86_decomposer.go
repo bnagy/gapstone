@@ -184,11 +184,11 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	insn.X86 = &x86
 }
 
-func decomposeX86(raws []C.cs_insn) []Instruction {
+func decomposeX86(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		fillGenericHeader(e, raw, decomp)
 		fillX86Header(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

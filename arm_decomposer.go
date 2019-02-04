@@ -143,11 +143,11 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Arm = &arm
 }
 
-func decomposeArm(raws []C.cs_insn) []Instruction {
+func decomposeArm(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		fillGenericHeader(e, raw, decomp)
 		fillArmHeader(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}
