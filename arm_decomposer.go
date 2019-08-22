@@ -51,13 +51,16 @@ type ArmOperand struct {
 	Mem         ArmMemoryOperand
 	Setend      int
 	Subtracted  bool
+	Access      uint
+	NeonLane    int
 }
 
 type ArmMemoryOperand struct {
-	Base  uint
-	Index uint
-	Scale int
-	Disp  int
+	Base   uint
+	Index  uint
+	Scale  int
+	Disp   int
+	LShift int
 }
 
 // Number of Operands of a given ARM_OP_* type
@@ -112,6 +115,8 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 			Type:        uint(cop._type),
 			VectorIndex: int(cop.vector_index),
 			Subtracted:  bool(cop.subtracted),
+			Access:      uint(cop.access),
+			NeonLane:    int(cop.neon_lane),
 		}
 		switch cop._type {
 		// fake a union by setting only the correct struct member
@@ -124,10 +129,11 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 		case ARM_OP_MEM:
 			cmop := (*C.arm_op_mem)(unsafe.Pointer(&cop.anon0[0]))
 			gop.Mem = ArmMemoryOperand{
-				Base:  uint(cmop.base),
-				Index: uint(cmop.index),
-				Scale: int(cmop.scale),
-				Disp:  int(cmop.disp),
+				Base:   uint(cmop.base),
+				Index:  uint(cmop.index),
+				Scale:  int(cmop.scale),
+				Disp:   int(cmop.disp),
+				LShift: int(cmop.lshift),
 			}
 		case ARM_OP_SETEND:
 			gop.Setend = int(*(*C.int)(unsafe.Pointer(&cop.anon0[0])))
@@ -137,11 +143,11 @@ func fillArmHeader(raw C.cs_insn, insn *Instruction) {
 	insn.Arm = &arm
 }
 
-func decomposeArm(raws []C.cs_insn) []Instruction {
+func decomposeArm(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		fillGenericHeader(e, raw, decomp)
 		fillArmHeader(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

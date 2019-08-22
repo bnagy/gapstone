@@ -30,15 +30,19 @@ type X86Instruction struct {
 	AddrSize byte
 	ModRM    byte
 	Sib      byte
-	Disp     int32
+	Disp     int64
 	SibIndex uint
 	SibScale int8
 	SibBase  uint
+	XopCC    uint
 	SseCC    uint
 	AvxCC    uint
 	AvxSAE   bool
 	AvxRM    uint
+	EFlags   uint64
+	FPUFlags uint64
 	Operands []X86Operand
+	Encoding X86Encoding
 }
 
 // Number of Operands of a given X86_OP_* type
@@ -52,13 +56,21 @@ func (insn X86Instruction) OpCount(optype uint) int {
 	return count
 }
 
+type X86Encoding struct {
+	ModRMOffset byte
+	DispOffset  byte
+	DispSize    byte
+	ImmOffset   byte
+	ImmSize     byte
+}
+
 type X86Operand struct {
 	Type          uint // X86_OP_* - determines which field is set below
 	Reg           uint
 	Imm           int64
-	FP            float64
 	Mem           X86MemoryOperand
 	Size          uint8
+	Access        uint8
 	AvxBcast      uint
 	AvxZeroOpmask bool
 }
@@ -99,14 +111,32 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		AddrSize: byte(cs_x86.addr_size),
 		ModRM:    byte(cs_x86.modrm),
 		Sib:      byte(cs_x86.sib),
-		Disp:     int32(cs_x86.disp),
+		Disp:     int64(cs_x86.disp),
 		SibIndex: uint(cs_x86.sib_index),
 		SibScale: int8(cs_x86.sib_scale),
 		SibBase:  uint(cs_x86.sib_base),
+		XopCC:    uint(cs_x86.xop_cc),
 		SseCC:    uint(cs_x86.sse_cc),
 		AvxCC:    uint(cs_x86.avx_cc),
 		AvxSAE:   bool(cs_x86.avx_sae),
 		AvxRM:    uint(cs_x86.avx_rm),
+		Encoding: X86Encoding{
+			ModRMOffset: byte(cs_x86.encoding.modrm_offset),
+			DispOffset:  byte(cs_x86.encoding.disp_offset),
+			DispSize:    byte(cs_x86.encoding.disp_size),
+			ImmOffset:   byte(cs_x86.encoding.imm_offset),
+			ImmSize:     byte(cs_x86.encoding.imm_size),
+		},
+	}
+
+	// Handle eflags and fpu_flags union
+	x86.EFlags = uint64(*(*C.uint64_t)(unsafe.Pointer(&cs_x86.anon0[0])))
+	for _, group := range insn.Groups {
+		if group == X86_GRP_FPU {
+			x86.EFlags = 0
+			x86.FPUFlags = uint64(*(*C.uint64_t)(unsafe.Pointer(&cs_x86.anon0[0])))
+			break
+		}
 	}
 
 	// Cast the op_info to a []C.cs_x86_op
@@ -126,6 +156,7 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		gop := X86Operand{
 			Type:          uint(cop._type),
 			Size:          uint8(cop.size),
+			Access:        uint8(cop.access),
 			AvxBcast:      uint(cop.avx_bcast),
 			AvxZeroOpmask: bool(cop.avx_zero_opmask),
 		}
@@ -134,8 +165,6 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 		// fake a union by setting only the correct struct member
 		case X86_OP_IMM:
 			gop.Imm = int64(*(*C.int64_t)(unsafe.Pointer(&cop.anon0[0])))
-		case X86_OP_FP:
-			gop.FP = float64(*(*C.double)(unsafe.Pointer(&cop.anon0[0])))
 		case X86_OP_REG:
 			gop.Reg = uint(*(*C.uint)(unsafe.Pointer(&cop.anon0[0])))
 		case X86_OP_MEM:
@@ -155,11 +184,11 @@ func fillX86Header(raw C.cs_insn, insn *Instruction) {
 	insn.X86 = &x86
 }
 
-func decomposeX86(raws []C.cs_insn) []Instruction {
+func decomposeX86(e *Engine, raws []C.cs_insn) []Instruction {
 	decomposed := []Instruction{}
 	for _, raw := range raws {
 		decomp := new(Instruction)
-		fillGenericHeader(raw, decomp)
+		fillGenericHeader(e, raw, decomp)
 		fillX86Header(raw, decomp)
 		decomposed = append(decomposed, *decomp)
 	}

@@ -27,7 +27,7 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case ARM_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case ARM_OP_IMM:
-			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint64(op.Imm)))
+			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint32(op.Imm)))
 		case ARM_OP_FP:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: FP = %f\n", i, op.FP)
 		case ARM_OP_MEM:
@@ -46,6 +46,9 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 			if op.Mem.Disp != 0 {
 				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.disp: 0x%x\n", i, uint32(op.Mem.Disp))
 			}
+			if op.Mem.LShift != 0 {
+				fmt.Fprintf(buf, "\t\t\toperands[%v].mem.lshift: 0x%x\n", i, uint32(op.Mem.LShift))
+			}
 		case ARM_OP_PIMM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: P-IMM = %v\n", i, op.Imm)
 		case ARM_OP_CIMM:
@@ -59,6 +62,19 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case ARM_OP_SYSREG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: SYSREG = %v\n", i, op.Reg)
 
+		}
+
+		if op.NeonLane != -1 {
+			fmt.Fprintf(buf, "\t\toperands[%v].neon_lane = %v\n", i, op.NeonLane)
+		}
+
+		switch op.Access {
+		case CS_AC_READ:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ\n", i)
+		case CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: WRITE\n", i)
+		case CS_AC_READ | CS_AC_WRITE:
+			fmt.Fprintf(buf, "\t\toperands[%v].access: READ | WRITE\n", i)
 		}
 
 		if op.Shift.Type != ARM_SFT_INVALID && op.Shift.Value != 0 {
@@ -114,6 +130,22 @@ func armInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		fmt.Fprintf(buf, "\tMemory-barrier: %v\n", insn.Arm.MemBarrier)
 	}
 
+	if len(insn.AllRegistersRead) > 0 {
+		fmt.Fprintf(buf, "\tRegisters read:")
+		for _, reg := range insn.AllRegistersRead {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
+	if len(insn.AllRegistersWritten) > 0 {
+		fmt.Fprintf(buf, "\tRegisters modified:")
+		for _, reg := range insn.AllRegistersWritten {
+			fmt.Fprintf(buf, " %s", engine.RegName(reg))
+		}
+		fmt.Fprintf(buf, "\n")
+	}
+
 	fmt.Fprintf(buf, "\n")
 }
 
@@ -121,6 +153,7 @@ func TestArm(t *testing.T) {
 
 	t.Parallel()
 
+	var address = uint64(0x80001000)
 	final := new(bytes.Buffer)
 	spec_file := "arm.SPEC"
 

@@ -55,7 +55,7 @@ func ppcInsnDetail(insn Instruction, engine *Engine, buf *bytes.Buffer) {
 		case PPC_OP_REG:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: REG = %v\n", i, engine.RegName(op.Reg))
 		case PPC_OP_IMM:
-			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, (uint32(op.Imm)))
+			fmt.Fprintf(buf, "\t\toperands[%v].type: IMM = 0x%x\n", i, uint64(op.Imm))
 		case PPC_OP_MEM:
 			fmt.Fprintf(buf, "\t\toperands[%v].type: MEM\n", i)
 			if op.Mem.Base != PPC_REG_INVALID {

@@ -89,3 +89,29 @@ Disasm:
 
 0x1008:
 
+****************
+Platform: MIPS-64-EL + Mips II (Little-endian)
+Code:0x70 0x00 0xb2 0xff 
+Disasm:
+0x1000:	sdc3	$18, 0x70($sp)
+	op_count: 2
+		operands[0].type: REG = s2
+		operands[1].type: MEM
+			operands[1].mem.base: REG = sp
+			operands[1].mem.disp: 0x70
+
+0x1004:
+
+****************
+Platform: MIPS-64-EL (Little-endian)
+Code:0x70 0x00 0xb2 0xff 
+Disasm:
+0x1000:	sd	$s2, 0x70($sp)
+	op_count: 2
+		operands[0].type: REG = s2
+		operands[1].type: MEM
+			operands[1].mem.base: REG = sp
+			operands[1].mem.disp: 0x70
+
+0x1004:
+

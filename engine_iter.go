@@ -58,21 +58,21 @@ func (e *Engine) DisasmIter(input []byte, address uint64) <-chan Instruction {
 
 			switch e.arch {
 			case CS_ARCH_ARM:
-				out <- decomposeArm(insns)[0]
+				out <- decomposeArm(e, insns)[0]
 			case CS_ARCH_ARM64:
-				out <- decomposeArm64(insns)[0]
+				out <- decomposeArm64(e, insns)[0]
 			case CS_ARCH_MIPS:
-				out <- decomposeMips(insns)[0]
+				out <- decomposeMips(e, insns)[0]
 			case CS_ARCH_X86:
-				out <- decomposeX86(insns)[0]
+				out <- decomposeX86(e, insns)[0]
 			case CS_ARCH_PPC:
-				out <- decomposePPC(insns)[0]
+				out <- decomposePPC(e, insns)[0]
 			case CS_ARCH_SYSZ:
-				out <- decomposeSysZ(insns)[0]
+				out <- decomposeSysZ(e, insns)[0]
 			case CS_ARCH_SPARC:
-				out <- decomposeSparc(insns)[0]
+				out <- decomposeSparc(e, insns)[0]
 			case CS_ARCH_XCORE:
-				out <- decomposeXcore(insns)[0]
+				out <- decomposeXcore(e, insns)[0]
 			default:
 				return
 			}

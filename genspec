@@ -11,11 +11,12 @@ end
 stub = ARGV[0].chomp('/')
 
 commands = [
-	"#{stub}/test > $GOPATH/src/github.com/bnagy/gapstone/test.SPEC",
+	"#{stub}/test_basic > $GOPATH/src/github.com/bnagy/gapstone/test.SPEC",
 	"#{stub}/test_detail > $GOPATH/src/github.com/bnagy/gapstone/test_detail.SPEC",
 	"#{stub}/test_arm > $GOPATH/src/github.com/bnagy/gapstone/arm.SPEC",
 	"#{stub}/test_arm64 > $GOPATH/src/github.com/bnagy/gapstone/arm64.SPEC",
-	"#{stub}/test_x86 > $GOPATH/src/github.com/bnagy/gapstone/x86.SPEC",
+	# Temporarily disabled. See https://github.com/aquynh/capstone/pull/1365
+	#"#{stub}/test_x86 > $GOPATH/src/github.com/bnagy/gapstone/x86.SPEC",
 	"#{stub}/test_mips > $GOPATH/src/github.com/bnagy/gapstone/mips.SPEC",
 	"#{stub}/test_ppc > $GOPATH/src/github.com/bnagy/gapstone/ppc.SPEC",
 	"#{stub}/test_systemz > $GOPATH/src/github.com/bnagy/gapstone/sysZ.SPEC",
