@@ -1,6 +1,18 @@
 gapstone
 ====
 
+
+RETIRED
+===
+
+This binding is no longer maintained. It has been forked at https://github.com/knightsc/gapstone
+
+Thanks!
+
+ben
+
+## OLD README FOLLOWS
+
 Gapstone is a Go binding for the Capstone disassembly library.
 
 ## CURRENT UPSTREAM VERSION: 4.0.1
